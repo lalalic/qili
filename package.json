@@ -1,6 +1,6 @@
 {
-  "name": "mobiengine",
-  "description": "mobiengine",
+  "name": "qili",
+  "description": "another REST BAAS",
   "version": "1.0.0",
   "author": {
     "name": "Raymond Li",
@@ -42,5 +42,5 @@
     "start": "node --debug server.js",
 	"test": "jasmine-node test"
   },
-  "readme":"mobiengine"
+  "readme":"README.md"
 }
