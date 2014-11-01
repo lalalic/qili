@@ -8,8 +8,8 @@ var config = module.exports.config={
 		'host' : "localhost"
 	},
 	'server' : {
-		'port' : 8080,
-		'https' : 8443,
+		'port' : 9080,
+		'https' : 9443,
 		'timeout' : 120,
 		'address' : "0.0.0.0"
 	},
