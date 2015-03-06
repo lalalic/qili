@@ -24,7 +24,7 @@ var config = module.exports.config={
 	autoCreateIndex:true,
 	sharedModules:"underscore,backbone,node-promise,ajax".split(","),
 	Internal_API:["users,roles,files,logs".split(",")],
-	domain:"http://getzipweb.com"
+	domain:"http://qili2.com"
 };
 
 require("./lib/cloud").support()
@@ -42,7 +42,7 @@ if (false && cluster.isMaster) {
 	// Worker processes have a http server.
 	var express = require('express');
 	var app = module.exports.app = express();
-	
+
 	var bodyParser = require("body-parser");
 	app.use(bodyParser.json());
 	app.use(bodyParser.urlencoded({extended : true}));
@@ -57,7 +57,7 @@ if (false && cluster.isMaster) {
 		})
 
 		app.use(require("morgan")("dev"));
-		
+
 		app.use("/test",express.static(__dirname+'/test'));
 		app.use("/"+config.qiniu.bucket,express.static(__dirname+'/upload/'+config.qiniu.bucket));
 	}
@@ -68,19 +68,18 @@ if (false && cluster.isMaster) {
 	require("./lib/role").init()
 	require("./lib/app").init()
 	require("./lib/entity").init()
-	
-	
+
+
 	app.use(express.static(__dirname+'/view'));
-	
+
 	// Bind to a port
 	app.listen(config.server.port, config.server.address);
 	app.on('connection', function (socket) {
 		socket.setTimeout(config.server.timeout * 1000);
 		console.log("server is ready");
 	});
-	
+
 	process.on("uncaughtException",function(error){
 		console.error(error)
 	})
 }
-
