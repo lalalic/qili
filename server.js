@@ -21,7 +21,6 @@ var config = module.exports.config={
 		expires:600,
 	},
 	debug:true,
-	autoCreateIndex:true,
 	sharedModules:"underscore,backbone,node-promise,ajax".split(","),
 	Internal_API:["users,roles,files,logs".split(",")],
 	domain:"http://qili2.com"
