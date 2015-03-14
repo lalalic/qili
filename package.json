@@ -39,7 +39,7 @@
     "node": ">= 0.4.4"
   },
   "scripts": {
-    "start": "node --debug server.js",
+    "start": "node --debug-brk server.js",
 	"test": "jasmine-node test"
   },
   "readme":"README.md"
