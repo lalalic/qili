@@ -6,17 +6,20 @@
     "name": "Raymond Li",
     "email": "lalalic@139.com"
   },
+  "devDepencies":{
+      "jasmine-node":"1.14.5",
+      "morgan":"*",
+      "cors":"*"
+  },
   "dependencies": {
     "express": "4.x",
 	"body-parser":"latest",
     "mongodb": ">= 0.9.2",
 	"node-promise":"latest",
 	"underscore":"latest",
-	"morgan":"*",
 	"formidable":"*",
 	"qiniu":"*",
-	"backbone":"*",
-	"jasmine-node":"1.14.5"
+	"backbone":"*"
   },
   "keywords": [
     "mongodb",
@@ -39,7 +42,7 @@
     "node": ">= 0.4.4"
   },
   "scripts": {
-    "start": "node --debug-brk server.js",
+    "start": "node --debug server.js",
 	"test": "jasmine-node test"
   },
   "readme":"README.md"

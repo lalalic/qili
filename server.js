@@ -46,13 +46,16 @@ if (false && cluster.isMaster) {
 	app.use(bodyParser.json());
 	app.use(bodyParser.urlencoded({extended : true}));
 	if(config.debug){
-		app.all("*",function(req,res,next){
+		app.use(function(req,res,next){
 			res.header({
 				"Access-Control-Allow-Headers":"X-Application-Id,Request,X-Requested-With,Content-Type,Accept,X-Session-Token",
 				"Access-Control-Allow-Origin": "*",
 				"Access-Control-Allow-Methods":"GET,POST,PUT,PATCH,DELETE"
 			});
 			next();
+		})
+		app.options("*",function(req,res){
+			res.send()
 		})
 
 		app.use(require("morgan")("dev"));
