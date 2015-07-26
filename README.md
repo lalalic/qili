@@ -37,7 +37,7 @@ You can use following 3 request to get a session token, and all returns user inf
 * requestPasswordReset
     * post
 
-* role/:id?
+* roles/:id?
     * get
     * post
     * delete
@@ -48,7 +48,7 @@ You can use following 3 request to get a session token, and all returns user inf
     * get token
     * post
 
-* app/:id?
+* apps/:id?
     * get
     * post
     * delete
