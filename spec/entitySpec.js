@@ -1,9 +1,10 @@
 describe("entity", function(){
-	var host="http://127.0.0.1/1",
+	var config=require('./config'),
+		host=config.host,
 		root=host+"/classes/books",
 		$=require('./ajax')(),
 		_=require('underscore');
-	
+
 	it("restore Test database",function(done){
 		$.reset4All(host).then(function(){
 			$.get(root+"/reset4Test")
@@ -22,7 +23,7 @@ describe("entity", function(){
 					done()
 				},done)
 		})
-		
+
 		it("not exists get with id should return error", function(done){
 			$.get(root+"/booknoexist",{error:null})
 				.then(function(data){
@@ -33,7 +34,7 @@ describe("entity", function(){
 					done()
 				})
 		})
-		
+
 		it("[all]", function(done){
 			$.get(root)
 				.then(function(data){
@@ -41,7 +42,7 @@ describe("entity", function(){
 					done()
 				},done)
 		})
-		
+
 		it('?query={name:"raymond"}', function(done){
 			var name='book0'
 			$.get(root+"?query="+JSON.stringify({name:name}))
@@ -49,12 +50,12 @@ describe("entity", function(){
 					expect(data.results).toBeDefined()
 					expect(data.results.length).toBe(4)
 					_.each(data.results,function(book){
-						expect(book.name).toBe(name)		
+						expect(book.name).toBe(name)
 					})
 					done()
 				},done)
 		})
-		
+
 		it("?limit=n", function(done){
 			var name='book0'
 			$.get(root+"?limit=2&query="+JSON.stringify({name:name}))
@@ -62,12 +63,12 @@ describe("entity", function(){
 					expect(data.results).toBeDefined()
 					expect(data.results.length).toBe(2)
 					_.each(data.results,function(book){
-						expect(book.name).toBe(name)		
+						expect(book.name).toBe(name)
 					})
 					done()
 				},done)
 		})
-		
+
 		it("direct doc recturned from ?limit=1", function(done){
 			var name='book0'
 			$.get(root+"?limit=1&query="+JSON.stringify({name:name}))
@@ -76,7 +77,7 @@ describe("entity", function(){
 					done()
 				},done)
 		})
-		
+
 		it("?skip=n", function(done){
 			var name='book0'
 			$.get(root+"?skip=3&query="+JSON.stringify({name:name}))
@@ -84,12 +85,12 @@ describe("entity", function(){
 					expect(data.results).toBeDefined()
 					expect(data.results.length).toBe(1)
 					_.each(data.results,function(book){
-						expect(book.name).toBe(name)		
+						expect(book.name).toBe(name)
 					})
 					done()
 				},done)
 		})
-		
+
 		it("?sort={name:1}", function(done){
 			$.get(root+"?limit=2&skip=7&sort="+JSON.stringify({name:1}))
 				.then(function(data){
@@ -100,7 +101,7 @@ describe("entity", function(){
 					done()
 				},done)
 		})
-		
+
 		it("?sort={name:-1}", function(done){
 			$.get(root+"?limit=2&sort="+JSON.stringify({name:-1}))
 				.then(function(data){
@@ -111,7 +112,7 @@ describe("entity", function(){
 					done()
 				},done)
 		})
-		
+
 		it("?fields={name:1}", function(done){
 			$.get(root+"/book1?fields="+JSON.stringify({name:1}))
 				.then(function(doc){
@@ -119,7 +120,7 @@ describe("entity", function(){
 					done()
 				},done)
 		})
-		
+
 		it("?fields={name:0}", function(done){
 			$.get(root+"/book1?fields="+JSON.stringify({name:0}))
 				.then(function(doc){
@@ -128,7 +129,7 @@ describe("entity", function(){
 				},done)
 		})
 	})
-	
+
 	describe("create with POST" ,function(){
 		it("with _id", function(done){
 			var id='a book created with _id'
@@ -138,7 +139,7 @@ describe("entity", function(){
 					done()
 				},done)
 		})
-		
+
 		it("without _id", function(done){
 			var name='a book created without _id'
 			$.ajax({type:'post',url:root,data:{name:name}})
@@ -148,7 +149,7 @@ describe("entity", function(){
 				},done)
 		})
 	})
-	
+
 	describe('update with PUT/PATCH', function(){
 		it("replace update with PUT", function(done){
 			$.ajax({
@@ -165,7 +166,7 @@ describe("entity", function(){
 						},done)
 				},done)
 		})
-		
+
 		it("patch update with PATCH", function(done){
 			$.ajax({
 					type:'patch',
@@ -182,7 +183,7 @@ describe("entity", function(){
 				},done)
 		})
 	})
-	
+
 	it("delete with DELETE", function(done){
 		$.ajax({
 			type:'delete',

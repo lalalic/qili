@@ -6,11 +6,12 @@ var request=require('request'),
 		encoding:'utf-8',
 		headers:{}
 	};
-	
+
+jasmine.getEnv().defaultTimeoutInterval = 50000
 module.exports=function(){
 	var defaults=_.extend({},gDefaults), AJAX={};
 	defaults.headers=_.extend({},gDefaults.headers,defaults.headers||{})
-	
+
 	function initParams(uri, options, callback) {
 		var opts;
 		if ((typeof options === 'function') && !callback) callback = options
@@ -26,10 +27,10 @@ module.exports=function(){
 			opts.headers=_.extend({},defaults.headers,opts.headers||{})
 			uri = opts.uri
 		}
-		
+
 		return { uri: uri, options: opts, callback: callback }
 	}
-	
+
 	function ajaxSetup(options, target){
 		target=target||defaults
 		if(options.dataType=='json')
@@ -41,16 +42,16 @@ module.exports=function(){
 		if(options.data && target.json)
 			target.json=options.data
 	}
-	
+
 	function _request(uri,options){
 		var p=new promise.Promise()
 		var params=initParams(uri,options)
 		uri=params.uri
 		options=params.options
-		
+
 		options.error && p.addErrback(options.error)
 		delete options.error
-		
+
 		request(uri, options, function(error, response, body){
 			if(error)
 				p.reject(error)
@@ -61,7 +62,7 @@ module.exports=function(){
 		})
 		return p
 	}
-	
+
 	_.each("get,delete,put,post,patch".split(','),function(key){
 		this[key]=function(uri, options, callback){
 			var params = initParams(uri, options, callback)
@@ -69,17 +70,17 @@ module.exports=function(){
 			return _request(params.uri || null, params.options, params.callback)
 		}
 	},AJAX)
-	
+
 	AJAX.ajax=function(options){
 		return _request(options.url,options)
 	}
-	
+
 	AJAX.inspect=inspect
 	AJAX.fail=fail
 	AJAX.ajaxSetup=ajaxSetup
-	
+
 	jasmine.getEnv().defaultTimeoutInterval = 250;
-	
+
 	ajaxSetup({
 		async:false,
 		dataType:"json",
@@ -91,7 +92,7 @@ module.exports=function(){
 			expect(error).toBe(null)
 		}
 	})
-	
+
 	AJAX.reset4All=function(host){
 		return this.get(host+"/apps/reset4Test",{
 			dataType:"json",
@@ -107,7 +108,7 @@ module.exports=function(){
 			expect(result.ok).toBe(1)
 		})
 	}
-	
+
 	return AJAX
 }
 
@@ -117,4 +118,3 @@ function inspect(o){
 function fail(error){
 	expect(error||true).toBeUndefined()
 }
-	

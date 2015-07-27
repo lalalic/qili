@@ -95,7 +95,7 @@ export default class Main extends Entity{
 		}
 	}
 
-	static resolvSessionToken:(token){
+	static resolvSessionToken(token){
 		return {_id:token||"test", username:token||"test"}
 	}
 

@@ -47,11 +47,11 @@ export default class Main{
 	}
 
 	get clazz(){
-		return this.prototype.constructor
+		return this.constructor
 	}
 
 	static isHttpRequest(req){
-		return request && request.header && true
+		return req && req.header && true
 	}
 
 	static get version(){

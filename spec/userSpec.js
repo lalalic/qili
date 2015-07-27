@@ -1,9 +1,10 @@
 describe("user", function(){
-	var host="http://127.0.0.1/1",
+	var config=require('./config'),
+		host=config.host,
 		root=host+"/users",	
 		$=require('./ajax')(),
 		_=require('underscore');
-	
+
 	it("restore Test database",function(done){
 		$.reset4All(host).then(function(){
 			$.get(root+"/reset4Test")
@@ -14,12 +15,12 @@ describe("user", function(){
 			},done)
 		},done)
 	})
-	
+
 	describe("Account service", function(){
 		it("post to signup", function(done){
 			$.ajax({
 				type:"post",
-				url: root, 
+				url: root,
 				data:{username:"test1",password:"test1",email:"test1@139.com"}
 			}).then(function(user){
 				expect(user.sessionToken).toBeDefined()
@@ -28,7 +29,7 @@ describe("user", function(){
 				done()
 			},done)
 		})
-		
+
 		it("get /login", function(done){
 			$.get(host+"/login?username=test&password=test0123")
 				.then(function(user){
@@ -38,7 +39,7 @@ describe("user", function(){
 					done()
 				},done)
 		})
-		
+
 		it("get /me with header 'X-Session-Token' of signedIn user to restore session", function(done){
 			$.get(root+"/me",{headers:{'X-Session-Token':'test'}})
 				.then(function(user){
@@ -48,7 +49,7 @@ describe("user", function(){
 					done()
 				},done)
 		})
-		
+
 		it("get /me with header 'X-Session-Token' of not signedIn user to restore session", function(done){
 			$.get(root+"/me",{headers:{'X-Session-Token':'test54'},error: null})
 				.then(function(user){
@@ -60,7 +61,7 @@ describe("user", function(){
 				})
 		})
 	})
-	
+
 	it("/requestPasswordReset", function(done){
 		$.ajax({
 			type:"post",

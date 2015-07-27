@@ -1,10 +1,11 @@
 describe("application log service should provide", function(){
-	var host="http://127.0.0.1/1",
+	var config=require('./config'),
+		host=config.host,
 		root=host+"/logs",
 		$=require('./ajax')(),
 		_=require('underscore'),
 		ACCESS=9,ERROR=2,WARN=1,INFO=0;
-	
+
 	function changeCloudCode(done,f,data,appId){
 		var code="("+f.toString()+")(Cloud"+(data ? ","+JSON.stringify(data) : '')+");"
 		appId=appId||'test'
@@ -30,7 +31,7 @@ describe("application log service should provide", function(){
 			},done)
 		},done)
 	}
-	
+
 	it("restore Test database",function(done){
 		$.reset4All(host).then(function(){
 			$.get(root+"/reset4Test")
@@ -40,7 +41,7 @@ describe("application log service should provide", function(){
 				},done)
 		},done)
 	})
-	
+
 	describe("individual application level log, including ", function(){
 		it("application runtime log", function(done){
 			$.get(root)
@@ -49,7 +50,7 @@ describe("application log service should provide", function(){
 				done()
 			},done)
 		})
-		
+
 		it("http access log", function(done){
 			$.get(root)
 			.then(function(docs){
@@ -61,7 +62,7 @@ describe("application log service should provide", function(){
 				},done)
 			},done)
 		})
-		
+
 		describe("query", function(){
 			it("all logs", function(done){
 				$.get(root)
@@ -70,7 +71,7 @@ describe("application log service should provide", function(){
 					done()
 				},done)
 			})
-			
+
 			describe("by level", function(){
 				it("access log", function(done){
 					$.get(root+"?query="+JSON.stringify({level:ACCESS}))
@@ -80,7 +81,7 @@ describe("application log service should provide", function(){
 						done()
 					},done)
 				})
-				
+
 				it("error log", function(done){
 					changeCloudCode(done,function(Cloud){
 						Cloud.define('test',function(req, res){
@@ -105,7 +106,7 @@ describe("application log service should provide", function(){
 						},done)
 					})
 				})
-				
+
 				it("warning log", function(done){
 					changeCloudCode(done,function(Cloud){
 						Cloud.define('test',function(req, res){
@@ -130,7 +131,7 @@ describe("application log service should provide", function(){
 						},done)
 					})
 				})
-				
+
 				it("info log", function(done){
 					changeCloudCode(done,function(Cloud){
 						Cloud.define('test',function(req, res){
@@ -158,7 +159,7 @@ describe("application log service should provide", function(){
 				})
 			})
 		})
-		
+
 		function changeLogLevel(done,level){
 			return $.ajax({
 				type:'patch',
@@ -178,13 +179,13 @@ describe("application log service should provide", function(){
 				},done)
 			},done)
 		}
-		
+
 		describe("log level on application", function(){
 			it("set on application", function(done){
 				changeLogLevel(done,INFO)
 				.then(done,done)
 			})
-			
+
 			it("access is lowest level, and always logged", function(done){
 				$.get(root+"?query="+JSON.stringify({level:ACCESS}))
 				.then(function(docs){
@@ -196,12 +197,12 @@ describe("application log service should provide", function(){
 							.then(function(docs){
 								expect(docs.results).toBeDefined()
 								expect(docs.results.length-len).toBe(1)
-								done()								
+								done()
 							},done)
 					},done)
 				},done)
 			})
-			
+
 			it("only error logged", function(done){
 				$.get(root)
 				.then(function(docs){//+1
@@ -224,23 +225,23 @@ describe("application log service should provide", function(){
 								.then(function(docs){
 									expect(docs.results).toBeDefined()
 									expect(docs.results.length-len).toBe(3)
-									done()								
+									done()
 								},done)
 							},done)
-							
+
 						},done)
-						
+
 					},done)
 				},done)
 			})
 		})
-		
+
 		it("support dump logs", function(){
-			
+
 		})
-		
+
 		it("clear all logs", function(){
-			
+
 		})
 	})
 })

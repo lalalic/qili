@@ -27,3 +27,5 @@ view/dashboard
 
 # Users Environment Variables
 .lock-wscript
+
+dist

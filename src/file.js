@@ -5,7 +5,7 @@ var qiniu=require("qiniu"),
 	Entity=require("./entity");
 
 export default class Main extends Entity{
-	constructor: function(req, res){
+	constructor(req, res){
 		super(req, res)
 		this.policy={
 			scope:config.qiniu.bucket,

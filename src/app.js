@@ -311,7 +311,7 @@ export default class Main extends Entity{
 		return _.extend({},Entity.routes,{
 			"get reset4Test": function(req, res){
 				var service=new this(req,res),
-					path=__dirname+"/../test/data/"+service.kind+".js",
+					path=__dirname+"/../spec/data/"+service.kind+".js",
 					fs=require('fs'),
 					exists=fs.existsSync(path),
 					content=exists ? require('fs').readFileSync(path, 'utf8') : null,
@@ -356,7 +356,7 @@ export default class Main extends Entity{
 						this.send(res, indexes)
 					}.bind(this), this.error(res))
 			}
-		}
+		})
 	}
 
 	static init(){

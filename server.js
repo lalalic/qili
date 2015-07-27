@@ -4,8 +4,8 @@ var numCPUs = require('os').cpus().length;
 
 var config = module.exports.config={
 	"db" : {
-		'port' : 27017,
-		'host' : "localhost"
+		'port' : 32772,
+		'host' : "192.168.99.100"
 	},
 	'server' : {
 		'port' : 9080,

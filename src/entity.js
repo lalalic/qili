@@ -6,7 +6,7 @@ var Service=require('./service'),
 	ObjectID = mongo.ObjectID,
 	Internal_API=require("../server").config.Internal_API;
 
-export default class Main extends Sevice{
+export default class Main extends Service{
 	constructor(req, res){
 		super(req, res)
 		if(this.clazz.isHttpRequest(req) && req.params.collection){
@@ -308,7 +308,7 @@ export default class Main extends Sevice{
 		return {
 			"get reset4Test": function(req, res){
 				var service=new this(req,res),
-					path=__dirname+"/../test/data/"+service.kind+".js",
+					path=__dirname+"/../spec/data/"+service.kind+".js",
 					fs=require('fs'),
 					exists=fs.existsSync(path),
 					content=exists ? require('fs').readFileSync(path, 'utf8') : null,

@@ -13,7 +13,7 @@ var VERSION=require('./service').version,
 		error: function(xhr, status, error){}
 	})
 */
-module.exports= function(app){
+module.exports=function(app){
 	function ajax(options){
 		var xhr={
 				settings:options,
@@ -75,7 +75,7 @@ module.exports= function(app){
 		})
 		return re
 	}
-	
+
 	return {
 		ajax:ajax,
 		get: function(url,options){
@@ -83,4 +83,3 @@ module.exports= function(app){
 		}
 	}
 }
-

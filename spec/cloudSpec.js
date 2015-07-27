@@ -1,11 +1,12 @@
 describe("cloud", function(){
-	var host="http://127.0.0.1/1",
+	var config=require('./config'),
+		host=config.host,
 		kind="books",
 		root=host+"/classes/"+kind,
 		$=require('./ajax')(),
 		_=require('underscore'),
 		promise=require('node-promise');
-	
+
 	it("restore application Test database",function(done){
 		$.reset4All(host)
 		.then(function(){
@@ -16,7 +17,7 @@ describe("cloud", function(){
 				},done)
 		},done)
 	})
-	
+
 	function changeCloudCode(done,f,data,appId){
 		var code="("+f.toString()+")(Cloud"+(data ? ","+JSON.stringify(data) : '')+");"
 		appId=appId||'test'
@@ -42,8 +43,8 @@ describe("cloud", function(){
 			},done)
 		},done)
 	}
-	
-		
+
+
 	describe("of collections",function(){
 		it("can inject code before creating document",function(done){
 			changeCloudCode(done,function(Cloud){
@@ -61,7 +62,7 @@ describe("cloud", function(){
 					},done)
 			},done)
 		})
-		
+
 		it("can inject code after creating document",function(done){
 			changeCloudCode(done,function(Cloud){
 				Cloud.afterCreate('books', function(req, res){
@@ -80,7 +81,7 @@ describe("cloud", function(){
 					},done)
 			},done)
 		})
-		
+
 		it("can inject code before updating document",function(done){
 			changeCloudCode(done,function(Cloud){
 				Cloud.beforeUpdate('books', function(req, res){
@@ -91,17 +92,17 @@ describe("cloud", function(){
 					.then(function(m){
 						expect(m.user).toBeDefined()
 						expect(m.user._id).toBe('test')
-						
+
 						expect(m.object).toBeDefined()
 						expect(m.object['$set'].name).toBe('a')
-						
+
 						expect(m.old).toBeDefined()
 						expect(m.old._id).toBe('book1')
 						done()
 					},done)
 			},done)
 		})
-		
+
 		it("can inject code after updating document",function(done){
 			changeCloudCode(done,function(Cloud){
 				Cloud.afterUpdate('books', function(req, res){
@@ -116,7 +117,7 @@ describe("cloud", function(){
 						expect(m.object).toBeDefined()
 						expect(m.object._id).toBe('book2')
 						expect(m.object.name).toBe('goodbook')
-						
+
 						expect(m.old).toBeUndefined()
 						done()
 					},done)
@@ -132,7 +133,7 @@ describe("cloud", function(){
 					.then(function(m){
 						expect(m.user).toBeDefined()
 						expect(m.user._id).toBe('test')
-						
+
 						expect(m.object).toBeDefined()
 						expect(m.object._id).toBe('book3')
 						expect(m.object.name).toBeDefined()
@@ -140,7 +141,7 @@ describe("cloud", function(){
 					},done)
 			},done)
 		})
-		
+
 		it("can inject code after deleting document",function(done){
 			changeCloudCode(done,function(Cloud){
 				Cloud.afterRemove('books', function(req, res){
@@ -151,7 +152,7 @@ describe("cloud", function(){
 					.then(function(m){
 						expect(m.user).toBeDefined()
 						expect(m.user._id).toBe('test')
-						
+
 						expect(m.object).toBeDefined()
 						expect(m.object._id).toBe('book4')
 						expect(m.object.name).toBeDefined()
@@ -168,7 +169,7 @@ describe("cloud", function(){
 					},done)
 			},done)
 		})
-		
+
 		it("return error directly",function(done){
 			changeCloudCode(done,function(Cloud){
 				Cloud.beforeCreate('books', function(req, res){
@@ -186,7 +187,7 @@ describe("cloud", function(){
 			},done)
 		})
 	})
-	
+
 	describe("of rest functions", function(){
 		it("can create", function(done){
 			changeCloudCode(done,function(Cloud){
@@ -202,10 +203,10 @@ describe("cloud", function(){
 					expect(m.params.hello).toBe(1)
 					done()
 				},done)
-			},done)		
+			},done)
 		})
 	})
-	
+
 	describe("context seperation:root,global,native object", function(){
 		it("can NOT change other application's context", function(done){
 			promise.allOrNone([
@@ -248,13 +249,13 @@ describe("cloud", function(){
 						try{
 							a.b=1
 						}catch(e){
-							expect(error).toBe(e.message)	
+							expect(error).toBe(e.message)
 						}
 						done()
 					})
 				},done)
 			})
-			
+
 			it("can NOT shutdown vm", function(done){
 				changeCloudCode(done,function(Cloud){
 					Cloud.define('test',function(req, res){
@@ -272,7 +273,7 @@ describe("cloud", function(){
 					})
 				},done)
 			})
-			
+
 			it("should timeout for long time execution", function(done){
 				changeCloudCode(done,function(Cloud){
 					Cloud.define('test',function(req, res){
@@ -293,7 +294,7 @@ describe("cloud", function(){
 			},1000)
 		})
 	})
-	
+
 	describe("shared modules", function(){
 		_.each("underscore,backbone,ajax,node-promise".split(","), function(module){
 			describe(module, function(){
@@ -310,7 +311,7 @@ describe("cloud", function(){
 						},done)
 					},done)
 				})
-				
+
 				describe("seperation", function(){
 					it("application level", function(done){
 						promise.allOrNone([
@@ -340,10 +341,10 @@ describe("cloud", function(){
 							},done)
 					})
 				})
-			})	
+			})
 		})
 	})
-	
+
 	describe("server side require('ajax')", function(){
 		it("restore application Test database",function(done){
 			$.reset4All(host)
@@ -355,7 +356,7 @@ describe("cloud", function(){
 					},done)
 			},done)
 		})
-		
+
 		it("not exists get with id return error", function(done){
 				changeCloudCode(done,function(Cloud,root){
 					var $=require('ajax')
@@ -374,7 +375,7 @@ describe("cloud", function(){
 					})
 				},done)
 			})
-		
+
 		describe("query with GET", function(){
 			it(":id",function(done){
 				changeCloudCode(done,function(Cloud,root){
@@ -391,9 +392,9 @@ describe("cloud", function(){
 					},done)
 				},done)
 			})
-			
-			
-			
+
+
+
 			it("[all]", function(done){
 				changeCloudCode(done,function(Cloud,root){
 					var $=require('ajax')
@@ -410,7 +411,7 @@ describe("cloud", function(){
 					},done)
 				},done)
 			})
-			
+
 			it('?query={name:"raymond"}', function(done){
 				changeCloudCode(done,function(Cloud,root){
 					var $=require('ajax')
@@ -424,7 +425,7 @@ describe("cloud", function(){
 						expect(data.results).toBeDefined()
 						expect(data.results.length).toBe(4)
 						_.each(data.results,function(book){
-							expect(book.name).toBe('book0')		
+							expect(book.name).toBe('book0')
 						})
 						done()
 					},done)
@@ -445,13 +446,13 @@ describe("cloud", function(){
 						expect(data.results).toBeDefined()
 						expect(data.results.length).toBe(2)
 						_.each(data.results,function(book){
-							expect(book.name).toBe(name)		
+							expect(book.name).toBe(name)
 						})
 						done()
 					},done)
 				},done)
 			})
-			
+
 			it("direct doc recturned from ?limit=1", function(done){
 				var name='book0'
 				changeCloudCode(done,function(Cloud,root){
@@ -468,7 +469,7 @@ describe("cloud", function(){
 					},done)
 				},done)
 			})
-			
+
 			it("?skip=n", function(done){
 				var name='book0'
 				changeCloudCode(done,function(Cloud,root){
@@ -483,13 +484,13 @@ describe("cloud", function(){
 						expect(data.results).toBeDefined()
 						expect(data.results.length).toBe(1)
 						_.each(data.results,function(book){
-							expect(book.name).toBe(name)		
+							expect(book.name).toBe(name)
 						})
 						done()
 					},done)
 				},done)
 			})
-			
+
 			it("?sort={name:1}", function(done){
 				changeCloudCode(done,function(Cloud,root){
 					var $=require('ajax')
@@ -508,7 +509,7 @@ describe("cloud", function(){
 					},done)
 				},done)
 			})
-			
+
 			it("?sort={name:-1}", function(done){
 				changeCloudCode(done,function(Cloud,root){
 					var $=require('ajax')
@@ -527,7 +528,7 @@ describe("cloud", function(){
 					},done)
 				},done)
 			})
-			
+
 			it("?fields={name:1}", function(done){
 				changeCloudCode(done,function(Cloud,root){
 					var $=require('ajax')
@@ -543,7 +544,7 @@ describe("cloud", function(){
 					},done)
 				},done)
 			})
-			
+
 			it("?fields={name:0}", function(done){
 				changeCloudCode(done,function(Cloud,root){
 					var $=require('ajax')
@@ -560,7 +561,7 @@ describe("cloud", function(){
 				},done)
 			})
 		})
-		
+
 		describe("create with POST" ,function(){
 			it("with _id", function(done){
 				var id='a book created with _id';
@@ -578,9 +579,9 @@ describe("cloud", function(){
 						done()
 					},done)
 				},done)
-				
+
 			})
-			
+
 			it("without _id", function(done){
 				var name='a book created without _id'
 				changeCloudCode(done,function(Cloud,root){
@@ -599,7 +600,7 @@ describe("cloud", function(){
 				},done)
 			})
 		})
-		
+
 		describe('update with PUT/PATCH', function(){
 			it("replace update with PUT", function(done){
 				changeCloudCode(done,function(Cloud,root){
@@ -626,7 +627,7 @@ describe("cloud", function(){
 					},done)
 				},done)
 			})
-			
+
 			it("patch update with PATCH", function(done){
 				changeCloudCode(done,function(Cloud,root){
 					var $=require('ajax')
@@ -653,7 +654,7 @@ describe("cloud", function(){
 				},done)
 			})
 		})
-		
+
 		it("delete with DELETE", function(done){
 			changeCloudCode(done,function(Cloud,root){
 				var $=require('ajax')
@@ -672,9 +673,9 @@ describe("cloud", function(){
 				},done)
 			},done)
 		})
-		
+
 	})
-	
+
 	describe("backbone in server side", function(){
 		it("restore application Test database",function(done){
 			$.reset4All(host)
@@ -686,7 +687,7 @@ describe("cloud", function(){
 					},done)
 			},done)
 		})
-		
+
 		it("get",function(done){
 			changeCloudCode(done,function(Cloud,root){
 				var backbone=require('backbone'),
@@ -705,7 +706,7 @@ describe("cloud", function(){
 				},done)
 			},done)
 		})
-		
+
 		it("create",function(done){
 			changeCloudCode(done,function(Cloud,root){
 				var backbone=require('backbone'),
@@ -728,7 +729,7 @@ describe("cloud", function(){
 				},done)
 			},done)
 		})
-		
+
 		it("put update",function(done){
 			changeCloudCode(done,function(Cloud,root){
 				var backbone=require('backbone'),
@@ -751,7 +752,7 @@ describe("cloud", function(){
 				},done)
 			},done)
 		})
-		
+
 		it("patch update",function(done){
 			changeCloudCode(done,function(Cloud,root){
 				var backbone=require('backbone'),
@@ -774,7 +775,7 @@ describe("cloud", function(){
 				},done)
 			},done)
 		})
-		
+
 		it("destroy",function(done){
 			changeCloudCode(done,function(Cloud,root){
 				var backbone=require('backbone'),
