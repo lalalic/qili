@@ -4,8 +4,8 @@ var numCPUs = require('os').cpus().length;
 
 var config = module.exports.config={
 	"db" : {
-		'port' : 32772,
-		'host' : "192.168.99.100"
+		'port' : 27017,
+		'host' : "localhost"
 	},
 	'server' : {
 		'port' : 9080,
@@ -43,9 +43,17 @@ if (false && cluster.isMaster) {
 	var app = module.exports.app = express();
 
 	var bodyParser = require("body-parser");
+
 	app.use(bodyParser.json());
 	app.use(bodyParser.urlencoded({extended : true}));
+
+	app.use(require('./lib/app').resolve)
+	app.use(require('./lib/user').resolve)
+
+
 	if(config.debug){
+		require('express-debug')(app)
+
 		app.use(function(req,res,next){
 			res.header({
 				"Access-Control-Allow-Headers":"X-Application-Id,Request,X-Requested-With,Content-Type,Accept,X-Session-Token",
