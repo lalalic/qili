@@ -43,14 +43,6 @@ describe("application log service should provide", function(){
 	})
 
 	describe("individual application level log, including ", function(){
-		it("application runtime log", function(done){
-			$.get(root)
-			.then(function(docs){
-				expect(docs.results.length).toBe(1)
-				done()
-			},done)
-		})
-
 		it("http access log", function(done){
 			$.get(root)
 			.then(function(docs){
