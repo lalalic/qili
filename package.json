@@ -52,6 +52,7 @@
   },
   "readme": "README.md",
   "devDependencies": {
+    "crypto": "0.0.3",
     "express-debug": "^1.1.1",
     "gulp": "^3.9.0",
     "gulp-shell": "^0.4.2",

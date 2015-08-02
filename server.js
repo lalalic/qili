@@ -3,16 +3,17 @@ var http = require('http');
 var numCPUs = require('os').cpus().length;
 
 var config = module.exports.config={
-	"db" : {
-		'port' : 27017,
-		'host' : "localhost"
+	db : {
+		port : 32772,
+		host : "192.168.99.100"
 	},
-	'server' : {
-		'port' : 9080,
-		'https' : 9443,
-		'timeout' : 120,
-		'address' : "0.0.0.0"
+	server : {
+		port : 9080,
+		https : 9443,
+		timeout : 120,
+		address : "0.0.0.0"
 	},
+	data_inited:true,
 	qiniu:{
 		ACCESS_KEY:"1o_JaGUUb8nVxRpDGoAYB9tjLT10WD7PBFVtMmVT",
 		SECRET_KEY:"r2nd182ZXzuCiCN7ZLoJPFVPZHqCxaUaE73RjKaW",
@@ -20,13 +21,14 @@ var config = module.exports.config={
 		accessURL:"http://qiniudn.com",
 		expires:600,
 	},
+	wechat:{
+		token:''
+	},
 	debug:true,
 	sharedModules:"underscore,backbone,node-promise,ajax".split(","),
 	Internal_API:["users,roles,files,logs".split(",")],
 	domain:"http://qili2.com"
 };
-
-require("./lib/cloud").support()
 
 if (false && cluster.isMaster) {
 	// Fork workers.
@@ -38,6 +40,8 @@ if (false && cluster.isMaster) {
 		console.log('worker ' + worker.pid + ' died');
 	});
 } else {
+	require("./lib/cloud").support()
+
 	// Worker processes have a http server.
 	var express = require('express');
 	var app = module.exports.app = express();
@@ -47,8 +51,9 @@ if (false && cluster.isMaster) {
 	app.use(bodyParser.json());
 	app.use(bodyParser.urlencoded({extended : true}));
 
-	app.use(require('./lib/app').resolve)
-	app.use(require('./lib/user').resolve)
+	app.use(require('./lib/wechat').resolve())
+	app.use(require('./lib/app').resolve())
+	app.use(require('./lib/user').resolve())
 
 
 	if(config.debug){
@@ -79,11 +84,9 @@ if (false && cluster.isMaster) {
 	require("./lib/app").init()
 	require("./lib/entity").init()
 
-
-	app.use(express.static(__dirname+'/view'));
-
 	// Bind to a port
 	app.listen(config.server.port, config.server.address);
+
 	app.on('connection', function (socket) {
 		socket.setTimeout(config.server.timeout * 1000);
 		console.log("server is ready");
