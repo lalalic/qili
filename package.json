@@ -6,12 +6,6 @@
     "name": "Raymond Li",
     "email": "lalalic@139.com"
   },
-  "devDepencies": {
-    "morgan": "~1.5.x",
-    "cors": "~2.5.x",
-    "gulp": "^3.8.11",
-    "gulp-shell": "^0.4.1"
-  },
   "dependencies": {
     "babel": "^5.6.14",
     "backbone": "~1.1.x",
@@ -56,6 +50,7 @@
     "express-debug": "^1.1.1",
     "gulp": "^3.9.0",
     "gulp-shell": "^0.4.2",
+    "morgan": "^1.6.1",
     "request": "^2.60.0"
   }
 }
