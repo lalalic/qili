@@ -4,8 +4,8 @@ var numCPUs = require('os').cpus().length;
 
 var config = module.exports.config={
 	db : {
-		port : 32772,
-		host : "192.168.99.100"
+		port : 27017,
+		host : "localhost"
 	},
 	server : {
 		port : 9080,
@@ -20,9 +20,6 @@ var config = module.exports.config={
 		bucket:"mobiengine",
 		accessURL:"http://qiniudn.com",
 		expires:600,
-	},
-	wechat:{
-		token:''
 	},
 	debug:true,
 	sharedModules:"underscore,backbone,node-promise,ajax".split(","),
