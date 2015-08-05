@@ -40,7 +40,7 @@ describe('File Service', function(){
 			var key="test/"+Date.now()
 			qiniu.io.put(token,key,"test",null,function(error,response){
 				if(error)
-					expect(error).toBetruthy();
+					expect(error).toBeTruthy();
 				else
 					$.fail()
 				done()

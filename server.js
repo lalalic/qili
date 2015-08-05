@@ -13,7 +13,6 @@ var config = module.exports.config={
 		timeout : 120,
 		address : "0.0.0.0"
 	},
-	data_inited:true,
 	qiniu:{
 		ACCESS_KEY:"1o_JaGUUb8nVxRpDGoAYB9tjLT10WD7PBFVtMmVT",
 		SECRET_KEY:"r2nd182ZXzuCiCN7ZLoJPFVPZHqCxaUaE73RjKaW",
@@ -22,6 +21,7 @@ var config = module.exports.config={
 		expires:600,
 	},
 	debug:true,
+	data_inited:false,
 	sharedModules:"underscore,backbone,node-promise,ajax".split(","),
 	Internal_API:["users,roles,files,logs".split(",")],
 	domain:"http://qili2.com"
