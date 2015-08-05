@@ -1,4 +1,4 @@
-FROM registry.mirrors.aliyuncs.com/library/node:0.12-onbuild
+FROM registry.mirrors.aliyuncs.com/library/node:0.12
 
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
