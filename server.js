@@ -22,6 +22,9 @@ var config = module.exports.config={
 	},
 	debug:true,
 	data_inited:false,
+	cloud:{
+		timeout:3000
+	},
 	sharedModules:"underscore,backbone,node-promise,ajax".split(","),
 	Internal_API:["users,roles,files,logs".split(",")],
 	domain:"http://qili2.com"

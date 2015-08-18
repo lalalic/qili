@@ -32,6 +32,26 @@ describe("application log service should provide", function(){
 		},done)
 	}
 
+	function changeLogLevel(done,level){
+		return $.ajax({
+			type:'patch',
+			url:host+"/apps/test",
+			data:{logLevel:level},
+			headers:{
+				"X-Application-Id":"admin",
+				"X-Session-Token":"test"
+			}
+		}).then(function(doc){
+			expect(doc.updatedAt).toBeDefined()
+			return $.get(host+"/apps/test",{headers:{
+				"X-Application-Id":"admin",
+				"X-Session-Token":"test"
+			}}).then(function(doc){
+				expect(doc.logLevel).toBe(level)
+			},done)
+		},done)
+	}
+
 	it("restore Test database",function(done){
 		$.reset4All(host).then(function(){
 			$.get(root+"/reset4Test")
@@ -81,21 +101,23 @@ describe("application log service should provide", function(){
 							res.success("good")
 						})
 					}).then(function(){
-						$.get(root+"?query="+JSON.stringify({level:ERROR}))
-						.then(function(docs){
-							expect(docs.results).toBeDefined()
-							var len=docs.results.length
-							$.get(host+"/functions/test")
-							.then(function(m){
-								expect(m).toBe('good')
-								$.get(root+"?query="+JSON.stringify({level:ERROR}))
-								.then(function(docs){
-									expect(docs.results).toBeDefined()
-									expect(docs.results.length-len).toBe(1)
-									done()
+						changeLogLevel(done,ERROR).then(function(){
+							$.get(root+"?query="+JSON.stringify({level:ERROR}))
+							.then(function(docs){
+								expect(docs.results).toBeDefined()
+								var len=docs.results.length
+								$.get(host+"/functions/test")
+								.then(function(m){
+									expect(m).toBe('good')
+									$.get(root+"?query="+JSON.stringify({level:ERROR}))
+									.then(function(docs){
+										expect(docs.results).toBeDefined()
+										expect(docs.results.length-len).toBe(1)
+										done()
+									},done)
 								},done)
 							},done)
-						},done)
+						})
 					})
 				})
 
@@ -106,21 +128,23 @@ describe("application log service should provide", function(){
 							res.success("good")
 						})
 					}).then(function(){
-						$.get(root+"?query="+JSON.stringify({level:WARN}))
-						.then(function(docs){
-							expect(docs.results).toBeDefined()
-							var len=docs.results.length
-							$.get(host+"/functions/test")
-							.then(function(m){
-								expect(m).toBe('good')
-								$.get(root+"?query="+JSON.stringify({level:WARN}))
-								.then(function(docs){
-									expect(docs.results).toBeDefined()
-									expect(docs.results.length-len).toBe(1)
-									done()
+						changeLogLevel(done,WARN).then(function(){
+							$.get(root+"?query="+JSON.stringify({level:WARN}))
+							.then(function(docs){
+								expect(docs.results).toBeDefined()
+								var len=docs.results.length
+								$.get(host+"/functions/test")
+								.then(function(m){
+									expect(m).toBe('good')
+									$.get(root+"?query="+JSON.stringify({level:WARN}))
+									.then(function(docs){
+										expect(docs.results).toBeDefined()
+										expect(docs.results.length-len).toBe(1)
+										done()
+									},done)
 								},done)
 							},done)
-						},done)
+						})
 					})
 				})
 
@@ -132,45 +156,27 @@ describe("application log service should provide", function(){
 							res.success("good")
 						})
 					}).then(function(){
-						$.get(root+"?query="+JSON.stringify({level:INFO}))
-						.then(function(docs){
-							expect(docs.results).toBeDefined()
-							var len=docs.results.length
-							$.get(host+"/functions/test")
-							.then(function(m){
-								expect(m).toBe('good')
-								$.get(root+"?query="+JSON.stringify({level:INFO}))
-								.then(function(docs){
-									expect(docs.results).toBeDefined()
-									expect(docs.results.length-len).toBe(2)
-									done()
+						changeLogLevel(done,INFO).then(function(){
+							$.get(root+"?query="+JSON.stringify({level:INFO}))
+							.then(function(docs){
+								expect(docs.results).toBeDefined()
+								var len=docs.results.length
+								$.get(host+"/functions/test")
+								.then(function(m){
+									expect(m).toBe('good')
+									$.get(root+"?query="+JSON.stringify({level:INFO}))
+									.then(function(docs){
+										expect(docs.results).toBeDefined()
+										expect(docs.results.length-len).toBe(2)
+										done()
+									},done)
 								},done)
 							},done)
-						},done)
+						})
 					})
 				})
 			})
 		})
-
-		function changeLogLevel(done,level){
-			return $.ajax({
-				type:'patch',
-				url:host+"/apps/test",
-				data:{logLevel:ERROR},
-				headers:{
-					"X-Application-Id":"admin",
-					"X-Session-Token":"test"
-				}
-			}).then(function(doc){
-				expect(doc.updatedAt).toBeDefined()
-				return $.get(host+"/apps/test",{headers:{
-					"X-Application-Id":"admin",
-					"X-Session-Token":"test"
-				}}).then(function(doc){
-					expect(doc.logLevel).toBe(ERROR)
-				},done)
-			},done)
-		}
 
 		describe("log level on application", function(){
 			it("set on application", function(done){

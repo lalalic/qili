@@ -7,7 +7,6 @@ var request=require('request'),
 		headers:{}
 	};
 
-jasmine.getEnv().defaultTimeoutInterval = 50000
 module.exports=function(){
 	var defaults=_.extend({},gDefaults), AJAX={};
 	defaults.headers=_.extend({},gDefaults.headers,defaults.headers||{})
@@ -78,8 +77,6 @@ module.exports=function(){
 	AJAX.inspect=inspect
 	AJAX.fail=fail
 	AJAX.ajaxSetup=ajaxSetup
-
-	jasmine.getEnv().defaultTimeoutInterval = 60000;
 
 	ajaxSetup({
 		async:false,

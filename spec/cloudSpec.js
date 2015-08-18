@@ -278,20 +278,20 @@ describe("cloud", function(){
 				changeCloudCode(done,function(Cloud){
 					Cloud.define('test',function(req, res){
 						var now=Date.now()
-						while(Date.now()<now+500);
+						while(Date.now()<now+3100);
 						res.success("good")
 					})
 				}).then(function(){
 					$.get(host+"/functions/test",{error:null})
 					.then(function(m){
-						$.fail()
+						$.fail("should throw timeout from server")
 						done()
 					},function(error){
 						expect(error).toBeTruthy()
 						done()
 					})
 				},done)
-			},1000)
+			},5000)
 		})
 	})
 
