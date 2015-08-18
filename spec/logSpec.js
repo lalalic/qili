@@ -49,7 +49,7 @@ describe("application log service should provide", function(){
 				var len=docs.results.length
 				$.get(root)
 				.then(function(docs){
-					expect(docs.results.length-len).toBe(1)
+					expect(docs.results.length).toBeGreaterThan(0)
 					done()
 				},done)
 			},done)

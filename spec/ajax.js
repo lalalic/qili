@@ -79,7 +79,7 @@ module.exports=function(){
 	AJAX.fail=fail
 	AJAX.ajaxSetup=ajaxSetup
 
-	jasmine.getEnv().defaultTimeoutInterval = 250;
+	jasmine.getEnv().defaultTimeoutInterval = 60000;
 
 	ajaxSetup({
 		async:false,
