@@ -2,33 +2,7 @@ var cluster = require('cluster');
 var http = require('http');
 var numCPUs = require('os').cpus().length;
 
-var config = module.exports.config={
-	db : {
-		port : 27017,
-		host : "localhost"
-	},
-	server : {
-		port : 9080,
-		https : 9443,
-		timeout : 120,
-		address : "0.0.0.0"
-	},
-	qiniu:{
-		ACCESS_KEY:"1o_JaGUUb8nVxRpDGoAYB9tjLT10WD7PBFVtMmVT",
-		SECRET_KEY:"r2nd182ZXzuCiCN7ZLoJPFVPZHqCxaUaE73RjKaW",
-		bucket:"mobiengine",
-		accessURL:"http://qiniudn.com",
-		expires:600,
-	},
-	debug:true,
-	data_inited:false,
-	cloud:{
-		timeout:3000
-	},
-	sharedModules:"underscore,backbone,node-promise,ajax".split(","),
-	Internal_API:["users,roles,files,logs".split(",")],
-	domain:"http://qili2.com"
-};
+var config =require('./conf');
 
 if (false && cluster.isMaster) {
 	// Fork workers.
@@ -57,7 +31,7 @@ if (false && cluster.isMaster) {
 
 
 	if(config.debug){
-		require('express-debug')(app)
+		//require('express-debug')(app)
 
 		app.use(function(req,res,next){
 			res.header({

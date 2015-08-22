@@ -41,8 +41,8 @@
     "node": ">= 0.4.4"
   },
   "scripts": {
-    "start": "node server.js",
-    "test": "jasmine-node test"
+    "start": "gulp",
+    "test":"gulp test"
   },
   "readme": "README.md",
   "devDependencies": {

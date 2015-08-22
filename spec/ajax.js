@@ -94,7 +94,7 @@ module.exports=function(){
 		return this.get(host+"/apps/reset4Test",{
 			dataType:"json",
 			headers:{
-				"X-Application-Id":"admin",
+				"X-Application-Id":require("./config").server.adminKey,
 				"X-Session-Token":"test"
 			},
 			error: function(error){

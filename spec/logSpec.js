@@ -14,7 +14,7 @@ describe("application log service should provide", function(){
 			url:host+"/apps/"+appId,
 			data:{cloudCode:code},
 			headers:{
-				"X-Application-Id":"admin",
+				"X-Application-Id":config.server.adminKey,
 				"X-Session-Token":"test"
 			}
 		}).then(function(doc){
@@ -23,7 +23,7 @@ describe("application log service should provide", function(){
 				type:'get',
 				url:host+"/apps/"+appId,
 				headers:{
-					"X-Application-Id":"admin",
+					"X-Application-Id":config.server.adminKey,
 					"X-Session-Token":"test"
 				}
 			}).then(function(doc){
@@ -38,13 +38,13 @@ describe("application log service should provide", function(){
 			url:host+"/apps/test",
 			data:{logLevel:level},
 			headers:{
-				"X-Application-Id":"admin",
+				"X-Application-Id":config.server.adminKey,
 				"X-Session-Token":"test"
 			}
 		}).then(function(doc){
 			expect(doc.updatedAt).toBeDefined()
 			return $.get(host+"/apps/test",{headers:{
-				"X-Application-Id":"admin",
+				"X-Application-Id":config.server.adminKey,
 				"X-Session-Token":"test"
 			}}).then(function(doc){
 				expect(doc.logLevel).toBe(level)

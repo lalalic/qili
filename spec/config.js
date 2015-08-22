@@ -1,6 +1,5 @@
+var conf=require("../conf")
 module.exports={
-    host:"http://127.0.0.1:9080/1",
-    cloud:{
-        timeout:3000
-    }
+    host:"http://127.0.0.1:"+conf.server.port+"/1",
+    server: conf
 }

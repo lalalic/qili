@@ -26,7 +26,7 @@ describe("cloud", function(){
 			url:host+"/apps/"+appId,
 			data:{cloudCode:code},
 			headers:{
-				"X-Application-Id":"admin",
+				"X-Application-Id":config.server.adminKey,
 				"X-Session-Token":"test"
 			}
 		}).then(function(doc){
@@ -35,7 +35,7 @@ describe("cloud", function(){
 				type:'get',
 				url:host+"/apps/"+appId,
 				headers:{
-					"X-Application-Id":"admin",
+					"X-Application-Id":config.server.adminKey,
 					"X-Session-Token":"test"
 				}
 			}).then(function(doc){

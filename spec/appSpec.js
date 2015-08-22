@@ -7,7 +7,7 @@ var config=require('./config'),
 
 	$.ajaxSetup({
 		headers:{
-			"X-Application-Id":"admin",
+			"X-Application-Id":config.server.adminKey,
 			"X-Session-Token":"test"
 		}
 	})
@@ -182,12 +182,12 @@ var config=require('./config'),
 			})
 
 			it("can NOT get others applictions by id", function(done){
-				$.get(root+"/admin",{error:null})
+				$.get(root+"/"+config.adminKey,{error:null})
 				.then(function(doc){
 					$.fail()
 					done()
 				},function(error){
-					expect(error).toBe('no hack')
+					expect(error).toBe('Not exists')
 					done()
 				})
 			})
