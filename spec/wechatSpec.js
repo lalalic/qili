@@ -31,11 +31,18 @@ describe("wechat", function(){
         }, done)
     })
 
-    describe("reply to message", function(){
+    xdescribe("reply to message", function(){
         it("text", function(done){
-            done();
+            $.ajax({
+                type:'post',
+                url:root,
+            }).then(function(){
+
+            })
         })
 
-
+        it("image", function(done){
+            done();
+        })
     })
 })
