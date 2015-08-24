@@ -8,3 +8,6 @@ gulp.task('javascript', shell.task('./node_modules/.bin/babel --stage 0 src --ou
     .task('test', shell.task('jasmine'))
     .task('debugTest', shell.task('node --debug-brk=5959 /usr/local/bin/jasmine'))
     .task('default',['run','inspect'])
+    .task('mongo.docker', shell.task('docker run --name qili.db -p 27017:27017 -v /data/db:/data/db -d registry.mirrors.aliyuncs.com/library/mongo:3.1  --storageEngine=wiredTiger --directoryperdb'))
+    .task('app.docker', shell.task(['docker build --quiet=true --rm=true --tag="qili"',
+            'docker run --name qili -p 80:9080 -v /data/qili/conf.js:/usr/src/app/conf.js --link qili.db:qili.db -d qili ']))
