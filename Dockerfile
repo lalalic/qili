@@ -14,10 +14,10 @@ RUN cnpm install
 #patch for mongodb driver issue with node.js https://github.com/mongodb/js-bson/issues/58
 RUN cd node_modules/mongodb/node_modules/mongodb-core/ & rm -rf node_modules & cnpm install
 
-RUN npm cache clear
+RUN cnpm cache clear
 
 EXPOSE 8080
 
 VOLUME /usr/src/app
 
-CMD ["npm", "start"]
+CMD git pull https://github.com/lalalic/qili.git & cnpm install & npm start
