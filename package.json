@@ -10,12 +10,10 @@
     "babel": "^5.6.14",
     "backbone": "~1.1.x",
     "body-parser": "~1.12.x",
-    "connect-timeout": "^1.6.2",
     "express": "^4.x",
     "formidable": ">=1.0.17",
     "mongodb": "^2.0.39",
     "node-promise": ">=0.5.12",
-    "passport": "^0.2.2",
     "qiniu": "~6.1.x",
     "underscore": "~1.8.x",
     "wechat": "^2.0.1"
