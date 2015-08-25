@@ -9,10 +9,10 @@ RUN npm install cnpm -g --registry=https://registry.npm.taobao.org
 
 RUN cnpm install -g node-gyp
 
-RUN cnpm install
+RUN cnpm install --production
 
 #patch for mongodb driver issue with node.js https://github.com/mongodb/js-bson/issues/58
-RUN cd node_modules/mongodb/node_modules/mongodb-core/ & rm -rf node_modules & cnpm install
+RUN cd node_modules/mongodb/node_modules/mongodb-core/ & rm -rf node_modules & cnpm install --production
 
 RUN cnpm cache clear
 
@@ -20,4 +20,4 @@ EXPOSE 8080
 
 VOLUME /usr/src/app
 
-CMD git pull https://github.com/lalalic/qili.git & cnpm install & npm start
+CMD git pull https://github.com/lalalic/qili.git & cnpm install --production & npm start
