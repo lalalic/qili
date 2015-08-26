@@ -11,6 +11,8 @@ gulp.task('javascript', shell.task('./node_modules/.bin/babel --stage 0 src --ou
     .task('mongo.docker', shell.task('docker run --name qili.db -p 27017:27017 -v /data/db:/data/db -d registry.mirrors.aliyuncs.com/library/mongo:3.1  --storageEngine=wiredTiger --directoryperdb'))
     .task('app.docker', shell.task([
             'docker build --quiet=true --rm=true --tag="qili" .',
-            /*db.host=qili.db*/
+            /* db.host=qili.db*/
             'docker run --name qili.server -p 9080:9080 -v /data/qili/conf.js:/usr/src/app/conf.js --link qili.db -d qili']))
-    .task('nginx.docker', shell.task('docker run --name qili.proxy -v /data/nginx/nginx.conf:/etc/nginx/nginx.conf -p 80:80 --link qili.server -d registry.mirrors.aliyuncs.com/library/nginx'))
+    .task('nginx.docker', shell.task(
+        /*  */
+        'docker run --name qili.proxy -v /data:/data -v /data/qili/nginx.conf:/etc/nginx/nginx.conf  -p 80:80 --link qili.server -d registry.mirrors.aliyuncs.com/library/nginx'))
