@@ -39,7 +39,7 @@
     "node": ">= 0.4.4"
   },
   "scripts": {
-    "start": "gulp",
+    "start": "gulp product",
     "test":"gulp test"
   },
   "readme": "README.md",
