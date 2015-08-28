@@ -39,8 +39,8 @@
     "node": ">= 0.4.4"
   },
   "scripts": {
-    "start": "gulp product",
-    "test":"gulp test"
+    "start": "node server.js",
+    "test": "./node_modules/.bin/jasmine"
   },
   "readme": "README.md",
   "devDependencies": {
@@ -48,6 +48,7 @@
     "express-debug": "^1.1.1",
     "gulp": "^3.9.0",
     "gulp-shell": "^0.4.2",
+    "jasmine": "^2.3.2",
     "morgan": "^1.6.1",
     "request": "^2.60.0"
   }

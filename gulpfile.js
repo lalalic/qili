@@ -3,11 +3,8 @@ var gulp=require('gulp'),
     isWin=/^win/.test(process.platform);
 
 gulp.task('compile', shell.task('./node_modules/.bin/babel --stage 0 src --out-dir dist'))
-    .task('product', shell.task('node server.js'))
-
     .task('debug', shell.task('node --debug=5858 server.js'))
     .task('inspect', shell.task('node-inspector'))
-    .task('test', shell.task('jasmine'))
     .task('debugTest', shell.task('node --debug-brk=5959 /usr/local/bin/jasmine'))
 
     .task('default',['debug','inspect'])
