@@ -30,19 +30,4 @@ describe("wechat", function(){
             done()
         }, done)
     })
-
-    xdescribe("reply to message", function(){
-        it("text", function(done){
-            $.ajax({
-                type:'post',
-                url:root,
-            }).then(function(){
-
-            })
-        })
-
-        it("image", function(done){
-            done();
-        })
-    })
 })

@@ -29,7 +29,6 @@ if (false && cluster.isMaster) {
 	app.use(require('./lib/app').resolve())
 	app.use(require('./lib/user').resolve())
 
-
 	if(config.debug){
 		//require('express-debug')(app)
 

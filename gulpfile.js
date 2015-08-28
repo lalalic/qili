@@ -18,7 +18,7 @@ gulp.task('compile', shell.task('./node_modules/.bin/babel --stage 0 src --out-d
     .task('nginx.docker', shell.task(
         /**/
         'docker run --name qili.proxy -v /data:/data -v /data/qili/nginx.conf:/etc/nginx/nginx.conf  -p 80:80 -p 443:443 --link qili.server -d nginx'))
-    .task('test.docker', shell.task(['docker run --name qili.test --link qili.server -v /data:/data qili gulp test']))
+    .task('test.docker', shell.task(['docker run --name qili.test --link qili.server -v /data/qili:/usr/src/app qili npm test']))
     /* pre:
      * docker images: mongo, nginx, /data/[qili|data|log/nginx]
      * */

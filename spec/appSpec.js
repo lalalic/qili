@@ -16,12 +16,6 @@ var config=require('./config'),
 		$.reset4All(host).then(done,done)
 	})
 
-	xdescribe("application", function(){
-		it("data should be seperated", function(){
-
-		})
-	})
-
 	describe("user", function(){
 		describe("create", function(){
 			it("can create new application, and return application token, and author should be set", function(done){

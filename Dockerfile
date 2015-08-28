@@ -7,7 +7,7 @@ RUN git pull https://github.com/lalalic/qili.git
 
 RUN npm install cnpm -g --registry=https://registry.npm.taobao.org
 
-RUN cnpm install -g node-gyp
+RUN cnpm install -g node-gyp jasmine
 
 RUN cnpm install --production
 

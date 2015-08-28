@@ -1,7 +1,7 @@
 module.exports={
 	db : {
 		port : 27017,
-		host : "localhost"
+		host : "qili.db"
 	},
 	server : {
 		port : 9080,
