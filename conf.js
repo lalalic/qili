@@ -6,25 +6,24 @@ module.exports={
 	server : {
 		port : 9080,
 		https : 9443,
-		timeout : 120,
-		address : "0.0.0.0"
+		timeout : 120
 	},
 	qiniu:{
-		ACCESS_KEY:"1o_JaGUUb8nVxRpDGoAYB9tjLT10WD7PBFVtMmVT",
-		SECRET_KEY:"r2nd182ZXzuCiCN7ZLoJPFVPZHqCxaUaE73RjKaW",
-		bucket:"mobiengine",
+		ACCESS_KEY:"",
+		SECRET_KEY:"",
+		bucket:"",
 		accessURL:"http://qiniudn.com",
 		expires:600,
 	},
-	debug:true,
+	domain:"http://qili2.com", //qiniu need it
+	debug:false,
 	data_inited:false,
 	cloud:{
 		timeout:3000
 	},
-	secret:"adfjalfjasdg",
+	secret:"abcdef",
 	rootPassword:"root",
 	adminKey:"qiliAdmin",
 	sharedModules:"underscore,backbone,node-promise,ajax".split(","),
-	Internal_API:["users,roles,files,logs".split(",")],
-	domain:"http://qili2.com"
+	Internal_API:["users,roles,files,logs".split(",")]
 }

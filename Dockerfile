@@ -4,10 +4,11 @@ RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 RUN git init
 RUN git pull https://github.com/lalalic/qili.git
+COPY conf.js .
 
 RUN npm install cnpm -g --registry=https://registry.npm.taobao.org
 
-RUN cnpm install -g node-gyp jasmine
+RUN cnpm install -g node-gyp jasmine pm2
 
 RUN cnpm install --production
 
@@ -20,4 +21,9 @@ EXPOSE 8080
 
 VOLUME /usr/src/app
 
-CMD git pull https://github.com/lalalic/qili.git & cnpm install --production & npm start
+CMD mv conf.js conf.js.bak && \
+    git checkout conf.js && \
+    git pull https://github.com/lalalic/qili.git && \
+    mv conf.js.bak conf.js && \
+    cnpm install --production && \
+    pm2 start server.js
