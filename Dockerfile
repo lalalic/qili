@@ -8,9 +8,11 @@ COPY conf.product.js ./conf.js
 
 RUN npm install cnpm -g --registry=https://registry.npm.taobao.org
 
-RUN cnpm install -g node-gyp jasmine request pm2
+RUN cnpm install -g node-gyp jasmine pm2
 
 RUN cnpm install --production
+
+RUN cnpm install request
 
 #patch for mongodb driver issue with node.js https://github.com/mongodb/js-bson/issues/58
 RUN cd node_modules/mongodb/node_modules/mongodb-core/ & rm -rf node_modules & cnpm install --production
