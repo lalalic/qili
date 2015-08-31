@@ -9,8 +9,6 @@ var bodyParser = require("body-parser");
 	if(!config.debug)
 		return;
 
-	require('express-debug')(app)
-
 	app.use(function(req,res,next){
 		res.header({
 			"Access-Control-Allow-Headers":"X-Application-Id,Request,X-Requested-With,Content-Type,Accept,X-Session-Token",
