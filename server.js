@@ -2,7 +2,7 @@ var config =require('./conf');
 require("./lib/cloud").support()
 
 var express = require('express');
-var app = module.exports.app = express();
+var app = module.exports.app = express.Router();
 var bodyParser = require("body-parser");
 
 (function debug(){
@@ -29,6 +29,7 @@ var bodyParser = require("body-parser");
 	app.use("/"+config.qiniu.bucket,express.static(__dirname+'/upload/'+config.qiniu.bucket));
 })();
 
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended : true}));
 
@@ -44,13 +45,15 @@ require("./lib/app").init()
 require("./lib/entity").init()
 
 // Bind to a port
-app.listen(config.server.port, "0.0.0.0");
-
-app.on('connection', function (socket) {
+var server=express()
+server.listen(config.server.port, "0.0.0.0")
+server.on('connection', function (socket) {
 	socket.setTimeout(config.server.timeout * 1000);
 	console.log("server is ready");
-});
+})
+server.use("/1",app)
 
 process.on("uncaughtException",function(error){
-	console.error(error)
+	console.error("uncaughtException")
+	console.log(require('util').inspect(error, { depth: null }))
 })
