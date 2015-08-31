@@ -4,7 +4,7 @@ RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 RUN git init
 RUN git pull https://github.com/lalalic/qili.git
-COPY conf.js .
+COPY conf.product.js ./conf.js
 
 RUN npm install cnpm -g --registry=https://registry.npm.taobao.org
 
@@ -17,7 +17,7 @@ RUN cd node_modules/mongodb/node_modules/mongodb-core/ & rm -rf node_modules & c
 
 RUN cnpm cache clear
 
-EXPOSE 8080
+EXPOSE 9080
 
 VOLUME /usr/src/app
 
