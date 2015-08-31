@@ -8,7 +8,7 @@ COPY conf.js .
 
 RUN npm install cnpm -g --registry=https://registry.npm.taobao.org
 
-RUN cnpm install -g node-gyp jasmine pm2
+RUN cnpm install -g node-gyp jasmine request pm2
 
 RUN cnpm install --production
 
@@ -26,4 +26,4 @@ CMD mv conf.js conf.js.bak && \
     git pull https://github.com/lalalic/qili.git && \
     mv conf.js.bak conf.js && \
     cnpm install --production && \
-    pm2 start server.js
+    npm start

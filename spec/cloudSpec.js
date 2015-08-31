@@ -237,8 +237,12 @@ describe("cloud", function(){
 			it("error in code", function(done){
 				changeCloudCode(done,function(Cloud){
 					Cloud.define('test',function(req, res){
-						a.b=1
-						res.success("good")
+						try{
+							a.b=1
+							res.success("good")
+						}catch(error){
+							res.error(error)
+						}
 					})
 				}).then(function(){
 					$.get(host+"/functions/test",{error:null})
@@ -259,8 +263,12 @@ describe("cloud", function(){
 			it("can NOT shutdown vm", function(done){
 				changeCloudCode(done,function(Cloud){
 					Cloud.define('test',function(req, res){
-						root.process.exit()
-						res.success("good")
+						try{
+							root.process.exit()
+							res.success("good")
+						}catch(error){
+							res.error(error)
+						}
 					})
 				}).then(function(){
 					$.get(host+"/functions/test",{error:null})
@@ -278,7 +286,7 @@ describe("cloud", function(){
 				changeCloudCode(done,function(Cloud){
 					Cloud.define('test',function(req, res){
 						var now=Date.now()
-						while(Date.now()<now+3100);
+						while(Date.now()<now+4000);
 						res.success("good")
 					})
 				}).then(function(){

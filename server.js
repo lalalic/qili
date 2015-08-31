@@ -51,7 +51,7 @@ server.on('connection', function (socket) {
 	socket.setTimeout(config.server.timeout * 1000);
 	console.log("server is ready");
 })
-server.use("/1",app)
+server.use("/"+config.version,app)
 
 process.on("uncaughtException",function(error){
 	console.error("uncaughtException")
