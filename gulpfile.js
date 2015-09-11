@@ -1,13 +1,14 @@
 var gulp=require('gulp'),
     shell=require('gulp-shell')
+    function download(file){
+        require('https').get("https://raw.githubusercontent.com/lalalic/dashboard/master/www/"+file,
+            function(response) {
+                response.pipe(require('fs').createWriteStream("www/dashboard/"+file));
+            });
+    }
 
 gulp.task('compile', shell.task('./node_modules/.bin/babel --stage 0 src --out-dir dist'))
-    .task('dashboard', function(){
-        require('https').get("https://raw.githubusercontent.com/lalalic/dashboard/master/www/allin1.html",
-            function(response) {
-                response.pipe(require('fs').createWriteStream("www/dashboard/index.html"));
-            });
-    })
+    .task('dashboard', function(){download("allin1.html"); download("index.html");download("index.js")})
     .task('debug', shell.task('node --debug=5858 server.js'))
     .task('inspect', shell.task('node-inspector'))
     .task('debugTest', shell.task('node --debug-brk=5959 /usr/local/bin/jasmine'))
@@ -21,7 +22,6 @@ gulp.task('compile', shell.task('./node_modules/.bin/babel --stage 0 src --out-d
             /* db.host=qili.db*/
             'docker run --name qili.server -p 9080:9080 --link qili.db -d qili']))
     .task('docker.nginx', shell.task(
-        /**/
         'docker run --name qili.proxy -v /data:/data -v /data/qili/nginx.conf:/etc/nginx/nginx.conf  -p 80:80 -p 443:443 --link qili.server -d nginx'))
     .task('docker.test', shell.task(['docker run --name qili.test --link qili.server qili npm test']))
     /* pre:
