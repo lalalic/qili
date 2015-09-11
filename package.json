@@ -45,11 +45,10 @@
   "readme": "README.md",
   "devDependencies": {
     "crypto": "0.0.3",
-    "express-debug": "^1.1.1",
+    "dashboard": "lalalic/dashboard",
     "gulp": "^3.9.0",
     "gulp-shell": "^0.4.2",
     "jasmine": "^2.3.2",
-    "morgan": "^1.6.1",
     "request": "^2.60.0"
   }
 }
