@@ -52,6 +52,6 @@ server.on('connection', function (socket) {
 server.use("/"+config.version,app)
 
 process.on("uncaughtException",function(error){
-	console.error("uncaughtException")
-	console.log(require('util').inspect(error, { depth: null }))
+	//console.error(error.message)
+	//console.log(require('util').inspect(error, { depth: null }))
 })

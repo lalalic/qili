@@ -17,7 +17,7 @@ module.exports={
 		expires:600,
 	},
 	domain:"http://qili2.com", //qiniu need it
-	debug:false,
+	debug:true,
 	data_inited:false,
 	cloud:{
 		timeout:3000
