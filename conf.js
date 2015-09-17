@@ -23,6 +23,7 @@ module.exports={
 		timeout:3000
 	},
 	secret:"abcdef",
+	root:"root",
 	rootPassword:"root",
 	adminKey:"qiliAdmin",
 	sharedModules:"underscore,backbone,node-promise,ajax".split(","),

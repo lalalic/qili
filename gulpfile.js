@@ -8,7 +8,7 @@ var gulp=require('gulp'),
     }
 
 gulp.task('compile', shell.task('./node_modules/.bin/babel --stage 0 src --out-dir dist'))
-    .task('dashboard', function(){download("allin1.html"); download("index.html");download("index.js")})
+    .task('dashboard', function(){download("allin1.html");})
     .task('debug', shell.task('node --debug=5858 server.js'))
     .task('inspect', shell.task('node-inspector'))
     .task('debugTest', shell.task('node --debug-brk=5959 /usr/local/bin/jasmine'))
