@@ -1,14 +1,6 @@
 var gulp=require('gulp'),
     shell=require('gulp-shell')
-    function download(file, as){
-        require('https').get("https://raw.githubusercontent.com/lalalic/dashboard/master/www/"+file,
-            function(response) {
-                response.pipe(require('fs').createWriteStream("www/dashboard/"+file));
-            });
-    }
-
 gulp.task('compile', shell.task('./node_modules/.bin/babel --stage 0 src --out-dir dist'))
-    .task('dashboard', function(){download("allin1.html", "index.html");})
     .task('debug', shell.task('node --debug=5858 server.js'))
     .task('inspect', shell.task('node-inspector'))
     .task('debugTest', shell.task('node --debug-brk=5959 /usr/local/bin/jasmine'))
