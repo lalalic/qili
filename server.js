@@ -47,11 +47,11 @@ var server=express()
 server.listen(config.server.port, "0.0.0.0")
 server.on('connection', function (socket) {
 	socket.setTimeout(config.server.timeout * 1000);
-	console.log("server is ready");
 })
+
 server.use("/"+config.version,app)
 
 process.on("uncaughtException",function(error){
-	//console.error(error.message)
-	//console.log(require('util').inspect(error, { depth: null }))
+	console.info(new Date())
+	console.dir(error,{depth:null})
 })

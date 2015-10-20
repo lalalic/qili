@@ -22,8 +22,10 @@ RUN cnpm cache clear
 EXPOSE 9080
 
 VOLUME /usr/src/app
+VOLUME /data/log
 
-CMD mv conf.js conf.js.bak && \
+CMD exec > /data/log/qili.log && \
+    mv conf.js conf.js.bak && \
     git checkout conf.js && \
     git pull https://github.com/lalalic/qili.git && \
     mv conf.js.bak conf.js && \
