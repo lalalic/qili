@@ -12,7 +12,7 @@ gulp.task('compile', shell.task('./node_modules/.bin/babel --stage 0 src --out-d
     .task('docker.app', shell.task([
             'docker build --quiet=true --rm=true --tag="qili" .',
             /* db.host=qili.db*/
-            'docker run --name qili.server -p 9080:9080 --link qili.db -d qili']))
+            'docker run --name qili.server -v /data/log:/data/log -p 9080:9080 --link qili.db -d qili']))
     .task('docker.nginx', shell.task(
         'docker run --name qili.proxy -v /data:/data -v /data/qili/nginx.conf:/etc/nginx/nginx.conf  -p 80:80 -p 443:443 --link qili.server -d nginx'))
     .task('docker.test', shell.task(['docker run --name qili.test --link qili.server qili npm test']))
