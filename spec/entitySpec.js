@@ -5,29 +5,51 @@ describe("entity", function(){
 		$=require('./ajax')(),
 		_=require('underscore');
 
-	it("restore Test database",function(done){
-		$.reset4All(host).then(function(){
-			$.get(root+"/reset4Test")
-				.then(function(result){
-					expect(result.ok).toBe(1)
+	beforeAll((done)=>config.init().then(done,done)	)
+
+	afterAll((done)=>config.release().then(done,done))
+
+	var uid=Date.now(), NULL=(a)=>a, createBook
+
+	describe("create with POST" ,function(){
+		it("without _id", function(done){
+			var data={name:`my book ${uid++}`}
+			return $.ajax({type:'post',url:root,data})
+				.then(function(book){
+					expect(book._id).toBeDefined()
+					expect(book.createdAt).toBeDefined()
 					done()
+					book._raw=data
+					return book
 				},done)
-		},done)
+		})
+
+		it("with _id", createBook=function(done){
+			var data={_id:`book${uid++}`, name:`my book ${uid++}`, title:`title ${uid}`}
+			return $.ajax({type:'post',url:root,data})
+				.then(function(book){
+					expect(book._id).toBe(data._id)
+					done()
+					book._raw=data
+					return book
+				},done)
+		})
 	})
 
 	describe("query with GET", function(done){
 		it(":id", function(done){
-			$.get(root+"/book1")
-				.then(function(data){
-					expect(data._id).toBe('book1')
-					done()
-				},done)
+			createBook(NULL).catch($.fail(done,"can't create entity book"))
+				.then((book)=>$.get(`${root}/${book._id}`)
+					.then((data)=>{
+						expect(data._id).toBe(book._id)
+						done()
+					},done))
 		})
 
 		it("not exists get with id should return error", function(done){
-			$.get(root+"/booknoexist",{error:null})
+			$.get(`${root}/book${uid++}`,{error:null})
 				.then(function(data){
-					$.fail()
+					fail()
 					done()
 				},function(error){
 					expect(error).toBe('Not exists')
@@ -36,161 +58,157 @@ describe("entity", function(){
 		})
 
 		it("[all]", function(done){
-			$.get(root)
-				.then(function(data){
-					expect(data.results.length).toBe(10)
-					done()
-				},done)
+			Promise.all([createBook(null),createBook(null)])
+				.then(()=>$.get(root)
+					.then((data)=>{
+						expect(data.results.length).toBeGreaterThan(1)
+						done()
+					},done)
+				,done)
 		})
 
-		it('?query={name:"raymond"}', function(done){
-			var name='book0'
-			$.get(root+"?query="+JSON.stringify({name:name}))
-				.then(function(data){
-					expect(data.results).toBeDefined()
-					expect(data.results.length).toBe(4)
-					_.each(data.results,function(book){
-						expect(book.name).toBe(name)
-					})
-					done()
-				},done)
+		it('?query={name}', function(done){
+			createBook(NULL).catch($.fail(done,"can't create book")).then((book)=>
+				$.get(root+"?query="+JSON.stringify({name:book._raw.name}))
+					.then((data)=>{
+						expect(data.results).toBeDefined()
+						expect(data.results.length).toBe(1)
+						expect(data.results[0].name).toBe(book._raw.name)
+						done()
+					},done)
+				)
 		})
 
 		it("?limit=n", function(done){
-			var name='book0'
-			$.get(root+"?limit=2&query="+JSON.stringify({name:name}))
-				.then(function(data){
-					expect(data.results).toBeDefined()
-					expect(data.results.length).toBe(2)
-					_.each(data.results,function(book){
-						expect(book.name).toBe(name)
-					})
-					done()
-				},done)
+			Promise.all([createBook(NULL),createBook(NULL),createBook(NULL)])
+				.then(()=>$.get(root+"?limit=2")
+					.then((data)=>{
+						expect(data.results).toBeDefined()
+						expect(data.results.length).toBe(2)
+						done()
+					},done), done)
 		})
 
-		it("direct doc recturned from ?limit=1", function(done){
-			var name='book0'
-			$.get(root+"?limit=1&query="+JSON.stringify({name:name}))
-				.then(function(data){
-					expect(data.name).toBe(name)
-					done()
-				},done)
+		it("direct doc returned from ?limit=1", function(done){
+			createBook(NULL).then((book)=>
+				$.get(root+"?limit=1&query="+JSON.stringify({name:book._raw.name}))
+					.then((data)=>{
+						expect(data.name).toBe(book._raw.name)
+						done()
+					},done),done)
 		})
 
 		it("?skip=n", function(done){
-			var name='book0'
-			$.get(root+"?skip=3&query="+JSON.stringify({name:name}))
-				.then(function(data){
-					expect(data.results).toBeDefined()
-					expect(data.results.length).toBe(1)
-					_.each(data.results,function(book){
-						expect(book.name).toBe(name)
-					})
-					done()
-				},done)
+			Promise.all([createBook(NULL),createBook(NULL),createBook(NULL)]).then(()=>
+				$.get(root).then((allBooks)=>
+					$.get(root+"?skip=3").then((skipedBooks)=>{
+						expect(allBooks.results).toBeDefined()
+						expect(skipedBooks.results).toBeDefined()
+						expect(allBooks.results.length-skipedBooks.results.length).toBe(3)
+						done()
+					},done)
+				,done)
+			,done)
 		})
 
 		it("?sort={name:1}", function(done){
-			$.get(root+"?limit=2&skip=7&sort="+JSON.stringify({name:1}))
-				.then(function(data){
+			Promise.all([createBook(NULL),createBook(NULL),createBook(NULL)]).then((books)=>
+				$.get(root+"?limit=2&sort="+JSON.stringify({name:1})).then((data)=>{
 					expect(data.results).toBeDefined()
 					expect(data.results.length).toBe(2)
-					expect(data.results[0].name).toBe("book7")
-					expect(data.results[1].name).toBe("book8")
+					var names=data.results.map((a)=>a.name).sort()
+					expect(data.results[0].name).toBe(names[0])
+					expect(data.results[1].name).toBe(names[1])
 					done()
 				},done)
+			,done)
 		})
 
 		it("?sort={name:-1}", function(done){
-			$.get(root+"?limit=2&sort="+JSON.stringify({name:-1}))
-				.then(function(data){
+			Promise.all([createBook(NULL),createBook(NULL),createBook(NULL)]).then((books)=>
+				$.get(root+"?limit=2&sort="+JSON.stringify({name:-1})).then((data)=>{
 					expect(data.results).toBeDefined()
 					expect(data.results.length).toBe(2)
-					expect(data.results[0].name).toBe("book9")
-					expect(data.results[1].name).toBe("book8")
+					var names=data.results.map((a)=>a.name).sort()
+					expect(data.results[0].name).toBe(names[1])
+					expect(data.results[1].name).toBe(names[0])
 					done()
 				},done)
+			,done)
 		})
 
-		it("?fields={name:1}", function(done){
-			$.get(root+"/book1?fields="+JSON.stringify({name:1}))
-				.then(function(doc){
+		it("?fields={name:true}", function(done){
+			createBook(NULL).then((book)=>
+				$.get(`${root}/${book._id}?fields=${JSON.stringify({name:true})}`).then((doc)=>{
 					expect(doc.name).toBeDefined()
+					expect(doc.title).toBeUndefined()
 					done()
 				},done)
+			,done)
 		})
 
-		it("?fields={name:0}", function(done){
-			$.get(root+"/book1?fields="+JSON.stringify({name:0}))
-				.then(function(doc){
+		it("?fields={name:false}", function(done){
+			createBook(NULL).then((book)=>
+				$.get(`${root}/${book._id}?fields=${JSON.stringify({name:false})}`).then((doc)=>{
 					expect(doc.name).toBeUndefined()
+					expect(doc.title).toBeDefined()
 					done()
 				},done)
+			,done)
 		})
 	})
 
-	describe("create with POST" ,function(){
-		it("with _id", function(done){
-			var id='a book created with _id'
-			$.ajax({type:'post',url:root,data:{_id:id}})
-				.then(function(data){
-					expect(data._id).toBe(id)
-					done()
-				},done)
-		})
 
-		it("without _id", function(done){
-			var name='a book created without _id'
-			$.ajax({type:'post',url:root,data:{name:name}})
-				.then(function(data){
-					expect(data._id).toBeTruthy()
-					done()
-				},done)
-		})
-	})
 
 	describe('update with PUT/PATCH', function(){
 		it("replace update with PUT", function(done){
-			$.ajax({
-					type:'put',
-					url:root+"/book1",
-					data:{author:'raymond'}
-				}).then(function(data){
-					expect(data.updatedAt).toBeTruthy()
-					return $.get(root+"/book1")
-						.then(function(doc){
-							expect(doc.name).toBeUndefined()
-							expect(doc.author).toBe('raymond')
-							done()
-						},done)
-				},done)
+			var title='read raymond'
+			createBook(NULL).then((book)=>
+				$.ajax({
+						type:'put',
+						url:`${root}/${book._id}`,
+						data:{title}
+					}).then((data)=>{
+						expect(data.updatedAt).toBeDefined()
+						$.get(`${root}/${book._id}`)
+							.then((doc)=>{
+								expect(doc.name).toBeUndefined()
+								expect(doc.title).toBe(title)
+								done()
+							},done)
+					},done)
+				,done)
 		})
 
 		it("patch update with PATCH", function(done){
-			$.ajax({
-					type:'patch',
-					url:root+"/book2",
-					data:{author:'raymond'}
-				}).then(function(data){
-					expect(data.updatedAt).toBeTruthy()
-					return $.get(root+"/book2")
-						.then(function(doc){
-							expect(doc.name).toBeDefined()
-							expect(doc.author).toBe('raymond')
-							done()
-						},done)
-				},done)
+			var title='read raymond'
+			createBook(NULL).then((book)=>
+				$.ajax({
+						type:'patch',
+						url:`${root}/${book._id}`,
+						data:{title}
+					}).then((data)=>{
+						expect(data.updatedAt).toBeDefined()
+						$.get(`${root}/${book._id}`)
+							.then((doc)=>{
+								expect(doc.name).toBeDefined()
+								expect(doc.title).toBe(title)
+								done()
+							},done)
+					},done)
+				,done)
 		})
 	})
 
 	it("delete with DELETE", function(done){
-		$.ajax({
-			type:'delete',
-			url:root+"/book0"
-		}).then(function(data){
-			expect(data).toBeTruthy()
-			done()
-		},done)
+		createBook(NULL).then((book)=>
+			$.ajax({
+				type:'delete',
+				url:`${root}/${book._id}`
+			}).then((data)=>{
+				expect(data).toBeTruthy()
+				done()
+			},done)
+		,done)
 	})
 })

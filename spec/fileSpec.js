@@ -11,18 +11,16 @@ describe('File Service', function(){
 		_=require('underscore'),
 		qiniu=require('qiniu');
 
-	it("restore Test database",function(done){
-		$.reset4All(host).then(done,done)
-	})
+	beforeAll((done)=>config.init().then(done,done)	)
+	afterAll((done)=>config.release().then(done,done))
 
 	it('works as business server to provide token to client, and make qiniu return {url} directly',function(done){
-		$.get(root+"/token")
-		.then(function(token){
+		$.get(root+"/token").then(function(token){
 			expect(token).toBeTruthy()
 			var key="test/"+Date.now()
 			qiniu.io.put(token,key,"test",null,function(error,response){
 				if(error || response==null)
-					$.fail(error)
+					fail(error)
 				else
 					expect(response.url).toMatch(new RegExp(key+"$"))
 				done()
@@ -42,7 +40,7 @@ describe('File Service', function(){
 				if(error)
 					expect(error).toBeTruthy();
 				else
-					$.fail()
+					fail("should expire")
 				done()
 			})
 		},done)
@@ -54,5 +52,5 @@ describe('File Service', function(){
 		}, $.fail)
 	})
 
-	
+
 })

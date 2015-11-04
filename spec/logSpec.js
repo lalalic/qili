@@ -4,8 +4,15 @@ describe("application log service should provide", function(){
 		root=host+"/logs",
 		$=require('./ajax')(),
 		_=require('underscore'),
-		ACCESS=9,ERROR=2,WARN=1,INFO=0;
+		INITAPP=10, ACCESS=9,ERROR=2,WARN=1,INFO=0;
 
+	beforeAll((done)=>config.init().then(done,done)	)
+	afterAll((done)=>config.release().then(done,done))
+
+	var headers={
+		"X-Application-Id":config.server.adminKey,
+		"X-Session-Token":config.testerSessionToken
+	}
 	function changeCloudCode(done,f,data,appId){
 		var code="("+f.toString()+")(Cloud"+(data ? ","+JSON.stringify(data) : '')+");"
 		appId=appId||'test'
@@ -13,19 +20,13 @@ describe("application log service should provide", function(){
 			type:'patch',
 			url:host+"/apps/"+appId,
 			data:{cloudCode:code},
-			headers:{
-				"X-Application-Id":config.server.adminKey,
-				"X-Session-Token":"test"
-			}
+			headers,
 		}).then(function(doc){
 			expect(doc.updatedAt).toBeDefined()
 			return $.ajax({
 				type:'get',
 				url:host+"/apps/"+appId,
-				headers:{
-					"X-Application-Id":config.server.adminKey,
-					"X-Session-Token":"test"
-				}
+				headers
 			}).then(function(doc){
 				expect(doc.cloudCode).toBe(code)
 			},done)
@@ -35,32 +36,16 @@ describe("application log service should provide", function(){
 	function changeLogLevel(done,level){
 		return $.ajax({
 			type:'patch',
-			url:host+"/apps/test",
+			url:`${host}/apps/${config.testApp._id}`,
 			data:{logLevel:level},
-			headers:{
-				"X-Application-Id":config.server.adminKey,
-				"X-Session-Token":"test"
-			}
+			headers
 		}).then(function(doc){
 			expect(doc.updatedAt).toBeDefined()
-			return $.get(host+"/apps/test",{headers:{
-				"X-Application-Id":config.server.adminKey,
-				"X-Session-Token":"test"
-			}}).then(function(doc){
+			return $.get(`${host}/apps/${config.testApp._id}`,{headers}).then(function(doc){
 				expect(doc.logLevel).toBe(level)
 			},done)
 		},done)
 	}
-
-	it("restore Test database",function(done){
-		$.reset4All(host).then(function(){
-			$.get(root+"/reset4Test")
-				.then(function(result){
-					expect(result.ok).toBe(1)
-					done()
-				},done)
-		},done)
-	})
 
 	describe("individual application level log, including ", function(){
 		it("http access log", function(done){
