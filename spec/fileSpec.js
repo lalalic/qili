@@ -47,4 +47,12 @@ describe('File Service', function(){
 			})
 		},done)
 	},2000)
+
+	it("is able to search files",function(done){
+		$.get(`${root}`).then((files)=>{
+			done()
+		}, $.fail)
+	})
+
+	
 })

@@ -1,4 +1,6 @@
 module.exports={
+	data_inited:true,
+	debug:true,
 	version:"1",
 	db : {
 		port : 27017,
@@ -17,8 +19,6 @@ module.exports={
 		expires:600,
 	},
 	domain:"http://qili2.com", //qiniu need it
-	debug:true,
-	data_inited:false,
 	cloud:{
 		timeout:3000
 	},

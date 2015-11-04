@@ -8,53 +8,55 @@ var config=require('./config'),
 	$.ajaxSetup({
 		headers:{
 			"X-Application-Id":config.server.adminKey,
-			"X-Session-Token":"test"
+			"X-Session-Token":config.testerSessionToken
 		}
 	})
 
-	it("restore application Test database",function(done){
-		$.reset4All(host).then(done,done)
-	})
+	beforeAll((done)=>config.init().then(done,done)	)
+
+	afterAll((done)=>config.release().then(done,done))
+
+	var uid=Date.now(), NULL=(a)=>a, createApp
 
 	describe("user", function(){
 		describe("create", function(){
-			it("can create new application, and return application token, and author should be set", function(done){
-				var data={_id:"testCreate", name:"testCreate"}
-				$.ajax({url:root,type:'post',data:data})
+			it("new application, and return application token, and author should be set", createApp=function(done){
+				var data={name:`_app${uid++}`}
+				return $.ajax({url:root,type:'post',data:data})
 					.then(function(doc){
 						expect(doc._id).toBeDefined()
 						expect(doc.apiKey).toBeDefined()
 						expect(doc.createdAt).toBeDefined()
-						$.get(root+"/testCreate")
-							.then(function(doc){
-								expect(doc.author).toBeDefined()
-								expect(doc.author.username).toBe('test')
+						expect(doc.token).toBeDefined()
+
+						return $.get(`${root}/${doc._id}`)
+							.then(function(a){
+								expect(a.author).toBeDefined()
+								expect(a.author.username).toBe(config.tester.username)
 								done()
+								a._raw=data
+								return a
 							},done)
 					},done)
 			})
 
 			it("can't create application with same name within an org", function(done){
-				$.ajax({url:root,type:'post',data:{name:"test10",url:"_test"}})
-					.then(function(doc){
-						expect(doc._id).toBeDefined()
-						expect(doc.apiKey).toBeDefined()
-						expect(doc.createdAt).toBeDefined()
-						$.post(root,{data:{name:"test10"},error:null})
-							.then(function(doc){
-								$.fail()
-								done()
-							},function(error){
-								expect(error).toMatch(/duplicate key/gi)
-								done()
-							})
-					},done)
+				createApp(NULL).catch($.fail(done,"can't create app"))
+					.then((app)=>$.post(root,{data:{name:app.name},error:null})
+						.then(function(doc){
+							fail("should not create new app")
+							done()
+						},function(error){
+							expect(error).toMatch(/duplicate key/gi)
+							done()
+						})
+					)
 			})
 
 			it("can't create application with empty name", function(done){
-				$.ajax({url:root, type:'post', data:{url:'ok'},error:null})
+				$.ajax({url:root, type:'post', data:{url:"ok"},error:null})
 					.then(function(doc){
-						$.fail()
+						fail()
 						done()
 					},function(error){
 						expect(error).toMatch(/empty/gi)
@@ -65,21 +67,20 @@ var config=require('./config'),
 
 		describe("update", function(){
 			it("can update its own application", function(done){
-				$.ajax({
-					type:'patch',
-					url:root+"/test1",
-					data:{url:'test1'}
-				}).then(function(doc){
-					expect(doc.updatedAt).toBeDefined()
-					done()
-				},done)
+				createApp(NULL).catch($.fail(done,"can't create app"))
+					.then((app)=>$.ajax({type:'patch',url:`${root}/${app._id}`,data:{__newField:1}})
+						.then(function(doc){
+							expect(doc.updatedAt).not.toEqual(app.updatedAt)
+							done()
+						},done)
+					)
 			})
 
 			it("can NOT update other's application", function(done){
 				$.ajax({
 					type:'patch',
-					url:root+"/test19",
-					data:{url:'test19'},
+					url:root+"/"+config.server.adminKey,
+					data:{__newField:'test19'},
 					error:null,
 				}).then(function(doc){
 					expect(doc).toBeFalsy()
@@ -91,53 +92,55 @@ var config=require('./config'),
 			})
 
 			it("can't update name to be duplicated", function(done){
-				var newName="test"
-				$.ajax({
-					type:'patch',
-					url:root+"/test1",
-					data:{name:newName},
-					error: null,
-				}).then(function(doc){
-					$.fail()
-					done()
-				},function(error){
-					expect(error).toMatch(/duplicate/gi)
-					done()
-				})
+				Promise.all([
+					createApp(NULL).catch($.fail(done,"can't create app")),
+					createApp(NULL).catch($.fail(done,"can't create app"))
+				]).then((apps)=>$.ajax({type:'patch',url:`${root}/${apps[0]._id}`,data:{name:apps[1].name}, error:null})
+					.then(function(doc){
+						fail()
+						done()
+					},function(error){
+						expect(error).toMatch(/duplicate/gi)
+						done()
+					})
+				,done)
 			})
 
 			it("can update cloud code", function(done){
-				var code="1=1"
-				$.ajax({
-					type:'patch',
-					url:root+"/test1",
-					data:{cloudCode:code}
-				}).then(function(doc){
-					expect(doc.updatedAt).toBeDefined()
-					$.get(root+"/test1")
-					.then(function(doc){
-						expect(doc.cloudCode).toBe(code)
-						done()
+				createApp(NULL).catch($.fail(done,"can't create app")).then((app)=>{
+					var code="var a=1";
+					$.ajax({
+						type:'patch',
+						url:`${root}/${app._id}`,
+						data:{cloudCode:code}
+					}).then(function(doc){
+						expect(doc.updatedAt).toBeDefined()
+						$.get(`${root}/${app._id}`)
+							.then(function(doc){
+								expect(doc.cloudCode).toBe(code)
+								done()
+							},done)
 					},done)
-				},done)
-			})
-
-			it("should throw error when there's error in cloud code", function(done){
-				var code="var a }";
-				$.ajax({
-					type:'patch',
-					url:root+"/test1",
-					data:{cloudCode:code},
-					error:null
-				}).then(function(doc){
-					$.fail()
-					done()
-				},function(error){
-					expect(error).toBe("Unexpected token }")
-					done()
 				})
 			})
 
+			it("should throw error when there's error in cloud code", function(done){
+				createApp(NULL).catch($.fail(done,"can't create app")).then((app)=>{
+					var code="var a }";
+					$.ajax({
+						type:'patch',
+						url:`${root}/${app._id}`,
+						data:{cloudCode:code},
+						error:null
+					}).then(function(doc){
+						fail()
+						done()
+					},function(error){
+						expect(error).toBe("Unexpected token }")
+						done()
+					})
+				})
+			})
 		})
 
 		describe("delete",function(){
@@ -154,10 +157,10 @@ var config=require('./config'),
 			it("can not get any information without admin key", function(done){
 				$.get(root,{headers:{
 						"X-Application-Id":"test",
-						"X-Session-Token":"test"
+						"X-Session-Token":config.testerSessionToken
 					}, error: null})
 				.then(function(docs){
-					$.fail()
+					fail()
 					done()
 				},function(error){
 					expect(error).toMatch(/no hack/gi)
@@ -167,30 +170,30 @@ var config=require('./config'),
 
 			it("can get its own applictions", function(done){
 				$.get(root)
-				.then(function(docs){
-					_.each(docs.results, function(doc){
-						expect(doc.author.username).toBe('test')
-					})
-					done()
-				},done)
+					.then(function(docs){
+						_.each(docs.results, function(doc){
+							expect(doc.author.username).toBe(config.tester.username)
+						})
+						done()
+					},done)
 			})
 
 			it("can NOT get others applictions by id", function(done){
-				$.get(root+"/"+config.adminKey,{error:null})
-				.then(function(doc){
-					$.fail()
-					done()
-				},function(error){
-					expect(error).toBe('Not exists')
-					done()
-				})
+				$.get(root+"/"+config.server.adminKey,{error:null})
+					.then(function(doc){
+						fail()
+						done()
+					},function(error){
+						expect(error).toMatch(/no hack/gi)
+						done()
+					})
 			})
 
 			it("can NOT get others applictions by query", function(done){
 				$.get(root+"?query="+JSON.stringify({"author._id":"lalalic"}))
 					.then(function(docs){
 						_.each(docs.results, function(doc){
-							expect(doc.author.username).toBe('test')
+							expect(doc.author.username).toBe(config.tester.username)
 						})
 						done()
 					},done)

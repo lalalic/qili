@@ -1,29 +1,30 @@
 var request=require('request'),
-	_=require('underscore'),
-	promise=require('node-promise'),
+	_=require('underscore'), //need _.omit
 	gDefaults={
 		method:'get',
 		encoding:'utf-8',
 		headers:{}
-	};
+	},
+	config=require("./config");
+
 
 module.exports=function(){
-	var defaults=_.extend({},gDefaults), AJAX={};
-	defaults.headers=_.extend({},gDefaults.headers,defaults.headers||{})
+	var defaults=Object.assign({},gDefaults), AJAX={};
+	defaults.headers=Object.assign({},gDefaults.headers,defaults.headers||{})
 
 	function initParams(uri, options, callback) {
 		var opts;
 		if ((typeof options === 'function') && !callback) callback = options
 		if (options && typeof options === 'object') {
-			opts = _.extend({},defaults,_.omit(options,"dataType,type,data".split(",")));
-			opts.headers=_.extend({},defaults.headers,opts.headers||{})
+			opts = Object.assign({},defaults,_.omit(options,"dataType,type,data".split(",")));
+			opts.headers=Object.assign({},defaults.headers,opts.headers||{})
 			options && ajaxSetup(options,opts)
 			opts.uri = uri
 		} else if (typeof uri === 'string') {
-			opts = _.extend({},defaults,{uri:uri})
+			opts = Object.assign({},defaults,{uri:uri})
 		} else {
-			opts = _.extend({}, defaults, uri);
-			opts.headers=_.extend({},defaults.headers,opts.headers||{})
+			opts = Object.assign({}, defaults, uri);
+			opts.headers=Object.assign({},defaults.headers,opts.headers||{})
 			uri = opts.uri
 		}
 
@@ -35,34 +36,41 @@ module.exports=function(){
 		if(options.dataType=='json')
 			target.json=true;
 		if(options.headers)
-			_.extend(target.headers,options.headers)
+			Object.assign(target.headers,options.headers)
 		if(options.type)
 			target.method=options.type.toLowerCase()
 		if(options.data && target.json)
 			target.json=options.data
+		if(options.error)
+			target.error=options.error
 	}
 
 	function _request(uri,options){
-		var p=new promise.Promise()
 		var params=initParams(uri,options)
 		uri=params.uri
 		options=params.options
+		var errorHandler=options.error
 
-		options.error && p.addErrback(options.error)
-		delete options.error
+		if(options.json && options.method=='post')
+			options.json.__fortest=true	
 
-		request(uri, options, function(error, response, body){
-			if(error)
-				p.reject(error)
-			else if(response.statusCode>=400)
-				p.reject(body)
-			else
-				p.resolve(body)
+		return new Promise((resolve, reject)=>{
+			request(uri, options, function(error, response, body){
+				if(error){
+					errorHandler && errorHandler(error)
+					reject(error.message)
+				}else if(response.statusCode>=400){
+					var message=body.split("&nbsp;at ")[0]
+					errorHandler && errorHandler(new Error(message))
+					reject(message)
+				}else{
+					resolve(body)
+				}
+			})
 		})
-		return p
 	}
 
-	_.each("get,delete,put,post,patch".split(','),function(key){
+	"get,delete,put,post,patch".split(',').forEach(function(key){
 		this[key]=function(uri, options, callback){
 			var params = initParams(uri, options, callback)
 			params.options.method = key.toUpperCase()
@@ -74,44 +82,23 @@ module.exports=function(){
 		return _request(options.url,options)
 	}
 
-	AJAX.inspect=inspect
-	AJAX.fail=fail
+	AJAX.fail=failit
 	AJAX.ajaxSetup=ajaxSetup
 
 	ajaxSetup({
 		async:false,
 		dataType:"json",
 		headers:{
-			"X-Application-Id":"test",
-			"X-Session-Token":"test"
+			"X-Application-Id":config.testApp.apiKey,
+			"X-Session-Token":config.testerSessionToken
 		},
 		error: function(error){
-			expect(error).toBe(null)
+			fail(error.message)
 		}
 	})
-
-	AJAX.reset4All=function(host){
-		return this.get(host+"/apps/reset4Test",{
-			dataType:"json",
-			headers:{
-				"X-Application-Id":require("./config").server.adminKey,
-				"X-Session-Token":"test"
-			},
-			error: function(error){
-				expect(error).toBe(null)
-			}
-		})
-		.then(function(result){
-			expect(result.ok).toBe(1)
-		})
-	}
-
 	return AJAX
 }
 
-function inspect(o){
-	console.log(require('util').inspect(o))
-}
-function fail(error){
-	expect(error||true).toBeUndefined()
+function failit(done,error){
+	return (e)=>{fail(error||e);done()}
 }

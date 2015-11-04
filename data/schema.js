@@ -2,12 +2,13 @@ module.exports={
 	users:[{username:1, $option:{unique:true}},{email:1, $option:{unique:true, sparse:true}}],
 	roles:[{name:1, $option:{unique:true}}],
 	apps:[{'author._id':1,'name':1, $option:{unique:true}}],
-	logs:[{level:1}, {'message.path':1, $option:{name:'accesspath', spare:true}}]
+	logs:[{level:1}, {'message.path':1, $option:{name:'accesspath', spare:true}}],
+	files:[{'entity.kind':1,'entity._id':1, $option:{name:'entity', spare:true}}]
 }
 
 /*
 log={
-	createdAt:new Date(), 
+	createdAt:new Date(),
 	level:9,
 	message:{
 		remote:	req.ip||req._remoteAddress||(req.connection&&req.connection.remoteAddress),

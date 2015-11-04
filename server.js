@@ -1,5 +1,8 @@
 var config =require('./conf');
 require("./lib/cloud").support()
+require('mongodb').ObjectID.prototype.toString=function(){
+	return this.toHexString()
+}
 
 var express = require('express');
 var app = module.exports.app = express.Router();
@@ -20,8 +23,6 @@ var bodyParser = require("body-parser");
 	app.options("*",function(req,res){
 		res.send()
 	})
-
-	app.use(require("morgan")("dev"));
 
 	app.use("/test",express.static(__dirname+'/test'));
 	app.use("/"+config.qiniu.bucket,express.static(__dirname+'/upload/'+config.qiniu.bucket));
