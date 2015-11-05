@@ -1,5 +1,4 @@
 module.exports={
-	data_inited:true,
 	debug:true,
 	version:"1",
 	db : {
@@ -12,9 +11,9 @@ module.exports={
 		timeout : 120
 	},
 	qiniu:{
-		ACCESS_KEY:"",
-		SECRET_KEY:"",
-		bucket:"",
+		ACCESS_KEY:"1o_JaGUUb8nVxRpDGoAYB9tjLT10WD7PBFVtMmVT",
+		SECRET_KEY:"r2nd182ZXzuCiCN7ZLoJPFVPZHqCxaUaE73RjKaW",
+		bucket:"mobiengine",
 		accessURL:"http://qiniudn.com",
 		expires:600,
 	},

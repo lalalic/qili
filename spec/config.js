@@ -64,18 +64,16 @@ module.exports={
                                 return reject(error);
                             Promise.all(apps.map(function(app){
                                 return Promise.all([
-                                    new Promise((resolve,reject)=>db.collection('apps')
-                                        .remove(app,(error,r)=>{
-                                            error ? reject(error) : resolve(r)
-                                        })),
-
                                     new Promise((resolve,reject)=>mongo.connect(`mongodb://${conf.db.host}:${conf.db.port}/${app._id}`,(error,db)=>{
-                                        if(error)
-                                            return reject(error)
                                         db.dropDatabase((error,r)=>{
                                             error ? reject(error) : resolve(r)
                                         })
-                                    }))
+                                    })),
+
+                                    new Promise((resolve,reject)=>db.collection('apps')
+                                        .remove(app,(error,r)=>{
+                                            error ? reject(error) : resolve(r)
+                                        }))
                                 ])
                             })).then(resolve,reject)
                         })

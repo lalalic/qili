@@ -96,10 +96,7 @@ var config=require('./config'),
 					createApp(NULL).catch($.fail(done,"can't create app")),
 					createApp(NULL).catch($.fail(done,"can't create app"))
 				]).then((apps)=>$.ajax({type:'patch',url:`${root}/${apps[0]._id}`,data:{name:apps[1].name}, error:null})
-					.then(function(doc){
-						fail()
-						done()
-					},function(error){
+					.then($.fail(done),function(error){
 						expect(error).toMatch(/duplicate/gi)
 						done()
 					})

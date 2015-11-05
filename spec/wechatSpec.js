@@ -19,6 +19,8 @@ describe("wechat", function(){
 		_=require('underscore'),
 		promise=require('node-promise');
 
+    beforeAll((done)=>config.init().then(done,done)	)
+	afterAll((done)=>config.release().then(done,done))
 
     it("validate url(/1/:appKey/wechat), token by GET",function(done){
         var timestamp=Date.now()+""
