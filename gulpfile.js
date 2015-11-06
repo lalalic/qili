@@ -4,7 +4,7 @@ gulp.task('compile', shell.task('./node_modules/.bin/babel --stage 0 src --out-d
     .task('debug', shell.task('node --debug=5858 server.js'))
     .task('inspect', shell.task('node-inspector'))
     .task('debugTest', shell.task('node --debug-brk=5959 ./node_modules/.bin/jasmine'))
-    .task('test', shell.task('./node_modules/.bin/jasmine'))
+    .task('test', shell.task('"./node_modules/.bin/jasmine"'))
 
     .task('default',['debug','inspect','dashboard'])
 

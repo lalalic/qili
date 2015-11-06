@@ -1,47 +1,62 @@
-//File Service is based on Qiniu storage Cloud
-/*
-File Service works as business server to provide token to client, and make qiniu return {url} directly. The token should be expired in a few minutes.
-
-*/
 describe('File Service', function(){
 	var config=require('./config'),
 		host=config.host,
 		root=host+"/files",
 		$=require('./ajax')(),
-		_=require('underscore'),
 		qiniu=require('qiniu');
 
 	beforeAll((done)=>config.init().then(done,done)	)
 	afterAll((done)=>config.release().then(done,done))
 
-	it('get upload token',function(done){
-		$.get(root+"/token").then(function(token){
-			expect(token).toBeDefined()
-		},done)
-	},1000)
+	var uid=Date.now(),
+		NULL=()=>1,
+		getToken,upload;
 
-	it('The token should be expired in a few minutes', function(done){
-		$.get(root+"/token?policy="+JSON.stringify({expires:1}))
-		.then(function(token){
-			expect(token).toBeTruthy()
-			var now=Date.now()
-			while(Date.now()<(now+1000));
-			var key="test/"+Date.now()
-			qiniu.io.put(token,key,"test",null,function(error,response){
-				if(error)
-					expect(error).toBeTruthy();
-				else
-					fail("should expire")
+	describe("policy",function(){
+		it('token',getToken=function(done,more){
+			return $.get(`${root}/token?${more}`).then(function(r){
+				expect(r.token).toBeDefined()
 				done()
-			})
-		},done)
-	},2000)
+				return r.token
+			},done)
+		})
 
-	it("is able to search files",function(){
+		it('token for save',function(done){
+			getToken(NULL,"save=1").then((token)=>{
+				expect(token).toBeDefined()
+				done()
+			},done)
+		})
 
+		it('token with life of 1 second', function(done){
+			getToken(NULL,`policy=${JSON.stringify({expires:1})}`).then((token)=>{
+				var now=Date.now()
+				while(Date.now()<(now+1000));
+				var key="test/"+Date.now()
+				qiniu.io.put(token,key,"test",null,(error)=>{
+					console.dir(error)
+					error ? expect(error).toMatch(/expired/i) : fail("token should be expired")
+					done()
+				})
+			},done)
+		},8000)
 	})
 
 	describe("upload", function(){
+		fit("then forget", function(done){
+			getToken(NULL).then((token)=>{
+				qiniu.io.put(token,null,"test",null,(error,res)=>{
+					expect(res).toBeDefined()
+					console.dir(res)
+					done()
+				})
+			},done)
+		}, 7000)
+
+		it("and save back to server", function(){})
+
+		it("and save back for entity", function(){})
+
 		it("images with information in qili server", function(){
 
 		})
@@ -50,12 +65,20 @@ describe('File Service', function(){
 
 		})
 
-		it("replace", function(){})
-
-		it("remove", function(){})
-
-		it("for entity", function(){})
+		it("for replacement", function(){})
 	})
 
+	describe("search", function(){
+		it("by entity",function(){
 
+		})
+	})
+
+	describe("remove", function(){
+		it("one file", function(){})
+
+		it("remove files for entity", function(){})
+
+		it("trim file system", function(){})
+	})
 })

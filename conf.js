@@ -13,8 +13,8 @@ module.exports={
 	qiniu:{
 		ACCESS_KEY:"1o_JaGUUb8nVxRpDGoAYB9tjLT10WD7PBFVtMmVT",
 		SECRET_KEY:"r2nd182ZXzuCiCN7ZLoJPFVPZHqCxaUaE73RjKaW",
-		bucket:"mobiengine",
-		accessURL:"http://qiniudn.com",
+		bucket:"qili2-app",
+		accessURL:"http://app.qili2.com",
 		expires:600,
 	},
 	domain:"http://qili2.com", //qiniu need it

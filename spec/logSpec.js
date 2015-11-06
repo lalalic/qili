@@ -187,8 +187,7 @@ describe("application log service should provide", function(){
 			})
 
 			it("only error logged", function(done){
-				$.get(root)
-				.then(function(docs){//+1
+				$.get(root).then(function(docs){//+1
 					expect(docs.results).toBeDefined()
 					var len=docs.results.length
 					changeLogLevel(done,ERROR)
@@ -219,11 +218,27 @@ describe("application log service should provide", function(){
 			})
 		})
 
-		it("support dump logs", function(){
-
+		it("support dump logs, not finished", function(done){
+			$.get(`${root}/dump`).then((r)=>{
+				expect(r.done).toBe(true)
+				expect(r.message).toBe(/email/gi)
+				done()
+			}, done)
 		})
 
-		it("clear all logs", function(){
+		it("clear all logs", function(done){
+			Promise.all([$.get(root),$.get(root),$.get(root),$.get(root),$.get(root)]).then(()=>
+				$.get(root).then((logs)=>{
+					expect(logs.results.length).toBeGreaterThan(3)
+					$.post(`${root}/clear`).then((r)=>{
+						expect(r.done).toBe(true)
+						$.get(root).then((logs)=>{
+							expect(logs.results.length).toBeLessThan(2)
+							done()
+						},done)
+					}, done)
+				},done)
+			,done)
 
 		})
 	})

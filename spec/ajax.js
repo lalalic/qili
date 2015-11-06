@@ -52,7 +52,7 @@ module.exports=function(){
 		var errorHandler=options.error
 
 		if(options.json && options.method=='post')
-			options.json.__fortest=true	
+			options.json.__fortest=true
 
 		return new Promise((resolve, reject)=>{
 			request(uri, options, function(error, response, body){

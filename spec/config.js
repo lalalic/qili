@@ -5,7 +5,7 @@ var conf=require("../conf"),
     assert = require('assert'),
     tester="test";
 module.exports={
-    host:"http://qili.server:"+conf.server.port+"/1",
+    host:`http://qili.server:${conf.server.port}/1`,
     server: conf,
     rootSessionToken: User.createSessionToken({_id:conf.root, username:conf.root}),
     testerSessionToken: User.createSessionToken({_id:tester, username:tester}),
