@@ -24,11 +24,13 @@ describe('File Service', function(){
 	})
 
 	describe("upload", function(){
-		it("and save back to server", upload=function(done, content){
+		fit("and save back to server", upload=function(done, content){
 			getToken(NULL).then((token)=>{
 				qiniu.io.put(token,getKey(),content||"test",null, (e,ret)=>{
-					if(e)
+					if(e){
+						console.dir(e)
 						fail(e);
+					}
 					expect(ret.url).toBeDefined()
 					done()
 				})
