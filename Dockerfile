@@ -1,4 +1,4 @@
-FROM registry.mirrors.aliyuncs.com/library/node:0.12
+FROM node:latest
 
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
@@ -7,6 +7,12 @@ RUN git pull https://github.com/lalalic/qili.git
 COPY conf.product.js ./conf.js
 
 RUN npm install cnpm -g --registry=https://registry.npm.taobao.org
+
+RUN cnpm cache clean -f
+
+RUN cnpm install n -g
+
+RUN n stable
 
 RUN cnpm install -g node-gyp jasmine pm2
 
