@@ -10,50 +10,30 @@ describe('File Service', function(){
 
 	var uid=Date.now(),
 		NULL=()=>1,
-		getToken,upload;
+		getToken,
+		upload,
+		getKey=()=>`${config.testApp.apiKey}/user/${config.tester._id}/${uid++}`;
 
-	describe("policy",function(){
-		it('token',getToken=function(done,more){
-			return $.get(`${root}/token?${more}`).then(function(r){
-				expect(r.token).toBeDefined()
-				done()
-				return r.token
-			},done)
-		})
-
-		it('token for save',function(done){
-			getToken(NULL,"save=1").then((token)=>{
-				expect(token).toBeDefined()
-				done()
-			},done)
-		})
-
-		it('token with life of 1 second', function(done){
-			getToken(NULL,`policy=${JSON.stringify({expires:1})}`).then((token)=>{
-				var now=Date.now()
-				while(Date.now()<(now+1000));
-				var key="test/"+Date.now()
-				qiniu.io.put(token,key,"test",null,(error)=>{
-					console.dir(error)
-					error ? expect(error).toMatch(/expired/i) : fail("token should be expired")
-					done()
-				})
-			},done)
-		},8000)
+	it('token',getToken=function(done){
+		return $.get(`${root}/token`).then(function(r){
+			expect(r.token).toBeDefined()
+			expect(r.expires).toBeDefined()
+			done()
+			return r.token
+		},done)
 	})
 
 	describe("upload", function(){
-		fit("then forget", function(done){
+		it("and save back to server", upload=function(done, content){
 			getToken(NULL).then((token)=>{
-				qiniu.io.put(token,null,"test",null,(error,res)=>{
-					expect(res).toBeDefined()
-					console.dir(res)
+				qiniu.io.put(token,getKey(),content||"test",null, (e,ret)=>{
+					if(e)
+						fail(e);
+					expect(ret.url).toBeDefined()
 					done()
 				})
 			},done)
-		}, 7000)
-
-		it("and save back to server", function(){})
+		})
 
 		it("and save back for entity", function(){})
 
