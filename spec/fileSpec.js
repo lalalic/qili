@@ -83,8 +83,8 @@ describe('File Service', function(){
 			upload(NULL,"test",uid++,{
 				mimeType:"text/plain",
 				params:{
-					"x:entity":config.tester._id,
-					"x:crc":5
+					"x:entity":JSON.stringify({kind:'user',_id:config.tester._id}),
+					"x:crc0":534
 				}
 			}).then((file)=>{
 				console.dir(file)
