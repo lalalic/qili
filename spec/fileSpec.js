@@ -84,7 +84,7 @@ describe('File Service', function(){
 				mimeType:"text/plain",
 				params:{
 					"x:entity":JSON.stringify({kind:'user',_id:config.tester._id}),
-					"x:crc0":534
+					"x:lcrc":"asdfds"
 				}
 			}).then((file)=>{
 				console.dir(file)
