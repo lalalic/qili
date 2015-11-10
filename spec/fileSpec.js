@@ -45,7 +45,7 @@ describe('File Service', function(){
 			},done)
 		}
 
-		fit("simple content and get url", (done)=>upload(done).catch(fail), 8000)
+		it("simple content and get url", (done)=>upload(done).catch(fail), 8000)
 
 		it("upload multiple times with one token", (done)=>{
 			let doUpload=(token)=>{
