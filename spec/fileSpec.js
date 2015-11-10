@@ -97,6 +97,9 @@ fdescribe('File Service', function(){
 			},$.fail(done))
 		})
 
+		it("to replace", function(){
+			fail("not implement yet")
+		})
 		it("images", function(done){
 			var params={"x:entity":JSON.stringify(entity)}
 			getToken(NULL).then((token)=>{
