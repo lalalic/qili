@@ -46,18 +46,6 @@ describe('File Service', function(){
 
 		it("simple content and get url", (done)=>upload(done).catch(fail), 8000)
 
-		describe("search", function(){
-			fit("by entity",function(done){
-				upload(NULL).then(()=>
-					$.get(`${root}?entity=${JSON.stringify({kind:"user",_id:config.tester._id})}`).then((files)=>{
-						expect(files.results).toBeDefined()
-						expect(files.results.length).toGreaterThan(0)
-						done()
-					},done),
-				$.fail(done))
-			})
-		})
-
 		it("upload multiple times with one token", (done)=>{
 			let doUpload=(token)=>{
 				return new Promise((resolve, reject)=>
@@ -101,14 +89,12 @@ describe('File Service', function(){
 					},
 					crc:5
 				}
-			}).then((d)=>{
-				$.get(`${root}/${d._id}`).then((file)=>{
-					expect(file.mimeType).toBe("text/plain")
-					expect(file.entity).toBeDefined()
-					expect(file.entity._id).toBe(config.tester._id)
-					expect(file.crc).toBe(5)
-					done()
-				},$.fail(done)
+			}).then((file)=>{
+				expect(file.mimeType).toBe("text/plain")
+				expect(file.entity).toBeDefined()
+				expect(file.entity._id).toBe(config.tester._id)
+				expect(file.crc).toBe(5)
+				done()
 			},$.fail(done))
 		})
 
