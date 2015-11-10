@@ -25,7 +25,7 @@ describe('File Service', function(){
 		},done)
 	})
 
-	describe("upload", function(){
+	fdescribe("upload", function(){
 		upload=(done, content, keyId,extra)=>{
 			return getToken(NULL).then((token)=>{
 				return new Promise((resolve, reject)=>
@@ -80,12 +80,12 @@ describe('File Service', function(){
 			},$.fail(done,"first upload failed"))
 		})
 
-		fit("with mimeType, entity, and crc", function(done){
+		it("with mimeType, entity, and crc", function(done){
 			upload(NULL,null,null,{
 				mimeType:"text/plain",
 				params:{
 					"x:entity":JSON.stringify({kind:'user',_id:config.tester._id}),
-					"x:crc":54
+					"x:crc":"54"
 				}
 			}).then((file)=>{
 				console.dir(file)
