@@ -1,6 +1,6 @@
 "use strict"
 
-describe('File Service', function(){
+fdescribe('File Service', function(){
 	var config=require('./config'),
 		host=config.host,
 		root=host+"/files",
@@ -14,7 +14,9 @@ describe('File Service', function(){
 		NULL=()=>1,
 		getToken,
 		upload,
-		getKey=(id)=>`${config.testApp.apiKey}/user/${config.tester._id}/${id||(uid++)}`;
+		entity={kind:'user',_id:config.tester._id},
+		getKey=(id)=>`${config.testApp.apiKey}/user/${entity._id}/${id||(uid++)}`;
+
 
 	it('token',getToken=function(done){
 		return $.get(`${root}/token`).then(function(r){
@@ -31,7 +33,6 @@ describe('File Service', function(){
 				return new Promise((resolve, reject)=>
 					qiniu.io.put(token,getKey(keyId),content||"test",extra, (e,ret)=>{
 						if(e){
-							console.dir(e)
 							reject(e)
 							done()
 							return
@@ -84,33 +85,65 @@ describe('File Service', function(){
 			upload(NULL,null,null,{
 				mimeType:"text/plain",
 				params:{
-					"x:entity":JSON.stringify({kind:'user',_id:config.tester._id}),
-					"x:crc":"54"
+					"x:entity":JSON.stringify(entity),
+					"x:crc":"54"//must be string
 				}
 			}).then((file)=>{
-				console.dir(file)
 				expect(file.mimeType).toBe("text/plain")
 				expect(file.entity).toBeDefined()
-				//expect(file.entity._id).toBe(config.tester._id)
-				expect(file.crc).toBe(5)
+				expect(file.entity._id).toBe(entity._id)
+				expect(file.crc).toBe(54)
 				done()
 			},$.fail(done))
 		})
 
-		it("images with information in qili server", function(){
-
+		it("images", function(done){
+			var params={"x:entity":JSON.stringify(entity)}
+			getToken(NULL).then((token)=>{
+				qiniu.io.putFile(token,getKey(),"./data/a.gif",{params},(error, response)=>{
+					if(error){
+						fail(JSON.stringify(error))
+						done()
+						return
+					}
+					expect(response.url).toBeDefined()
+					expect(response.entity).toBeDefined()
+					expect(response.mimeType).toMatch(/image/i)
+					done()
+				})
+			},done)
 		})
 
-		it("docx with information in qili server", function(){
-
+		it("docx with information in qili server", function(done){
+			var params={"x:entity":JSON.stringify(entity)}
+			getToken(NULL).then((token)=>{
+				qiniu.io.putFile(token,getKey(),"./data/a.docx",{params},(error, response)=>{
+					if(error){
+						fail(JSON.stringify(error))
+						done()
+						return
+					}
+					console.dir(response)
+					expect(response.url).toBeDefined()
+					expect(response.entity).toBeDefined()
+					expect(response.mimeType).toMatch(/image/i)
+					done()
+				})
+			},done)
 		})
 	})
 
 	describe("remove", function(){
-		it("one file", function(){})
+		it("one file", function(){
+			fail("not implement")
+		})
 
-		it("remove files for entity", function(){})
+		it("remove files for entity", function(){
+			fail("not implement")
+		})
 
-		it("trim file system", function(){})
+		it("trim file system", function(){
+			fail("not implement")
+		})
 	})
 })
