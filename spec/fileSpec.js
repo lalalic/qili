@@ -80,19 +80,17 @@ describe('File Service', function(){
 		})
 
 		fit("with mimeType, entity, and crc", function(done){
-			upload(NULL,"test",null,{
+			upload(NULL,"test",uid++,{
 				mimeType:"text/plain",
 				params:{
-					entity:{
-						kind:"user",
-						_id:config.tester._id
-					},
-					crc:5
+					"x:entity":config.tester._id,
+					"x:crc":5
 				}
 			}).then((file)=>{
+				console.dir(file)
 				expect(file.mimeType).toBe("text/plain")
 				expect(file.entity).toBeDefined()
-				expect(file.entity._id).toBe(config.tester._id)
+				//expect(file.entity._id).toBe(config.tester._id)
 				expect(file.crc).toBe(5)
 				done()
 			},$.fail(done))
