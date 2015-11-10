@@ -31,6 +31,7 @@ describe('File Service', function(){
 				return new Promise((resolve, reject)=>
 					qiniu.io.put(token,getKey(keyId),content||"test",extra, (e,ret)=>{
 						if(e){
+							console.dir(e)
 							reject(e)
 							done()
 							return
@@ -80,11 +81,11 @@ describe('File Service', function(){
 		})
 
 		fit("with mimeType, entity, and crc", function(done){
-			upload(NULL,"test",uid++,{
+			upload(NULL,null,null,{
 				mimeType:"text/plain",
 				params:{
 					"x:entity":JSON.stringify({kind:'user',_id:config.tester._id}),
-					"x:lcrc":"asdfds"
+					"x:crc":54
 				}
 			}).then((file)=>{
 				console.dir(file)
