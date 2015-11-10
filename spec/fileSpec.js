@@ -16,7 +16,7 @@ describe('File Service', function(){
 		upload,
 		getKey=(id)=>`${config.testApp.apiKey}/user/${config.tester._id}/${id||(uid++)}`;
 
-	fit('token',getToken=function(done){
+	it('token',getToken=function(done){
 		return $.get(`${root}/token`).then(function(r){
 			expect(r.token).toBeDefined()
 			expect(r.expires).toBeDefined()
@@ -27,7 +27,7 @@ describe('File Service', function(){
 
 	describe("upload", function(){
 		let doUpload=null;
-		it("simple content and get url", upload=function(done, content, keyId){
+		fit("simple content and get url", upload=function(done, content, keyId){
 			return getToken(NULL).then(doUpload=(token)=>{
 				console.info(token)
 				return new Promise((resolve, reject)=>
@@ -36,6 +36,7 @@ describe('File Service', function(){
 							console.dir(e)
 							fail(e);
 							reject(e)
+							done()
 							return
 						}
 						console.dir(ret)
@@ -46,7 +47,7 @@ describe('File Service', function(){
 					})
 				)
 			},done)
-		})
+		}, 8000)
 
 		it("upload multiple times with one token", (done)=>{
 			getToken(NULL).then((token)=>{
