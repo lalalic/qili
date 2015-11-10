@@ -25,7 +25,7 @@ describe('File Service', function(){
 		},done)
 	})
 
-	fdescribe("upload", function(){
+	describe("upload", function(){
 		upload=(done, content, keyId,extra)=>{
 			return getToken(NULL).then((token)=>{
 				return new Promise((resolve, reject)=>
@@ -45,7 +45,7 @@ describe('File Service', function(){
 			},done)
 		}
 
-		it("simple content and get url", (done)=>upload(done).catch(fail), 8000)
+		fit("simple content and get url", (done)=>upload(done).catch(fail), 8000)
 
 		it("upload multiple times with one token", (done)=>{
 			let doUpload=(token)=>{
