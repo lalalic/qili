@@ -1,3 +1,5 @@
+"use strict"
+
 describe('File Service', function(){
 	var config=require('./config'),
 		host=config.host,
@@ -12,9 +14,9 @@ describe('File Service', function(){
 		NULL=()=>1,
 		getToken,
 		upload,
-		getKey=()=>`${config.testApp.apiKey}/user/${config.tester._id}/${uid++}`;
+		getKey=(id)=>`${config.testApp.apiKey}/user/${config.tester._id}/${id||(uid++)}`;
 
-	it('token',getToken=function(done){
+	fit('token',getToken=function(done){
 		return $.get(`${root}/token`).then(function(r){
 			expect(r.token).toBeDefined()
 			expect(r.expires).toBeDefined()
@@ -24,20 +26,37 @@ describe('File Service', function(){
 	})
 
 	describe("upload", function(){
-		fit("and save back to server", upload=function(done, content){
-			getToken(NULL).then((token)=>{
-				qiniu.io.put(token,getKey(),content||"test",null, (e,ret)=>{
-					if(e){
-						console.dir(e)
-						fail(e);
-					}
-					expect(ret.url).toBeDefined()
-					done()
-				})
+		let doUpload=null;
+		it("simple content and get url", upload=function(done, content, keyId){
+			return getToken(NULL).then(doUpload=(token)=>{
+				console.info(token)
+				return new Promise((resolve, reject)=>
+					qiniu.io.put(token,getKey(keyId),content||"test",null, (e,ret)=>{
+						if(e){
+							console.dir(e)
+							fail(e);
+							reject(e)
+							return
+						}
+						console.dir(ret)
+						expect(ret.url).toBeDefined()
+						expect(ret.url).toMatch(`${config.server.qiniu.accessURL}/${config.testApp.apiKey}/user/${config.tester._id}/`)
+						done()
+						resolve(ret.url)
+					})
+				)
 			},done)
 		})
 
-		it("and save back for entity", function(){})
+		it("upload multiple times with one token", (done)=>{
+			getToken(NULL).then((token)=>{
+				Promise.all([
+					doUpload(token),
+					doUpload(token),
+					doUpload(token)
+				]).then(done,$.fail(done))
+			},done)
+		})
 
 		it("images with information in qili server", function(){
 
