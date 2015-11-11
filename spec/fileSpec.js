@@ -6,6 +6,8 @@ xdescribe('File Service', function(){
 		root=host+"/files",
 		$=require('./ajax')(),
 		qiniu=require('qiniu');
+	qiniu.conf.ACCESS_KEY=config.server.qiniu.ACCESS_KEY
+	qiniu.conf.SECRET_KEY=config.server.qiniu.SECRET_KEY
 
 	beforeAll((done)=>config.init().then(done,done)	)
 	afterAll((done)=>config.release().then(done,done))
@@ -17,6 +19,13 @@ xdescribe('File Service', function(){
 		entity={kind:'user',_id:config.tester._id},
 		getKey=(id)=>`${config.testApp.apiKey}/user/${entity._id}/${id||(uid++)}`;
 
+	function remove(key){
+		return new Promise((resolve, reject)=>
+			new qiniu.rs.Client().remove(config.server.qiniu.bucket, key, (e, ret)=>{
+				e ? reject(e) : resolve(ret)
+			})
+		)
+	}
 
 	it('token',getToken=function(done){
 		return $.get(`${root}/token`).then(function(r){
@@ -97,13 +106,33 @@ xdescribe('File Service', function(){
 			},$.fail(done))
 		})
 
-		it("to replace", function(){
+		it("with specified key", function(done){
+			var doit
+			remove(getKey("thumbnail")).catch(doit=()=>
+				upload(NULL, null, "thumbnail").then((file)=>{
+					expect(file.url).toMatch(/thumbnail/i)
+					done()
+				},$.fail(done))
+			).then(doit)
+		})
+
+		it("to replace", function(done){
 			fail("not implement yet")
+			return done()
+			var doit, key=getKey("thumbnail"),
+			remove(key).catch(doit=()=>
+				upload(NULL, null, "thumbnail").catch($.fail(done)).then((file)=>{
+					expect(file.url).toMatch(/thumbnail/i)
+					getToken(NULL,key).then((token)=>{
+
+					},$.fail(done))
+				})
+			).then(doit)
 		})
 		it("images", function(done){
 			var params={"x:entity":JSON.stringify(entity)}
 			getToken(NULL).then((token)=>{
-				qiniu.io.putFile(token,getKey(),"./data/a.gif",{params},(error, response)=>{
+				qiniu.io.putFile(token,getKey(),"./spec/data/a.gif",{params},(error, response)=>{
 					if(error){
 						fail(JSON.stringify(error))
 						done()
@@ -117,19 +146,19 @@ xdescribe('File Service', function(){
 			},done)
 		})
 
-		it("docx with information in qili server", function(done){
+		it("docx", function(done){
 			var params={"x:entity":JSON.stringify(entity)}
 			getToken(NULL).then((token)=>{
-				qiniu.io.putFile(token,getKey(),"./data/a.docx",{params},(error, response)=>{
+				qiniu.io.putFile(token,getKey(),"./spec/data/a.docx",{params},(error, response)=>{
 					if(error){
 						fail(JSON.stringify(error))
 						done()
 						return
 					}
-					console.dir(response)
+
 					expect(response.url).toBeDefined()
 					expect(response.entity).toBeDefined()
-					expect(response.mimeType).toMatch(/image/i)
+					expect(response.mimeType).toMatch(/wordprocessingml/i)
 					done()
 				})
 			},done)
