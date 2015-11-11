@@ -3,9 +3,7 @@ describe("cloud", function(){
 		host=config.host,
 		kind="books",
 		root=host+"/classes/"+kind,
-		$=require('./ajax')(),
-		_=require('underscore'),
-		promise=require('node-promise');
+		$=require('./ajax')();
 
 	beforeAll((done)=>config.init().then(done,done)	)
 	afterAll((done)=>config.release().then(done,done))
@@ -331,7 +329,7 @@ describe("cloud", function(){
 	})
 
 	describe("shared modules", function(){
-		"underscore,backbone,ajax,node-promise".split(",").forEach(function(module){
+		"underscore,backbone,ajax".split(",").forEach(function(module){
 			describe(module, function(){
 				it("require", function(done){
 					changeCloudCode(done,function(Cloud,module){

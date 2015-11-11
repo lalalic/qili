@@ -1,6 +1,6 @@
 "use strict"
 
-fdescribe('File Service', function(){
+xdescribe('File Service', function(){
 	var config=require('./config'),
 		host=config.host,
 		root=host+"/files",

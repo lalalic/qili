@@ -15,14 +15,14 @@ describe("wechat", function(){
     var config=require('./config'),
 		host=config.host,
 		root=host+"/test/wechat",
-		$=require('./ajax')(),
-		_=require('underscore'),
-		promise=require('node-promise');
+		$=require('./ajax')();
 
     beforeAll((done)=>config.init().then(done,done)	)
 	afterAll((done)=>config.release().then(done,done))
 
     it("validate url(/1/:appKey/wechat), token by GET",function(done){
+        fail("not implement")
+        return done()
         var timestamp=Date.now()+""
         $.ajax({
             type:'get',

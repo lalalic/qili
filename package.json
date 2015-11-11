@@ -7,13 +7,10 @@
     "email": "lalalic@139.com"
   },
   "dependencies": {
-    "babel": "^5.6.14",
     "backbone": "~1.1.x",
     "body-parser": "~1.12.x",
     "express": "^4.x",
-    "formidable": ">=1.0.17",
     "mongodb": "^2.0.39",
-    "node-promise": ">=0.5.12",
     "qiniu": "~6.1.x",
     "underscore": "~1.8.x",
     "wechat": "^2.0.1"
