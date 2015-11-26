@@ -199,12 +199,11 @@ describe("entity", function(){
 				,done)
 		})
 
-		fit("update with POST", function(done){
+		it("update with POST", function(done){
 			var title='read raymond'
 			createBook(NULL).then((book)=>{
 					var data=Object.assign({},book,book._raw,
 							{title,_raw:undefined,name:undefined,updatedAt:undefined})
-					console.dir(data)
 					$.ajax({
 							type:'post',
 							url:`${root}`,
@@ -213,8 +212,7 @@ describe("entity", function(){
 							expect(data.updatedAt).toBeDefined()
 							$.get(`${root}/${book._id}`)
 								.then((doc)=>{
-									console.dir(doc)
-									//expect(doc.name).toBeUndefined()
+									expect(doc.name).toBeUndefined()
 									expect(doc.title).toBe(title)
 									done()
 								},done)

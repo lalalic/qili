@@ -25,7 +25,6 @@ var bodyParser = require("body-parser");
 	app.use("/"+config.qiniu.bucket,express.static(__dirname+'/upload/'+config.qiniu.bucket));
 })();
 
-app.use(bodyParser.urlencoded({extended : true, verify: require('./lib/file').verify}));
 {//make ObjectID transparent for code
 	var ObjectID=require('mongodb').ObjectID
 	ObjectID.prototype.toString=function(){return this.toHexString()}
@@ -37,8 +36,8 @@ app.use(bodyParser.urlencoded({extended : true, verify: require('./lib/file').ve
 			return value
 		}
 	}}));
-	app.use(require("./lib/entity").resolveObjectId)
 }
+app.use(bodyParser.urlencoded({extended : true, verify: require('./lib/file').verify}));
 
 
 app.use(require('./lib/wechat').resolve())

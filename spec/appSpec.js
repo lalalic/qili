@@ -141,13 +141,18 @@ var config=require('./config'),
 		})
 
 		describe("delete",function(){
-			it("can be deleted with confirmation", function(){
-
+			it("can be done", function(done){
+				createApp(NULL).then((app)=>{
+					$.ajax({
+						type:"delete",
+						url:`${root}/${app._id}`
+					}).then((a)=>{
+						expect(a).toBe(true)
+						done()
+					},(e)=>{fail(e.message);done()})
+				}, (e)=>{fail(e.message);done()})
 			})
 
-			it("can't be deleted without confirmation", function(){
-
-			})
 		})
 
 		describe("query", function(){
