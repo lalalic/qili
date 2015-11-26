@@ -6,7 +6,8 @@ gulp.task('compile', shell.task('./node_modules/.bin/babel --stage 0 src --out-d
     .task('debugTest', shell.task('node --debug-brk=5959 ./node_modules/.bin/jasmine'))
     .task('test', shell.task('"./node_modules/.bin/jasmine"'))
 
-    .task('default',['debug','inspect','dashboard'])
+    .task('default',['debug','inspect'])
+    .task('mongo', shell.task('mongod  --storageEngine=wiredTiger --directoryperdb --dbpath=.'))
 
 
     .task('docker.mongo', shell.task('docker run --name qili.db -p 27017:27017 -v /data/db:/data/db -d mongo  --storageEngine=wiredTiger --directoryperdb'))

@@ -12,8 +12,8 @@ describe("entity", function(){
 	var uid=Date.now(), NULL=(a)=>a, createBook
 
 	describe("create with POST" ,function(){
-		it("without _id", function(done){
-			var data={name:`my book ${uid++}`}
+		it("without _id", createBook=function(done){
+			var data={name:`my book ${uid++}`, title:`title ${uid}`}
 			return $.ajax({type:'post',url:root,data})
 				.then(function(book){
 					expect(book._id).toBeDefined()
@@ -24,7 +24,7 @@ describe("entity", function(){
 				},done)
 		})
 
-		it("with _id", createBook=function(done){
+		it("with _id", function(done){
 			var data={_id:`book${uid++}`, name:`my book ${uid++}`, title:`title ${uid}`}
 			return $.ajax({type:'post',url:root,data})
 				.then(function(book){
@@ -161,7 +161,7 @@ describe("entity", function(){
 
 
 	describe('update with PUT/PATCH', function(){
-		it("replace update with PUT", function(done){
+		it("update with PUT", function(done){
 			var title='read raymond'
 			createBook(NULL).then((book)=>
 				$.ajax({
@@ -180,7 +180,7 @@ describe("entity", function(){
 				,done)
 		})
 
-		it("patch update with PATCH", function(done){
+		it(" update with PATCH", function(done){
 			var title='read raymond'
 			createBook(NULL).then((book)=>
 				$.ajax({
@@ -198,6 +198,30 @@ describe("entity", function(){
 					},done)
 				,done)
 		})
+
+		fit("update with POST", function(done){
+			var title='read raymond'
+			createBook(NULL).then((book)=>{
+					var data=Object.assign({},book,book._raw,
+							{title,_raw:undefined,name:undefined,updatedAt:undefined})
+					console.dir(data)
+					$.ajax({
+							type:'post',
+							url:`${root}`,
+							data:data
+						}).then((data)=>{
+							expect(data.updatedAt).toBeDefined()
+							$.get(`${root}/${book._id}`)
+								.then((doc)=>{
+									console.dir(doc)
+									//expect(doc.name).toBeUndefined()
+									expect(doc.title).toBe(title)
+									done()
+								},done)
+						},done)
+					}
+				,done)
+		}, 1000000)
 	})
 
 	it("delete with DELETE", function(done){

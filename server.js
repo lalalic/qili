@@ -1,8 +1,5 @@
 var config =require('./conf');
 require("./lib/cloud").support()
-require('mongodb').ObjectID.prototype.toString=function(){
-	return this.toHexString()
-}
 
 var express = require('express');
 var app = module.exports.app = express.Router();
@@ -28,9 +25,21 @@ var bodyParser = require("body-parser");
 	app.use("/"+config.qiniu.bucket,express.static(__dirname+'/upload/'+config.qiniu.bucket));
 })();
 
-
-app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended : true, verify: require('./lib/file').verify}));
+{//make ObjectID transparent for code
+	var ObjectID=require('mongodb').ObjectID
+	ObjectID.prototype.toString=function(){return this.toHexString()}
+
+	app.use(bodyParser.json({reviver:function(key,value){
+		try{
+			return key==='_id' ? ObjectID(value) : value
+		}catch(e){
+			return value
+		}
+	}}));
+	app.use(require("./lib/entity").resolveObjectId)
+}
+
 
 app.use(require('./lib/wechat').resolve())
 app.use(require('./lib/app').resolve())

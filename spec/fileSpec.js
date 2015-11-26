@@ -119,7 +119,7 @@ xdescribe('File Service', function(){
 		it("to replace", function(done){
 			fail("not implement yet")
 			return done()
-			var doit, key=getKey("thumbnail"),
+			var doit, key=getKey("thumbnail")
 			remove(key).catch(doit=()=>
 				upload(NULL, null, "thumbnail").catch($.fail(done)).then((file)=>{
 					expect(file.url).toMatch(/thumbnail/i)
