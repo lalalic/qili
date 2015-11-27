@@ -173,7 +173,7 @@ var config=require('./config'),
 			it("can get its own applictions", function(done){
 				$.get(root)
 					.then(function(docs){
-						_.each(docs.results, function(doc){
+						docs.results && docs.results.forEach(function(doc){
 							expect(doc.author.username).toBe(config.tester.username)
 						})
 						done()
@@ -194,7 +194,7 @@ var config=require('./config'),
 			it("can NOT get others applictions by query", function(done){
 				$.get(root+"?query="+JSON.stringify({"author._id":"lalalic"}))
 					.then(function(docs){
-						_.each(docs.results, function(doc){
+						docs.results && docs.results.forEach(function(doc){
 							expect(doc.author.username).toBe(config.tester.username)
 						})
 						done()
