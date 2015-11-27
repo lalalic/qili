@@ -12,7 +12,7 @@
     "express": "^4.x",
     "mongodb": "^2.0.39",
     "qiniu": "~6.1.x",
-    "underscore": "~1.8.x",
+    "underscore": "^1.8.3",
     "wechat": "^2.0.1"
   },
   "keywords": [

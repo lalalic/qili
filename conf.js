@@ -25,6 +25,6 @@ module.exports={
 	root:"root",
 	rootPassword:"root",
 	adminKey:"qiliAdmin",
-	sharedModules:"underscore,backbone,ajax".split(","),
+	sharedModules:"backbone,ajax".split(","),
 	Internal_API:["users,roles,files,logs".split(",")]
 }
