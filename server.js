@@ -1,3 +1,8 @@
+Object.assign(Object.prototype,{
+	forEach(f,context){
+		Object.keys(this).forEach((k)=>f.call(context, this[k], k))
+	}
+})
 var config =require('./conf');
 require("./lib/cloud").support()
 
