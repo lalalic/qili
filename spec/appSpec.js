@@ -2,8 +2,7 @@ describe("app", function(){
 var config=require('./config'),
 	host=config.host,
 	root=host+"/apps",
-	$=require('./ajax')(),
-	_=require('underscore');
+	$=require('./ajax')();
 
 	$.ajaxSetup({
 		headers:{

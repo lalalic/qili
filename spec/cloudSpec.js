@@ -329,7 +329,7 @@ describe("cloud", function(){
 	})
 
 	describe("shared modules", function(){
-		"underscore,backbone,ajax".split(",").forEach(function(module){
+		"backbone,ajax".split(",").forEach(function(module){
 			describe(module, function(){
 				it("require", function(done){
 					changeCloudCode(done,function(Cloud,module){

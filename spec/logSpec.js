@@ -3,7 +3,6 @@ describe("application log service should provide", function(){
 		host=config.host,
 		root=host+"/logs",
 		$=require('./ajax')(),
-		_=require('underscore'),
 		INITAPP=10, ACCESS=9,ERROR=2,WARN=1,INFO=0;
 
 	beforeAll((done)=>config.init().then(done,done)	)

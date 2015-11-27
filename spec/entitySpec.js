@@ -2,8 +2,7 @@ describe("entity", function(){
 	var config=require('./config'),
 		host=config.host,
 		root=host+"/classes/books",
-		$=require('./ajax')(),
-		_=require('underscore');
+		$=require('./ajax')();
 
 	beforeAll((done)=>config.init().then(done,done)	)
 

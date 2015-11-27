@@ -1,5 +1,4 @@
 var request=require('request'),
-	_=require('underscore'), //need _.omit
 	gDefaults={
 		method:'get',
 		encoding:'utf-8',
@@ -7,7 +6,12 @@ var request=require('request'),
 	},
 	config=require("./config");
 
-
+function omit(a){
+	var b=Object.assign({},a)
+	for(var i=1, len=arguments.length;i<len;i++)
+		delete b[arguments[i]]
+	return b
+}
 module.exports=function(){
 	var defaults=Object.assign({},gDefaults), AJAX={};
 	defaults.headers=Object.assign({},gDefaults.headers,defaults.headers||{})
@@ -16,7 +20,7 @@ module.exports=function(){
 		var opts;
 		if ((typeof options === 'function') && !callback) callback = options
 		if (options && typeof options === 'object') {
-			opts = Object.assign({},defaults,_.omit(options,"dataType,type,data".split(",")));
+			opts = Object.assign({},defaults,omit(options,"dataType,type,data".split(",")));
 			opts.headers=Object.assign({},defaults.headers,opts.headers||{})
 			options && ajaxSetup(options,opts)
 			opts.uri = uri

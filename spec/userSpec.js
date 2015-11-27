@@ -2,8 +2,7 @@ describe("user", function(){
 	var config=require('./config'),
 		host=config.host,
 		root=host+"/users",
-		$=require('./ajax')(),
-		_=require('underscore');
+		$=require('./ajax')();
 
 	beforeAll((done)=>config.init().then(done,done)	)
 
