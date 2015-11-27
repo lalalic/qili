@@ -1,13 +1,9 @@
 var gulp=require('gulp'),
     shell=require('gulp-shell')
-gulp.task('compile', shell.task('./node_modules/.bin/babel --stage 0 src --out-dir dist'))
-    .task('debug', shell.task('node --debug=5858 server.js'))
-    .task('inspect', shell.task('node-inspector'))
-    .task('debugTest', shell.task('node --debug-brk=5959 ./node_modules/.bin/jasmine'))
-    .task('test', shell.task('"./node_modules/.bin/jasmine"'))
-
-    .task('default',['debug','inspect'])
-    .task('mongo', shell.task('mongod  --storageEngine=wiredTiger --directoryperdb --dbpath=.'))
+gulp.task('default', shell.task('node --debug=5858 server.js'))
+    .task('test', shell.task('jasmine'))
+    .task('test.debug', shell.task('node --debug-brk=5959 ./node_modules/.bin/jasmine'))
+    .task('mongo', shell.task('mongod  --storageEngine=wiredTiger --directoryperdb --dbpath="/"'))
 
 
     .task('docker.mongo', shell.task('docker run --name qili.db -p 27017:27017 -v /data/db:/data/db -d mongo  --storageEngine=wiredTiger --directoryperdb'))
