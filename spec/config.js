@@ -20,7 +20,6 @@ module.exports={
         _id:tester,
         apiKey: tester,
         name: tester,
-        token: App.prototype.token(tester,tester),
         __fortest:true,
         author: {
             _id:tester,

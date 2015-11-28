@@ -26,8 +26,7 @@ var config=require('./config'),
 						expect(doc._id).toBeDefined()
 						expect(doc.apiKey).toBeDefined()
 						expect(doc.createdAt).toBeDefined()
-						expect(doc.token).toBeDefined()
-
+						
 						return $.get(`${root}/${doc._id}`)
 							.then(function(a){
 								expect(a.author).toBeDefined()

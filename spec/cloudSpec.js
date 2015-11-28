@@ -57,8 +57,7 @@ describe("cloud", function(){
 				expect(doc._id).toBeDefined()
 				expect(doc.apiKey).toBeDefined()
 				expect(doc.createdAt).toBeDefined()
-				expect(doc.token).toBeDefined()
-
+				
 				return $.ajax({url:`${host}/apps/${doc._id}`,type:'get',headers})
 					.then(function(a){
 						expect(a.author).toBeDefined()

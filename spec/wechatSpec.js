@@ -1,5 +1,10 @@
-describe("wechat", function(){
-    var token="test.token",
+describe("wechat (/:appkey/wechat)", function(){
+    var config=require('./config'),
+		host=config.host,
+		root=host+"/test/wechat",
+		$=require('./ajax')();
+
+    var token=config.server.token,
         nonce="asdfkafdljadsf",
         echostr="hrlslkjsfg",
         crypto = require('crypto');;
@@ -12,17 +17,10 @@ describe("wechat", function(){
     }
 
 
-    var config=require('./config'),
-		host=config.host,
-		root=host+"/test/wechat",
-		$=require('./ajax')();
-
     beforeAll((done)=>config.init().then(done,done)	)
 	afterAll((done)=>config.release().then(done,done))
 
-    it("validate url(/1/:appKey/wechat), token by GET",function(done){
-        fail("not implement")
-        return done()
+    it("validate token by GET",function(done){
         var timestamp=Date.now()+""
         $.ajax({
             type:'get',
@@ -31,5 +29,26 @@ describe("wechat", function(){
             expect(a).toBe(echostr)
             done()
         }, done)
+    })
+
+    xit("post message", function(done){
+        var content="hello wechat"
+        $.ajax({
+            type:'post',
+            dataType:'xml',
+            headers:{'content-type':'xml'},
+            url:root,
+            data:`<xml>
+ <ToUserName><![CDATA[toUser]]></ToUserName>
+ <FromUserName><![CDATA[fromUser]]></FromUserName>
+ <CreateTime>1348831860</CreateTime>
+ <MsgType><![CDATA[text]]></MsgType>
+ <Content><![CDATA[${content}]]></Content>
+ <MsgId>1234567890123456</MsgId>
+ </xml>`
+        }).then((m)=>{
+            expect(m).toBe(content)
+            done()
+        },done)
     })
 })

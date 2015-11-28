@@ -45,7 +45,7 @@ var bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({extended : true, verify: require('./lib/file').verify}));
 
 
-app.use(require('./lib/wechat').resolve())
+app.use(require('./lib/wechat').resolve(app, config))
 app.use(require('./lib/app').resolve())
 app.use(require('./lib/user').resolve())
 

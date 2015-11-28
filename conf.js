@@ -21,6 +21,7 @@ module.exports={
 	cloud:{
 		timeout:3000
 	},
+	token:"thirdtoken",//such as wechat api token
 	secret:"abcdef",
 	root:"root",
 	rootPassword:"root",
