@@ -30,18 +30,7 @@ var bodyParser = require("body-parser");
 	app.use("/"+config.qiniu.bucket,express.static(__dirname+'/upload/'+config.qiniu.bucket));
 })();
 
-{//make ObjectID transparent for code
-	var ObjectID=require('mongodb').ObjectID
-	ObjectID.prototype.toString=function(){return this.toHexString()}
-
-	app.use(bodyParser.json({reviver:function(key,value){
-		try{
-			return key==='_id' ? ObjectID(value) : value
-		}catch(e){
-			return value
-		}
-	}}));
-}
+app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended : true, verify: require('./lib/file').verify}));
 
 
