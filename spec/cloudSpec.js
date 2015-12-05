@@ -57,7 +57,7 @@ describe("cloud", function(){
 				expect(doc._id).toBeDefined()
 				expect(doc.apiKey).toBeDefined()
 				expect(doc.createdAt).toBeDefined()
-				
+
 				return $.ajax({url:`${host}/apps/${doc._id}`,type:'get',headers})
 					.then(function(a){
 						expect(a.author).toBeDefined()
@@ -581,7 +581,7 @@ describe("cloud", function(){
 						},done)
 					},done)
 				,done)
-			})
+			},200000)
 
 			it("?fields={name:0}", function(done){
 				createBook(NULL).then((book)=>
