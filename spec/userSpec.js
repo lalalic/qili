@@ -73,4 +73,38 @@ describe("user", function(){
 			done()
 		})
 	})
+
+	describe("ping", function(){
+		it("ping", function(done){
+			$.ajax({
+				type:'get',
+				url:`${host}/ping`
+			}).then(done,$.fail(done))
+		})
+		it("xping", function(done){
+			$.ajax({
+				type:'get',
+				url:`${host}/xping`
+			}).then((username)=>{
+				expect(username).toBe(config.tester.username)
+				done()
+			},$.fail(done))
+		})
+	})
+
+	it("basic auth", function(done){
+		$.ajax({
+			type:'get',
+			url:`${host}/xping`,
+			headers:{
+				"X-Application-Id": config.server.adminKey,
+				Authorization: `Basic ${new Buffer(`${config.server.root}:${config.server.rootPassword}`).toString('base64')}`,
+				"X-Session-Token": undefined
+			}
+		}).then((username)=>{
+			expect(username).toBe(config.server.root)
+			done()
+		},$.fail(done))
+	})
+
 })

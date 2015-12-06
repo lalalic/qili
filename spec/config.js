@@ -12,7 +12,8 @@ module.exports={
     tester:{
         _id: tester,
         username:tester,
-        "password": User.prototype.encrypt("test0123"),
+        password: User.prototype.encrypt("test0123"),
+        __password:"test0123",
         __fortest:true,
         createdAt: new Date()
     },

@@ -225,7 +225,7 @@ var config=require('./config'),
 
 		it("to get user data without password", function(){})
 
-		fit("to upload app client code", function(done){
+		it("to upload app client code", function(done){
 			var clientcode=require('fs').createReadStream(__dirname+"/data/clientcode.html")
 			$.ajax({
 				type:'post',
@@ -240,7 +240,7 @@ var config=require('./config'),
 			})
 		})
 
-		fit("to upload admin client code", function(done){
+		it("to upload admin client code", function(done){
 			var clientcode=require('fs').createReadStream(__dirname+"/data/clientcode.html")
 			$.ajax({
 				type:'post',
