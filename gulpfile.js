@@ -6,14 +6,15 @@ gulp.task('default', shell.task('node --debug=5858 server.js'))
     .task('mongo', shell.task('mongod  --storageEngine=wiredTiger --directoryperdb --dbpath="/"'))
 
 
-    .task('docker.mongo', shell.task('docker run --name qili.db -p 27017:27017 -v /data/db:/data/db -d mongo  --storageEngine=wiredTiger --directoryperdb'))
+    .task('docker.mongo', shell.task([
+        'docker run --name qili.db.test --link qili.db -it mongo mongo qili.db',//mongo console
+        'docker run --name qili.db -p 27017:27017 -v /data/db:/data/db -d mongo  --storageEngine=wiredTiger --directoryperdb']))
     .task('docker.app', shell.task([
-            'docker build --quiet=true --rm=true --tag="qili" .',
+            //update source code, node-inspector, and test
             /* db.host=qili.db*/
-            'docker run --name qili.server -v /data/log:/data/log -p 9080:9080 --link qili.db -d qili']))
+            'docker run --name qili.server -v /data:/data --workdir /data/qili -p 9080:9080 -p 8080:8080 --link qili.db -d node node_modules/.bin/node-debug --no-debug-brk --no-prelead server.js']))
     .task('docker.nginx', shell.task(
         'docker run --name qili.proxy -v /data:/data -v /data/qili/nginx.conf:/etc/nginx/nginx.conf  -p 80:80 -p 443:443 --link qili.server -d nginx'))
-    .task('docker.test', shell.task(['docker run --name qili.test --link qili.server qili npm test']))
     /* pre:
      * docker images: mongo, nginx, /data/[qili|data|log/nginx]
      * */

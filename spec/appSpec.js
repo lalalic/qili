@@ -26,7 +26,7 @@ var config=require('./config'),
 						expect(doc._id).toBeDefined()
 						expect(doc.apiKey).toBeDefined()
 						expect(doc.createdAt).toBeDefined()
-						
+
 						return $.get(`${root}/${doc._id}`)
 							.then(function(a){
 								expect(a.author).toBeDefined()
@@ -197,6 +197,61 @@ var config=require('./config'),
 						})
 						done()
 					},done)
+			})
+		})
+	})
+
+	describe("management", function(){
+		var _root, extra=`appman=${config.testApp.apiKey}`;
+		beforeAll(()=>{
+			_root=root
+			root=host+'/schemas'
+		})
+		afterAll(()=>root=_root)
+
+		it("to create schemas and indexes", function(){
+			//$.ajax({type:'post', url:root, })
+		})
+
+		it("to change schemas and indexes", function(){})
+
+		it("to drop a collection", function(){})
+
+		it("to get indexes", function(){})
+
+		it("to get schemas", function(){})
+
+		it("to get collection data", function(){})
+
+		it("to get user data without password", function(){})
+
+		fit("to upload app client code", function(done){
+			var clientcode=require('fs').createReadStream(__dirname+"/data/clientcode.html")
+			$.ajax({
+				type:'post',
+				url:`${root}/clientcode?`+extra,
+				formData: {clientcode}
+			}).then((r)=>{
+				expect(r).toBe(config.testApp.apiKey)
+				done()
+			},(e)=>{
+				fail(e)
+				done()
+			})
+		})
+
+		fit("to upload admin client code", function(done){
+			var clientcode=require('fs').createReadStream(__dirname+"/data/clientcode.html")
+			$.ajax({
+				type:'post',
+				url:`${root}/clientcode?appman=${config.server.adminKey}`,
+				formData: {clientcode}
+			}).then((r)=>{
+				expect(r).toBe(config.server.adminKey)
+				done()
+			},(e)=>{
+				fail(e)
+				done()
 			})
 		})
 	})

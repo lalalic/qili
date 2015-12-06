@@ -20,6 +20,7 @@ module.exports={
         _id:tester,
         apiKey: tester,
         name: tester,
+        uname: tester,
         __fortest:true,
         author: {
             _id:tester,

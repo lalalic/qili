@@ -8,7 +8,7 @@ COPY conf.product.js ./conf.js
 
 RUN npm install cnpm -g --registry=https://registry.npm.taobao.org
 
-RUN cnpm install -g node-gyp jasmine pm2
+RUN cnpm install -g node-gyp
 
 RUN cnpm install --production
 

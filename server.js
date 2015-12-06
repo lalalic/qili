@@ -9,8 +9,9 @@ require("./lib/cloud").support()
 var express = require('express');
 var app = module.exports.app = express.Router();
 var bodyParser = require("body-parser");
+var multipart=require('connect-multiparty')
 
-(function debug(){
+;(function debug(){
 	if(!config.debug)
 		return;
 
@@ -32,7 +33,7 @@ var bodyParser = require("body-parser");
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended : true, verify: require('./lib/file').verify}));
-
+app.use(multipart())
 
 app.use(require('./lib/wechat').resolve(app, config))
 app.use(require('./lib/app').resolve())

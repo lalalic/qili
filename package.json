@@ -9,7 +9,9 @@
   "dependencies": {
     "backbone": "~1.1.x",
     "body-parser": "~1.12.x",
+    "connect-multiparty": "^2.0.0",
     "express": "^4.x",
+    "mkdirp": "^0.5.1",
     "mongodb": "^2.0.39",
     "qiniu": "~6.1.x",
     "underscore": "^1.8.3",
