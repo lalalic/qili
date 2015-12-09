@@ -218,7 +218,7 @@ describe("entity", function(){
 						},done)
 					}
 				,done)
-		}, 1000000)
+		})
 	})
 
 	it("delete with DELETE", function(done){

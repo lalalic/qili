@@ -581,7 +581,7 @@ describe("cloud", function(){
 						},done)
 					},done)
 				,done)
-			},200000)
+			})
 
 			it("?fields={name:0}", function(done){
 				createBook(NULL).then((book)=>
@@ -841,4 +841,111 @@ describe("cloud", function(){
 			},done)
 		})
 	})
+
+	describe("wechat (/:appkey/wechat)", function(){
+	    var config=require('./config'),
+			host=config.host,
+			root=host+"/test/wechat",
+			$=require('./ajax')();
+
+		function signature(timestamp){
+			var shasum = crypto.createHash('sha1');
+			var arr = [token, timestamp, nonce].sort();
+			shasum.update(arr.join(''));
+			return shasum.digest('hex')
+		}
+
+	    var token=config.server.token,
+	        nonce="asdfkafdljadsf",
+	        echostr="hrlslkjsfg",
+	        crypto = require('crypto'),
+			now=Date.now()+"",
+			url=`${root}?nonce=${nonce}&timestamp=${now}&signature=${signature(now)}`
+
+
+	    beforeAll((done)=>config.init().then(done,done)	)
+		afterAll((done)=>config.release().then(done,done))
+
+	    it("validate token by GET",function(done){
+	        var timestamp=Date.now()+""
+	        $.ajax({
+	            type:'get',
+	            url:`${url}&echostr=${echostr}`
+	        }).then(function(a){
+	            expect(a).toBe(echostr)
+	            done()
+	        }, done)
+	    })
+
+	    describe('wechat cloud', function(){
+	        var opt={
+	            url,
+	            type:'post',
+	            headers:{'Content-Type':'xml;encoding=utf-8'},
+	            dataType:'xml'
+	        }, _head=`<xml>
+					<ToUserName><![CDATA[toUser]]></ToUserName>
+					<FromUserName><![CDATA[fromUser]]></FromUserName>
+					<CreateTime>1348831860</CreateTime>
+					<MsgId>1234567890123456</MsgId>`,
+				text=`${_head}
+					<MsgType><![CDATA[text]]></MsgType>
+					<Content><![CDATA[test]]></Content>
+				</xml>`;
+	        it(".all",(done)=>{
+	            changeCloudCode(done,(Cloud)=>{
+	                Cloud.wechat.on((req,res,next)=>{
+						res.success(JSON.stringify(req.message))
+	                })
+	            }).then(()=>{
+					var now=Date.now()
+	                $.ajax(Object.assign({
+						body:text
+	                },opt)).then((m)=>{
+						expect(m.indexOf("<ToUserName><![CDATA[fromUser]]></ToUserName>")).not.toBe(-1)
+						expect(m.indexOf(JSON.stringify({MsgType:"text",Content:"test"}))).not.toBe(-1)
+						done()
+	                },$.fail(done))
+	            }, $.fail(done,"cloud code fails changed"))
+	        })
+
+	        it(".all then .text",(done)=>{
+				changeCloudCode(done,(Cloud)=>{
+	                Cloud.wechat.on((req,res,next)=>{
+						req.message.all=1
+						next()
+	                }).on('text',(req,res)=>{
+						res.success(JSON.stringify(req.message))
+					})
+	            }).then(()=>{
+					var now=Date.now()
+	                $.ajax(Object.assign({
+						body:text
+	                },opt)).then((m)=>{
+						expect(m.indexOf("<ToUserName><![CDATA[fromUser]]></ToUserName>")).not.toBe(-1)
+						expect(m.indexOf(JSON.stringify({MsgType:"text",Content:"test",all:1}))).not.toBe(-1)
+						done()
+	                },$.fail(done))
+	            }, $.fail(done,"cloud code fails changed"))
+			})
+
+			it("only .text",(done)=>{
+				changeCloudCode(done,(Cloud)=>{
+					Cloud.wechat.on('text',(req,res)=>{
+						res.success(JSON.stringify(req.message))
+					})
+				}).then(()=>{
+					var now=Date.now()
+					$.ajax(Object.assign({
+						body:text
+					},opt)).then((m)=>{
+						expect(m.indexOf("<ToUserName><![CDATA[fromUser]]></ToUserName>")).not.toBe(-1)
+						expect(m.indexOf(JSON.stringify({MsgType:"text",Content:"test"}))).not.toBe(-1)
+						done()
+					},$.fail(done))
+				}, $.fail(done,"cloud code fails changed"))
+			})
+		})
+	})
+
 })

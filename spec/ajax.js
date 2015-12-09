@@ -6,12 +6,6 @@ var request=require('request'),
 	},
 	config=require("./config");
 
-function omit(a){
-	var b=Object.assign({},a)
-	for(var i=1, len=arguments.length;i<len;i++)
-		delete b[arguments[i]]
-	return b
-}
 module.exports=function(){
 	var defaults=Object.assign({},gDefaults), AJAX={};
 	defaults.headers=Object.assign({},gDefaults.headers,defaults.headers||{})
@@ -20,8 +14,7 @@ module.exports=function(){
 		var opts;
 		if ((typeof options === 'function') && !callback) callback = options
 		if (options && typeof options === 'object') {
-			opts = Object.assign({},defaults,omit(options,"dataType,type,data".split(",")));
-			opts.headers=Object.assign({},defaults.headers,opts.headers||{})
+			opts = Object.assign({},defaults,{headers:Object.assign({},defaults.headers)});
 			options && ajaxSetup(options,opts)
 			opts.uri = uri
 		} else if (typeof uri === 'string') {
@@ -37,16 +30,23 @@ module.exports=function(){
 
 	function ajaxSetup(options, target){
 		target=target||defaults
-		if(options.dataType=='json')
-			target.json=true;
-		if(options.headers)
-			Object.assign(target.headers,options.headers)
-		if(options.type)
-			target.method=options.type.toLowerCase()
-		if(options.data && target.json)
-			target.json=options.data
-		if(options.error)
-			target.error=options.error
+		var headers=Object.assign(target.headers||{}, options.headers||{})
+
+		Object.assign(target,options,{headers})
+
+		if(target.dataType=='json'){
+			if(target.data){
+				target.json=target.data
+				delete target.data
+			}else
+				target.json=true;
+		}else
+			target.json=false
+
+		if(target.type){
+			target.method=target.type.toLowerCase()
+			delete target.type
+		}
 	}
 
 	function _request(uri,options){
@@ -55,9 +55,12 @@ module.exports=function(){
 		options=params.options
 		var errorHandler=options.error
 
+
 		if(options.json && options.method=='post')
 			options.json.__fortest=true
 
+		delete options.url
+		delete options.uri
 		return new Promise((resolve, reject)=>{
 			request(uri, options, function(error, response, body){
 				if(error){

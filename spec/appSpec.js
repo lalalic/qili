@@ -40,7 +40,8 @@ var config=require('./config'),
 
 			it("can't create application with same name within an org", function(done){
 				createApp(NULL).catch($.fail(done,"can't create app"))
-					.then((app)=>$.post(root,{data:{name:app.name},error:null})
+					.then((app)=>{
+						$.post(root,{data:{name:app.name},error:null})
 						.then(function(doc){
 							fail("should not create new app")
 							done()
@@ -48,7 +49,7 @@ var config=require('./config'),
 							expect(error).toMatch(/duplicate key/gi)
 							done()
 						})
-					)
+					})
 			})
 
 			it("can't create application with empty name", function(done){

@@ -55,7 +55,7 @@ xdescribe('File Service', function(){
 			},done)
 		}
 
-		it("simple content and get url", (done)=>upload(done).catch(fail), 8000)
+		it("simple content and get url", (done)=>upload(done).catch(fail))
 
 		it("upload multiple times with one token", (done)=>{
 			let doUpload=(token)=>{
@@ -79,7 +79,7 @@ xdescribe('File Service', function(){
 					doUpload(token)
 				]).then(done,$.fail(done))
 			},done)
-		},8000)
+		})
 
 		it("can't replace", function(done){
 			upload(NULL,"test replace","replaceit").then(()=>{
