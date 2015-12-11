@@ -205,7 +205,7 @@ describe("application log service should provide", function(){
 								$.get(root)
 								.then(function(docs){
 									expect(docs.results).toBeDefined()
-									expect(docs.results.length-len).toBe(3)
+									expect(docs.results.length-len).toBe(2)
 									done()
 								},done)
 							},done)

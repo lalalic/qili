@@ -1,5 +1,5 @@
 Object.assign(Object.prototype,{
-	forEach(f,context){
+	forEach(f,context){//support iterate keys
 		Object.keys(this).forEach((k)=>f.call(context, this[k], k))
 	}
 })
@@ -59,3 +59,7 @@ process.on("uncaughtException",function(error){
 	console.info(new Date())
 	console.dir(error,{depth:null})
 })
+/**
+* @Todo:
+log is not thread-safe
+*/
