@@ -37,7 +37,7 @@ module.exports=function(){
 		if(target.dataType=='json'){
 			if(target.data){
 				target.json=target.data
-				delete target.data
+				//delete target.data //why .json will be null with this
 			}else
 				target.json=true;
 		}else
@@ -61,6 +61,7 @@ module.exports=function(){
 
 		delete options.url
 		delete options.uri
+		//console.dir(options)
 		return new Promise((resolve, reject)=>{
 			request(uri, options, function(error, response, body){
 				if(error){
