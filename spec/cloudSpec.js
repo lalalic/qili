@@ -249,7 +249,7 @@ describe("cloud", function(){
 				]).then(()=>
 						Promise.all([
 							$.get(host+"/functions/test"),
-							$.get(host+"/functions/test",{headers:{"X-Application-Id":app._id}})
+							$.get(host+"/functions/test",{headers:{"X-Application-Id":app.apiKey}})
 						]).then((results)=>{
 							expect(results.length).toBe(2)
 							expect(results[0].array).toBe(10)
@@ -364,7 +364,7 @@ describe("cloud", function(){
 								]).then(function(){
 									Promise.all([
 										$.get(host+"/functions/test"),
-										$.get(host+"/functions/test",{headers:{"X-Application-Id":app._id}})
+										$.get(host+"/functions/test",{headers:{"X-Application-Id":app.apiKey}})
 									]).then(function(results){
 										expect(results.length).toBe(2)
 										expect(results[0].imchanged).toBe(true)
