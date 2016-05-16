@@ -41,9 +41,9 @@
     "start": "node server.js",
 	"debug": "node --debug-brk=5858 server.js",
 	
-	"mongo": 'mongod  --storageEngine=wiredTiger --directoryperdb --dbpath="mongo/"',
+	"mongo": "mongod  --storageEngine=wiredTiger --directoryperdb --dbpath=\"mongo/\"",
     "test": "./node_modules/.bin/jasmine",
-	"test.debug": 'node --debug-brk=5959 ./node_modules/.bin/jasmine'
+	"test.debug": "node --debug-brk=5959 ./node_modules/.bin/jasmine"
   },
   "readme": "README.md",
   "devDependencies": {
