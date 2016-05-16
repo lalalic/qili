@@ -1,0 +1,11 @@
+language: node_js
+node_js: 
+ - "4.2"
+
+services:
+ - mongodb
+before_script:
+ - echo '127.0.0.1 qili.server' > /etc/hosts
+ - echo '127.0.0.1 qili.db' > /etc/hosts
+ - head -20 /etc/hosts
+ 

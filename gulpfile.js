@@ -3,7 +3,7 @@ var gulp=require('gulp'),
 gulp.task('default', shell.task('node --debug=5858 server.js'))
     .task('test', shell.task('jasmine'))
     .task('test.debug', shell.task('node --debug-brk=5959 ./node_modules/.bin/jasmine'))
-    .task('mongo', shell.task('mongod  --storageEngine=wiredTiger --directoryperdb --dbpath="/"'))
+    .task('mongo', shell.task('mongod  --storageEngine=wiredTiger --directoryperdb --dbpath="mongo/"'))
 
 
     .task('docker.mongo', shell.task([

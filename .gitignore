@@ -29,3 +29,5 @@ view/dashboard
 .lock-wscript
 
 apps
+
+mongo/
