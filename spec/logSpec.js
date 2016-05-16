@@ -1,4 +1,4 @@
-describe("application log service should provide", function(){
+xdescribe("application log service should provide", function(){
 	var config=require('./config'),
 		host=config.host,
 		root=host+"/logs",
@@ -78,7 +78,7 @@ describe("application log service should provide", function(){
 					},done)
 				})
 
-				xit("error log", function(done){
+				it("error log", function(done){
 					changeCloudCode(done,function(Cloud){
 						Cloud.define('test',function(req, res){
 							console.error("error log")
