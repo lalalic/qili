@@ -6,8 +6,8 @@ module.exports={
 		host : "qili.db"
 	},
 	server : {
-		port : 80,
-		https : 443,
+		port : 8080,
+		https : 8443,
 		timeout : 120
 	},
 	qiniu:{
