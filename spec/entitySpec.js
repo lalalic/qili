@@ -35,7 +35,7 @@ describe("entity", function(){
 		})
 	})
 
-	describe("query with GET", function(done){
+	describe("query with GET", function(){
 		it(":id", function(done){
 			createBook(NULL).catch($.fail(done,"can't create entity book"))
 				.then((book)=>$.get(`${root}/${book._id}`)
