@@ -1,11 +1,9 @@
 language: node_js
 node_js: 
  - "4.2"
-
 services:
  - mongodb
-before_install:
- - sudo echo '127.0.0.1 qili.server' > /etc/hosts
- - sudo echo '127.0.0.1 qili.db' > /etc/hosts
- - head -20 /etc/hosts
- 
+addons:
+ hosts:
+  - qili.server
+  - qili.db
