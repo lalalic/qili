@@ -7,3 +7,7 @@ addons:
  hosts:
   - qili.server
   - qili.db
+before_script:
+ - sleep 15
+ - npm start &
+ - sleep 2
