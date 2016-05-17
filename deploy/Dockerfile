@@ -1,10 +1,8 @@
-FROM node:latest
+FROM node:4
 
-RUN mkdir -p /usr/src/app
-WORKDIR /usr/src/app
+WORKDIR /data/qili
 RUN git init
 RUN git pull https://github.com/lalalic/qili.git
-COPY conf.product.js ./conf.js
 
 RUN npm install cnpm -g --registry=https://registry.npm.taobao.org
 
@@ -20,14 +18,9 @@ RUN cd node_modules/mongodb/node_modules/mongodb-core/ & rm -rf node_modules & c
 RUN cnpm cache clear
 
 EXPOSE 9080
-
-VOLUME /usr/src/app
-VOLUME /data/log
+EXPOSE 9443
 
 CMD exec > /data/log/qili.log && \
-    mv conf.js conf.js.bak && \
-    git checkout conf.js && \
     git pull https://github.com/lalalic/qili.git && \
-    mv conf.js.bak conf.js && \
     cnpm install --production && \
     npm start

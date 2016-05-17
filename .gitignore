@@ -28,6 +28,4 @@ view/dashboard
 # Users Environment Variables
 .lock-wscript
 
-apps
-
-mongo/
+test/

@@ -1,9 +1,11 @@
+var env=process.env
+
 module.exports={
-	debug:true,
 	version:"1",
+	debug: env.DEBUG || false,
 	db : {
-		port : 27017,
-		host : "qili.db"
+		port : env.DB_PORT || 27017,
+		host : env.DB_HOST || "qili.db"
 	},
 	server : {
 		port : 9080,
@@ -11,22 +13,34 @@ module.exports={
 		timeout : 120
 	},
 	qiniu:{
-		ACCESS_KEY:"1o_JaGUUb8nVxRpDGoAYB9tjLT10WD7PBFVtMmVT",
-		SECRET_KEY:"r2nd182ZXzuCiCN7ZLoJPFVPZHqCxaUaE73RjKaW",
-		bucket:"qili2-app",
-		accessURL:"http://app.qili2.com",
-		expires:600,
+		ACCESS_KEY:env.QINIU_ACCESS_KEY,
+		SECRET_KEY:env.QINIU_SECRET_KEY,
+		bucket:env.QINIU_BUCKET,
+		accessURL:env.QINIU_ACCESS_URL,
+		expires:env.QINIU_EXPIRES || 600,
 	},
-	domain:"http://qili2.com", //qiniu need it
+	domain: env.DOMAIN, //qiniu need it, if you don't use file, ignore it
 	cloud:{
-		timeout:3000
+		timeout: env.CLOUD_TIMEOUT || 3000
 	},
-	appRoot:`${__dirname}/apps`,
-	token:"thirdtoken",//such as wechat api token
-	secret:"abcdef",
-	root:"root",
-	rootPassword:"root",
-	adminKey:"qiliAdmin",
+	appRoot: env.APPS_ROOT || `${__dirname}/test/apps`,
+	wechat:{
+		token: env.WECHAT_TOKEN//wechat api token, ignore it without wechat integration
+	},
+	
+	
+	secret: env.SECRET || "abcdef",
+	root: env.ROOT || "root",
+	rootPassword:env.PASSWORD || "root",
+	adminKey: env.ADMIN_KEY || "qiliAdmin",
+	
 	sharedModules:"backbone,ajax".split(","),
-	Internal_API:["users,roles,files,logs".split(",")]
+	Internal_API:["users,roles,files,logs".split(",")],
+	DEFAULT_SCHEMA: {
+		users:[{username:1, $option:{unique:true}},{email:1, $option:{unique:true, sparse:true}}],
+		roles:[{name:1, $option:{unique:true}}],
+		apps:[{'author._id':1,'name':1, $option:{unique:true}}],
+		logs:[{level:1}, {'message.path':1, $option:{name:'accesspath', spare:true}}],
+		files:[{'entity.kind':1,'entity._id':1, $option:{name:'entity', spare:true}}]
+	}
 }

@@ -38,17 +38,15 @@
     "node": ">= 0.4.4"
   },
   "scripts": {
-    "start": "node server.js",
-	"debug": "node --debug-brk=5858 server.js",
+    "start": "node ./lib/index.js",
+	"debug": "node --debug-brk=5858 ./lib/index.js",
 	
-	"mongo": "mongod  --storageEngine=wiredTiger --directoryperdb --dbpath=\"mongo/\"",
-    "test": "./node_modules/.bin/jasmine",
+	"mongo": "mongod  --storageEngine=wiredTiger --directoryperdb --dbpath=\"test/mongo/\"",
+    "test": "jasmine",
 	"test.debug": "node --debug-brk=5959 ./node_modules/.bin/jasmine"
   },
   "readme": "README.md",
   "devDependencies": {
-    "gulp": "^3.9.0",
-    "gulp-shell": "^0.4.2",
     "jasmine": "^2.3.2",
     "request": "^2.60.0"
   }
