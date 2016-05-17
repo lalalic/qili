@@ -16,10 +16,6 @@ before_script:
  - sleep 15
  - npm start &
  - sleep 2
-after_success:
- - mkdir test/data/qili
- - mkdir test/data/log
- - mkdir test/data/apps
- - cd deploy
- - docker-compose up
- - curl http://localhost/1/____test
+deploy:
+ provider: script
+ script: deploy/index.js

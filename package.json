@@ -39,15 +39,15 @@
   },
   "scripts": {
     "start": "node ./lib/index.js",
-	"debug": "node --debug-brk=5858 ./lib/index.js",
-	
-	"mongo": "mongod  --storageEngine=wiredTiger --directoryperdb --dbpath=\"test/mongo/\"",
+    "debug": "node --debug-brk=5858 ./lib/index.js",
+    "mongo": "mongod  --storageEngine=wiredTiger --directoryperdb --dbpath=\"test/mongo/\"",
     "test": "jasmine",
-	"test.debug": "node --debug-brk=5959 ./node_modules/.bin/jasmine"
+    "test.debug": "node --debug-brk=5959 ./node_modules/.bin/jasmine"
   },
   "readme": "README.md",
   "devDependencies": {
     "jasmine": "^2.3.2",
-    "request": "^2.60.0"
+    "request": "^2.60.0",
+    "ssh-exec": "^2.0.0"
   }
 }

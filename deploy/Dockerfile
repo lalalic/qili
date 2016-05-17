@@ -1,4 +1,4 @@
-FROM node:4
+FROM "${IMAGE_ROOT}node:4"
 
 WORKDIR /data/qili
 RUN git init
