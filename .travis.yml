@@ -1,4 +1,5 @@
 language: node_js
+group: edge
 node_js: 
  - "4.2"
 services:
