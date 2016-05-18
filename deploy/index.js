@@ -1,16 +1,10 @@
 #!/usr/bin/env node
 
 var exec = require('ssh-exec'),
-	env=process.env,
-	stream=exec('bash',{	
+	env=process.env
+
+exec(env.DEPLOYER,{	
 		user: env.DEPLOY_USER,
 		host: env.DEPLOY_HOST,
 		password: env.DEPLOY_PASSWORD
-	});
-	
-stream.pipe(process.stdout)
-	
-stream.write(`
-cd /data/qili
-ls -a`)
-
+	}).pipe(process.stdout)
