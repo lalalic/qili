@@ -1,6 +1,8 @@
 language: node_js
 node_js: 
  - "4.2"
+install:
+ - echo "installed"
 #services:
 # - mongodb
 #addons:
@@ -14,10 +16,11 @@ node_js:
 # - sleep 5
 # - npm start &
 # - sleep 2
-#before_deploy:
-# - chmod u+x deploy/deploy.sh
+before_deploy:
+ - chmod u+x deploy/deploy.sh
 script:
  - echo "hello world"
 deploy:
  provider: script
+ skip_cleanup: true
  script: deploy/deploy.sh
