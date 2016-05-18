@@ -1,4 +1,4 @@
-FROM "${HUB}node:latest"
+FROM node
 
 WORKDIR /data/qili
 
