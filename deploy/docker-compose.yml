@@ -1,5 +1,5 @@
 qili.proxy:
- image: "${IMAGE_ROOT}nginx"
+ image: "${HUB}nginx"
  ports:
   - "80:80"
   - "443:443"
@@ -35,7 +35,7 @@ qili.server:
   - "${DATA_ROOT}/data:/data"
 
 qili.db:
- image: "${IMAGE_ROOT}mongo"
+ image: "${HUB}mongo"
  ports:
   - "27017:27017"
  volumes:
