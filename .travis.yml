@@ -1,23 +1,21 @@
 language: node_js
 node_js: 
  - "4.2"
-#services:
-# - mongodb
-#addons:
-# hosts:
-#  - qili.server
-#  - qili.db
-#before_script:
-# - mkdir test
-# - mkdir test/data
-# - mkdir test/data/apps
-# - sleep 5
-# - npm start &
-# - sleep 2
+services:
+ - mongodb
+addons:
+ hosts:
+  - qili.server
+  - qili.db
+before_script:
+ - mkdir test
+ - mkdir test/data
+ - mkdir test/data/apps
+ - sleep 5
+ - npm start &
+ - sleep 2
 before_deploy:
  - chmod u+x deploy/deploy.sh
-script:
- - echo "hello world"
 deploy:
  provider: script
  skip_cleanup: true
