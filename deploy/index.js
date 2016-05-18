@@ -10,8 +10,6 @@ var exec = require('ssh-exec'),
 	
 stream.write(`
 cd /data/qili
-git pull
-cd deploy
-${env.DOCKER_COMPOSE_ENV} docker-compose restart`)
+ls -a`)
 
 stream.pipe(process.stdout)
