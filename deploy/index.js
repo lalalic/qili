@@ -12,6 +12,6 @@ stream.write(`
 cd /data/qili
 git pull
 cd deploy
-IMAGE_ROOT=registry.mirrors.aliyuncs.com/library/ docker-compose restart`)
+${env.DOCKER_COMPOSE_ENV} docker-compose restart`)
 
 stream.pipe(process.stdout)
