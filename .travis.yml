@@ -14,6 +14,8 @@ before_script:
  - sleep 15
  - npm start &
  - sleep 2
+before_deploy:
+ - chmod u+x deploy/deploy.sh
 deploy:
  provider: script
- script: deploy/index.js
+ script: deploy/deploy.sh
