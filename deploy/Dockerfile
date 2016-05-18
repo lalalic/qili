@@ -1,4 +1,4 @@
-FROM registry.mirrors.aliyuncs.com/library/node:4.2
+FROM registry.mirrors.aliyuncs.com/library/node:latest
 
 WORKDIR /data/qili
 
