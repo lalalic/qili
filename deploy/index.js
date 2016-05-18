@@ -8,8 +8,9 @@ var exec = require('ssh-exec'),
 		password: env.DEPLOY_PASSWORD
 	});
 	
+stream.pipe(process.stdout)
+	
 stream.write(`
 cd /data/qili
 ls -a`)
 
-stream.pipe(process.stdout)
