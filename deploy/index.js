@@ -1,10 +1,12 @@
 #!/usr/bin/env node
 
 var exec = require('ssh-exec'),
-	env=process.env
-
-exec(env.DEPLOYER,{	
+	env=process.env,
+	opt={
 		user: env.DEPLOY_USER,
 		host: env.DEPLOY_HOST,
 		password: env.DEPLOY_PASSWORD
-	}).pipe(process.stdout)
+	}
+	//,cmd=require("fs").readFileSync("./start.sh").replace(/\${(.*?)}/gm,(a,key)=>env[key]||"")
+
+exec(env.DEPLOYER,opt).pipe(process.stdout)
