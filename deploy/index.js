@@ -15,13 +15,11 @@ function decode(a){
 }
 var cmds=require("fs").readFileSync(`${__dirname}/start.sh`,{encoding:"utf8"}).replace(/\${(.*?)}/gm,(a,key)=>decode(env[key])||"")
 
-//new file
-exec(`echo "#${new Date()}" > ${target}`,opt).pipe(process.stdout)
-
-cmds.split(/\r?\n/).forEach(a=>{
-	exec(`echo "#${a}" >> ${target}`,opt).pipe(process.stdout)
-})
-exec(`echo "!finish deploying on remote target!" >> ${target}`,opt).pipe(process.stdout)
-exec(`chmod u+x ${target}`,opt).pipe(process.stdout)
-
-exec(target,opt).pipe(process.stdout)
+exec(`echo "${cmds}" > ${target}`,opt, error=>{
+	if(error)
+		return;
+	exec(`chmod u+x ${target}`,opt, error=>{
+		if(error) return;
+		exec(target,opt).pipe(process.stdout)
+	}).pipe(process.stdout)
+}).pipe(process.stdout)
