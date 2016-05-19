@@ -1,5 +1,5 @@
 language: node_js
-node_js: 
+node_js:
  - "4.2"
 services:
  - mongodb
@@ -14,9 +14,12 @@ before_script:
  - sleep 5
  - npm start &
  - sleep 2
+
+#created by travis-deploy-ssh
+
 before_deploy:
- - chmod u+x deploy/deploy.sh
+ - chmod u+x node_modules/travis-deploy-ssh/deploy.sh
 deploy:
  provider: script
  skip_cleanup: true
- script: deploy/deploy.sh
+ script: node_modules/travis-deploy-ssh/deploy.sh
