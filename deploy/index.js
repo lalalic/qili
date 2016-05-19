@@ -6,7 +6,17 @@ var exec = require('ssh-exec'),
 		user: env.DEPLOY_USER,
 		host: env.DEPLOY_HOST,
 		password: env.DEPLOY_PASSWORD
-	}
-	//,cmd=require("fs").readFileSync("./start.sh").replace(/\${(.*?)}/gm,(a,key)=>env[key]||"")
+	},
+	target=env.TARGET_DEPLOY_FILE
+var cmds=require("fs").readFileSync("./start.sh").replace(/\${(.*?)}/gm,(a,key)=>env[key]||"")
 
-exec(env.DEPLOYER,opt).pipe(process.stdout)
+//new file
+exec(`echo #${new Date()} > ${target}`,opt).pipe(process.stdout)
+
+cmds.split(/\r?\n/).forEach(a=>{
+	exec(`echo "${a}" >> ${target}`).pipe(process.stdout)
+})
+
+exec(`chmod u+x ${target}`,opt).pipe(process.stdout)
+
+exec(target,opt).pipe(process.stdout)

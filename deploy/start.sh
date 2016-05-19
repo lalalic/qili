@@ -1,4 +1,5 @@
-cd ${GIT_REPOSITORY}
+cd ${TARGET_REPOSITORY_PATH}
 git pull
 cd deploy
-${DOCKER_ENVS} docker-compose restart
+${TARGET_DOCKER_ENVS} docker-compose ${TARGET_DOCKER_ACTIOIN}
+echo "deploy done on server"
