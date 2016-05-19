@@ -8,7 +8,7 @@ var exec = require('ssh-exec'),
 		password: env.DEPLOY_PASSWORD
 	},
 	target=env.TARGET_DEPLOY_FILE
-var cmds=require("fs").readFileSync("./start.sh").replace(/\${(.*?)}/gm,(a,key)=>env[key]||"")
+var cmds=require("fs").readFileSync(`${__dirname}/start.sh`).replace(/\${(.*?)}/gm,(a,key)=>env[key]||"")
 
 //new file
 exec(`echo #${new Date()} > ${target}`,opt).pipe(process.stdout)
