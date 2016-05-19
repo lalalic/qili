@@ -8,13 +8,18 @@ var exec = require('ssh-exec'),
 		password: env.DEPLOY_PASSWORD
 	},
 	target=env.TARGET_DEPLOY_FILE
-var cmds=require("fs").readFileSync(`${__dirname}/start.sh`,{encoding:"utf8"}).replace(/\${(.*?)}/gm,(a,key)=>env[key]||"")
+function decode(a){
+	if(a && a[0]=="'")
+		return a.sustring(1,a.length-2)
+	return a
+}
+var cmds=require("fs").readFileSync(`${__dirname}/start.sh`,{encoding:"utf8"}).replace(/\${(.*?)}/gm,(a,key)=>decode(env[key])||"")
 
 //new file
 exec(`echo #${new Date()} > ${target}`,opt).pipe(process.stdout)
 
 cmds.split(/\r?\n/).forEach(a=>{
-	exec(`echo "${a}" >> ${target}`).pipe(process.stdout)
+	exec(`echo "${a}" >> ${target}`,opt).pipe(process.stdout)
 })
 
 exec(`chmod u+x ${target}`,opt).pipe(process.stdout)
