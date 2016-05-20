@@ -16,8 +16,6 @@ before_script:
  - npm start &
  - sleep 2
 
-
-
 #created by travis-deploy-ssh
 
 before_deploy:
@@ -26,3 +24,4 @@ deploy:
  provider: script
  skip_cleanup: true
  script: node_modules/travis-deploy-ssh/deploy.sh
+
