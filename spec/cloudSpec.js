@@ -855,7 +855,7 @@ describe("cloud", function(){
 			return shasum.digest('hex')
 		}
 
-	    var token=config.wechat.token,
+	    var token=config.server.wechat.token,
 	        nonce="asdfkafdljadsf",
 	        echostr="hrlslkjsfg",
 	        crypto = require('crypto'),
