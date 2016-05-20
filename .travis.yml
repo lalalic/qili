@@ -7,6 +7,9 @@ addons:
  hosts:
   - qili.server
   - qili.db
+ apt:
+  packages:
+   - sshpass
 before_script:
  - mkdir test
  - mkdir test/data
@@ -15,11 +18,8 @@ before_script:
  - npm start &
  - sleep 2
 
-#created by travis-deploy-ssh
-
-before_deploy:
- - chmod u+x node_modules/travis-deploy-ssh/deploy.sh
-deploy:
- provider: script
- skip_cleanup: true
- script: node_modules/travis-deploy-ssh/deploy.sh
+after_success:
+ - node scripts/replaceEnv.js .travis.deploy.sh qili.travis.deploy.sh
+ - sshpass -p $DEPLOY_PASSWORD scp qili.travis.deploy.sh $DEPLOY_USER@$DEPLOY_HOST:qili.travis.deploy.sh
+ - sshpass -p $DEPLOY_PASSWORD ssh $DEPLOY_USER@$DEPLOY_HOST ./qili.travis.deploy.sh
+ - echo done
