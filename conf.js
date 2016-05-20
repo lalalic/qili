@@ -25,15 +25,15 @@ module.exports={
 	},
 	appRoot: env.APPS_ROOT || `${__dirname}/test/apps`,
 	wechat:{
-		token: env.WECHAT_TOKEN//wechat api token, ignore it without wechat integration
+		token: env.WECHAT_TOKEN||'myqili'//wechat api token, ignore it without wechat integration
 	},
-	
-	
+
+
 	secret: env.SECRET || "abcdef",
 	root: env.ROOT || "root",
 	rootPassword:env.PASSWORD || "root",
 	adminKey: env.ADMIN_KEY || "qiliAdmin",
-	
+
 	sharedModules:"backbone,ajax".split(","),
 	Internal_API:["users,roles,files,logs".split(",")],
 	DEFAULT_SCHEMA: {
