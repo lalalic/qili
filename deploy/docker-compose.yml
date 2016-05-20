@@ -10,25 +10,25 @@ qili.proxy:
   - "${DATA_ROOT}/data/qili/deploy/nginx.conf:/etc/nginx/nginx.conf"
 
 qili.server:
- build: ./
- ports:
-  - "9080:9080"
-  - "9443:9443"
+ build: "${DATA_ROOT}/data/qili/deploy/"
+ expose:
+  - "9080"
+  - "9443"
  environment:
-  - "DOMAIN=${DOMAIN}"
-  - "DB_HOST=${DB_HOST}"
-  - "DB_PORT=${DB_PORT}"
-  - "APPS_ROOT=${APPS_ROOT}"
-  - "ADMIN_KEY=${ADMIN_KEY}"
-  - "SECRET=${SECRET}"
-  - "ROOT=${ROOT}"
-  - "ROOT_PASSWORD=${PASSWORD}"
-  - "QINIU_ACCESS_KEY=${QINIU_ACCESS_KEY}"
-  - "QINIU_SECRET_KEY=$QINIU_SECRET_KEY}"
-#  - "QINIU_BUCKET=${QINIU_BUCKET}"
-  - "QINIU_ACCESS_URL=${QINIU_ACCESS_URL}"
-  - "DEBUG=${DEBUG}"
-  - "CLOUD_TIMEOUT=${CLOUD_TIMEOUT}"
+  - DOMAIN
+  - DB_HOST
+  - DB_PORT
+  - APPS_ROOT
+  - ADMIN_KEY
+  - SECRET
+  - ROOT
+  - ROOT_PASSWORD
+  - QINIU_ACCESS_KEY
+  - QINIU_SECRET_KEY
+#  - QINIU_BUCKET
+  - QINIU_ACCESS_URL
+  - DEBUG
+  - CLOUD_TIMEOUT
  links:
   - qili.db
  volumes:
@@ -36,8 +36,8 @@ qili.server:
 
 qili.db:
  image: "${HUB}mongo:3.1"
- ports:
-  - "27017:27017"
+ expose:
+  - "27017"
  volumes:
   - "${DATA_ROOT}/data/db:/data/db"
  command: --storageEngine=wiredTiger --directoryperdb
