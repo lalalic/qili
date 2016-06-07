@@ -11,6 +11,7 @@
     "body-parser": "~1.12.x",
     "connect-multiparty": "^2.0.0",
     "express": "^4.x",
+    "helmet": "^2.1.0",
     "mkdirp": "^0.5.1",
     "mongodb": "^2.0.39",
     "qiniu": "~6.1.x",
@@ -48,6 +49,6 @@
   "devDependencies": {
     "jasmine": "^2.3.2",
     "request": "^2.60.0",
-	"travis-deploy-ssh":"^1.0.0"
+    "travis-deploy-ssh": "^1.0.0"
   }
 }
