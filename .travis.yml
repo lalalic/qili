@@ -19,15 +19,6 @@ before_script:
  - npm start &
  - sleep 2
 
-#created by travis-deploy-ssh
-
-#before_deploy:
-# - chmod u+x node_modules/travis-deploy-ssh/deploy.sh
-#deploy:
-# provider: script
-# skip_cleanup: true
-# script: node_modules/travis-deploy-ssh/deploy.sh
-
 script:
  - npm test
  - sshpass -e ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $DEPLOY_USER@$DEPLOY_HOST "cd $TARGET_REPOSITORY_PATH && git pull && cd deploy && $TARGET_DOCKER_ENVS docker-compose restart"
