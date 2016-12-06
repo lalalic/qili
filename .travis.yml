@@ -7,6 +7,9 @@ addons:
  hosts:
   - qili.server
   - qili.db
+ apt:
+  packages:
+   - sshpass
 
 before_script:
  - mkdir test
