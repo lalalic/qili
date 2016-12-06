@@ -2,7 +2,7 @@ var env=process.env
 
 module.exports={
 	version:"1",
-	debug: env.DEBUG || false,
+	debug: env.DEBUG || true,
 	db : {
 		port : env.DB_PORT || 27017,
 		host : env.DB_HOST || "qili.db"

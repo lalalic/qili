@@ -13,7 +13,7 @@
     "express": "^4.x",
     "helmet": "^2.1.0",
     "mkdirp": "^0.5.1",
-    "mongodb": "^2.0.39",
+    "mongodb": "2.1.21",
     "qiniu": "~6.1.x",
     "underscore": "^1.8.3",
     "wechat": "^2.0.1"
@@ -40,7 +40,7 @@
   },
   "scripts": {
     "start": "node ./lib/index.js",
-    "debug": "node --debug-brk=5858 ./lib/index.js",
+    "debug": "node --debug ./lib/index.js",
     "mongo": "mongod  --storageEngine=wiredTiger --directoryperdb --dbpath=\"test/mongo/\"",
     "test": "jasmine",
     "test.debug": "node --debug-brk=5959 ./node_modules/.bin/jasmine"
