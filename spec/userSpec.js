@@ -16,7 +16,7 @@ describe("user", function(){
 				user={username,password:`abc${uid++}`,email:`${username}@139.com`}
 			return $.ajax({
 				type:"post",
-				url: root,
+				url: root+"/signup",
 				data:user
 			}).then(function(a){
 				expect(a.sessionToken).toBeDefined()
@@ -30,7 +30,11 @@ describe("user", function(){
 
 		it("get /login", login=function(done){
 			return createUser(NULL).catch($.fail(done,"can't create a user before login"))
-				.then((user)=>$.get(`${host}/login?username=${user.username}&password=${user._raw.password}`)
+				.then((user)=>$.ajax({
+						type:"post",
+						url: root+"/login",
+						data:{username:user.username, password: user._raw.password}
+					})
 					.then((a)=>{
 							expect(a.sessionToken).toBeDefined()
 							expect(a.username).toBe(user.username)
