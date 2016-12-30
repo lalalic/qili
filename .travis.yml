@@ -1,6 +1,6 @@
 language: node_js
 node_js:
- - "4.2"
+ - 6
 services:
  - mongodb
 addons:
@@ -19,6 +19,6 @@ before_script:
  - npm start &
  - sleep 2
 
-script:
- - npm test
+
+after_success:
  - sshpass -e ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $DEPLOY_USER@$DEPLOY_HOST "cd $TARGET_REPOSITORY_PATH && git pull && cd deploy && $TARGET_DOCKER_ENVS docker-compose restart"
