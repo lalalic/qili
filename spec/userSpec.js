@@ -68,7 +68,7 @@ describe("user", function(){
 
 	it("/requestPasswordReset", function(done){
 		$.ajax({
-			type:"get",
+			type:"post",
 			url: host+"/requestPasswordReset",
 			data:{old:"123456",password:"aa"},
 			error: null

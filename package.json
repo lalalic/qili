@@ -43,6 +43,7 @@
     "start": "node ./lib/index.js",
     "debug": "node --inspect --debug ./lib/index.js",
     "mongo": "mongod  --storageEngine=wiredTiger --directoryperdb --dbpath=\"test/mongo/\"",
+
     "test": "jasmine",
     "test.debug": "node --debug-brk=5959 ./node_modules/.bin/jasmine"
   },
@@ -50,5 +51,5 @@
   "devDependencies": {
     "jasmine": "^2.3.2",
     "request": "^2.60.0"
-  }
+    }
 }
