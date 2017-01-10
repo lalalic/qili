@@ -19,6 +19,15 @@ module.exports={
 		accessURL:env.QINIU_ACCESS_URL,
 		expires:env.QINIU_EXPIRES || 600,
 	},
+	ali:{
+		ACCESS_KEY:env.ALI_ACCESS_KEY,
+		SECRET_KEY:env.ALI_SECRET_KEY,
+		sms:{
+			SIGN_NAME:env.ALI_SMS_SIGN_NAME,
+			TEMPLATE_RESET: env.ALI_SMS_TEMPLATE_RESET,
+			TEMPLATE_CREATE:env.ALI_SMS_TEMPLATE_CREATE
+		}
+	},
 	domain: env.DOMAIN, //qiniu need it, if you don't use file, ignore it
 	cloud:{
 		timeout: env.CLOUD_TIMEOUT || 3000
