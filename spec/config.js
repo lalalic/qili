@@ -4,15 +4,18 @@ var conf=require("../conf"),
     mongo=require("mongodb").MongoClient,
     assert = require('assert'),
     tester="test";
+
 module.exports={
     host:`http://qili.server:${conf.server.port}/1`,
     server: conf,
     rootSessionToken: User.createSessionToken({_id:conf.root, username:conf.root}),
     testerSessionToken: User.createSessionToken({_id:tester, username:tester}),
+	createSalt:User.createSalt,
     tester:{
         _id: tester,
         username:tester,
         password: User.prototype.encrypt("test0123"),
+		phone:"1",
         __password:"test0123",
         __fortest:true,
         createdAt: new Date()
@@ -44,7 +47,16 @@ module.exports={
                         .update({_id:tester},this.testApp,{upsert:true},(error,r)=>{
                             error ? reject(error) : resolve(r)
                         }))
-                ]).then(resolve,(a)=>{fail(`init for testing failed with ${a.message}`);reject(a)})
+                ]).then(a=>{
+					mongo.connect(`mongodb://${conf.db.host}:${conf.db.port}/${this.testApp._id}`,(error,db)=>{
+						if(error)
+							return reject(error);
+						db.collection('users')
+							.update({_id:tester},this.tester,{upsert:true},(error,r)=>{
+								error ? reject(error) : resolve(r)
+							})
+					})
+				},(a)=>{fail(`init for testing failed with ${a.message}`);reject(a)})
             })
         )
     },

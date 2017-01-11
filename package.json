@@ -43,13 +43,21 @@
     "start": "node ./lib/index.js",
     "debug": "node --inspect --debug ./lib/index.js",
     "mongo": "mongod  --storageEngine=wiredTiger --directoryperdb --dbpath=\"test/mongo/\"",
-
+	
+	"jest": "jest",
     "test": "jasmine",
     "test.debug": "node --debug-brk=5959 ./node_modules/.bin/jasmine"
   },
   "readme": "README.md",
   "devDependencies": {
     "jasmine": "^2.3.2",
+    "jest": "^18.1.0",
     "request": "^2.60.0"
-    }
+  },
+  "jest":{
+	"testPathDirs": [
+      "spec"
+    ],
+	"testRegex":""
+  }
 }
