@@ -1,9 +1,10 @@
+
 describe("cloud", function(){
-	var config=require('./config'),
+	var config=require('./config')(),
 		host=config.host,
 		kind="books",
 		root=host+"/classes/"+kind,
-		$=require('./ajax')();
+		$=require('./ajax')(config);
 
 	beforeAll(()=>config.init())
 	afterAll(()=>config.release())
@@ -14,9 +15,10 @@ describe("cloud", function(){
 			"X-Session-Token":config.testerSessionToken
 		}
 
+
 	function changeCloudCode(f,data,appId){
 		var code=`(${f.toString()})(Cloud${data ? ","+JSON.stringify(data) : ''});`
-		appId=appId||'test'
+		appId=appId||config.testApp._id
 		return $.ajax({
 			type:'patch',
 			url:host+"/apps/"+appId,
@@ -65,6 +67,8 @@ describe("cloud", function(){
 					})
 			})
 	}
+
+
 	describe("of collections",function(){
 		it("can inject code before creating document",function(){
 			return changeCloudCode(function(Cloud){
@@ -75,7 +79,7 @@ describe("cloud", function(){
 				return $.ajax({url: root, type:'post',data:{name:"a"}})
 					.then(function(m){
 						expect(m.user).toBeDefined()
-						expect(m.user._id).toBe('test')
+						expect(m.user._id).toBe(config.tester._id)
 						expect(m.object).toBeDefined()
 						expect(m.object.name).toBe('a')
 					})
@@ -370,6 +374,7 @@ describe("cloud", function(){
 			})
 		})
 	})
+
 
 	describe("server side require('ajax')", function(){
 		it("not exists get with id return error", function(){
@@ -835,10 +840,7 @@ describe("cloud", function(){
 	})
 
 	describe("wechat (/:appkey/wechat)", function(){
-	    var config=require('./config'),
-			host=config.host,
-			root=host+"/test/wechat",
-			$=require('./ajax')();
+	    var root=host+"/test/wechat"
 
 		function signature(timestamp){
 			var shasum = crypto.createHash('sha1');
@@ -853,10 +855,6 @@ describe("cloud", function(){
 	        crypto = require('crypto'),
 			now=Date.now()+"",
 			url=`${root}?nonce=${nonce}&timestamp=${now}&signature=${signature(now)}`
-
-
-	    beforeAll(()=>config.init())
-		afterAll(()=>config.release())
 
 	    it("validate token by GET",function(){
 	        var timestamp=Date.now()+""
@@ -886,19 +884,19 @@ describe("cloud", function(){
 				</xml>`;
 	        it(".all",()=>{
 	            return changeCloudCode((Cloud)=>{
-	                Cloud.wechat.on((req,res,next)=>{
+	                Cloud.wechat.on("all",(req,res,next)=>{
 						res.success(JSON.stringify(req.message))
 	                })
 	            }).then(()=>{
 					var now=Date.now()
 	                return $.ajax(Object.assign({
 						body:text
-	                },opt)).then((m)=>{
+	                },opt)).then(m=>{
 						expect(m.indexOf("<ToUserName><![CDATA[fromUser]]></ToUserName>")).not.toBe(-1)
 						expect(m.indexOf(JSON.stringify({MsgType:"text",Content:"test"}))).not.toBe(-1)
 
-	                },fail)
-	            }, e=>fail("cloud code fails changed"))
+	                })
+	            })
 	        })
 
 	        it(".all then .text",()=>{

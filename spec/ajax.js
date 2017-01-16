@@ -3,10 +3,9 @@ var request=require('request'),
 		method:'get',
 		encoding:'utf-8',
 		headers:{}
-	},
-	config=require("./config");
+	}
 
-module.exports=function(){
+module.exports=function(config){
 	var defaults=Object.assign({},gDefaults), AJAX={};
 	defaults.headers=Object.assign({},gDefaults.headers,defaults.headers||{})
 

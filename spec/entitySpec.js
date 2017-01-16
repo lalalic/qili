@@ -1,12 +1,12 @@
 describe("entity", function(){
-	var config=require('./config'),
+	var config=require('./config')(),
 		host=config.host,
 		root=host+"/classes/books",
-		$=require('./ajax')();
+		$=require('./ajax')(config);
 
-	beforeAll((done)=>config.init().then(done,done)	)
+	beforeAll(()=>config.init())
 
-	afterAll((done)=>config.release().then(done,done))
+	afterAll(()=>config.release())
 
 	var uid=Date.now(),createBook
 

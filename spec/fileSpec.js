@@ -1,10 +1,10 @@
 "use strict"
 
 xdescribe('File Service', function(){
-	var config=require('./config'),
+	var config=require('./config')(),
 		host=config.host,
 		root=host+"/files",
-		$=require('./ajax')(),
+		$=require('./ajax')(config),
 		qiniu=require('qiniu');
 	qiniu.conf.ACCESS_KEY=config.server.qiniu.ACCESS_KEY
 	qiniu.conf.SECRET_KEY=config.server.qiniu.SECRET_KEY

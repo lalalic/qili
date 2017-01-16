@@ -1,8 +1,8 @@
 xdescribe("application log service should provide", function(){
-	var config=require('./config'),
+	var config=require('./config')(),
 		host=config.host,
 		root=host+"/logs",
-		$=require('./ajax')(),
+		$=require('./ajax')(config),
 		INITAPP=10, ACCESS=9,ERROR=2,WARN=1,INFO=0;
 
 	beforeAll((done)=>config.init().then(done,done)	)

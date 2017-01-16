@@ -1,20 +1,27 @@
 describe("user", function(){
-	var config=require('./config'),
+	var config=require('./config')(),
 		host=config.host,
 		root=host+"/users",
-		$=require('./ajax')();
-	
+		$=require('./ajax')(config);
+
 	const phone=config.tester.phone
 	const code="123456"
 	const salt=config.createSalt(code,phone)
 	const verifyPhone={phone,code,salt}
-	
-	beforeAll((done)=>config.init().then(done,done)	)
 
-	afterAll((done)=>config.release().then(done,done))
+	beforeAll(()=>config.init())
+
+	afterAll(()=>config.release())
 
 	var uid=Date.now()
 	const expectError=e=>e
+
+	xit("clear empty databases",()=>{
+		jasmine.DEFAULT_TIMEOUT_INTERVAL
+		return Promise.all(``.split("          0.000GB")
+			.map(name=>config.dropDB(name.trim()))
+		)
+	})
 
 	describe("Account service", function(){
 		it("post to signup", function(){
@@ -75,7 +82,7 @@ describe("user", function(){
 			data:{phone,existence:true}
 		})
 	})
-	
+
 	it("/requestPhoneCode for non-exist user", function(){
 		return $.ajax({
 			type:"post",
@@ -83,7 +90,7 @@ describe("user", function(){
 			data:{phone:"asfdsf",existence:false}
 		})
 	})
-	
+
 	it("/requestPhoneCode, existence:true, but phone not used, should throw error", function(){
 		return $.ajax({
 			type:"post",
@@ -100,7 +107,7 @@ describe("user", function(){
 				url:`${host}/ping`
 			})
 		})
-		
+
 		it("xping", function(){
 			return $.ajax({
 				type:'get',

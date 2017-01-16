@@ -1,8 +1,8 @@
 describe("app", function(){
-var config=require('./config'),
+var config=require('./config')(),
 	host=config.host,
 	root=host+"/apps",
-	$=require('./ajax')();
+	$=require('./ajax')(config);
 
 	$.ajaxSetup({
 		headers:{
@@ -11,21 +11,24 @@ var config=require('./config'),
 		}
 	})
 
-	beforeAll((done)=>config.init().then(done,done)	)
+	beforeAll(()=>config.init())
 
-	afterAll((done)=>config.release().then(done,done))
+	afterAll(()=>{
+		return Promise.all([config.release(),...removingApps.map(a=>config.dropDB(a))])
+	})
 
-	var uid=Date.now(), createApp
+	var uid=Date.now(), createApp, removingApps=[]
 
 	describe("user", function(){
 		describe("create", function(){
 			it("new application, and return application token, and author should be set", createApp=function(){
-				var data={name:`_app${uid++}`}
+				var data={name:`_app${uid++}`, __fortest:true}
 				return $.ajax({url:root,type:'post',data:data})
 					.then(function(doc){
 						expect(doc._id).toBeDefined()
 						expect(doc.apiKey).toBeDefined()
 						expect(doc.createdAt).toBeDefined()
+						removingApps.push(doc.apiKey)
 
 						return $.get(`${root}/${doc._id}`)
 							.then(function(a){
@@ -119,10 +122,10 @@ var config=require('./config'),
 		describe("query", function(){
 			it("can not get any information without admin key", function(){
 				return $.get(root,{headers:{
-						"X-Application-Id":"test",
+						"X-Application-Id":"unknownAppId",
 						"X-Session-Token":config.testerSessionToken
 					}, error: null})
-				.then(fail,error=>expect(error).toMatch(/no hack/gi))
+				.then(fail,error=>true)
 			})
 
 			it("can get its own applictions", function(){

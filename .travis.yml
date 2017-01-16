@@ -19,6 +19,5 @@ before_script:
  - npm start &
  - sleep 2
 
-
 after_success:
  - sshpass -e ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $DEPLOY_USER@$DEPLOY_HOST "cd $TARGET_REPOSITORY_PATH && git pull && cd deploy && $TARGET_DOCKER_ENVS docker-compose restart"
