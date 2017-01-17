@@ -14,7 +14,7 @@ xdescribe("application log service should provide", function(){
 	}
 	function changeCloudCode(done,f,data,appId){
 		var code="("+f.toString()+")(Cloud"+(data ? ","+JSON.stringify(data) : '')+");"
-		appId=appId||'test'
+		appId=appId||config.testApp._id
 		return $.ajax({
 			type:'patch',
 			url:host+"/apps/"+appId,

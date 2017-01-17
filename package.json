@@ -45,7 +45,7 @@
     "mongo": "mongod  --storageEngine=wiredTiger --directoryperdb --dbpath=\"test/mongo/\"",
 
 	"test": "jest entitySpec.js && jest userSpec.js && jest cloudSpec.js && jest appSpec.js",
-    "test.debug": "node --debug-brk=5959 ./node_modules/.bin/jasmine"
+    "jest": "jest"
   },
   "readme": "README.md",
   "devDependencies": {
