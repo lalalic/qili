@@ -44,8 +44,7 @@
     "debug": "node --inspect --debug ./lib/index.js",
     "mongo": "mongod  --storageEngine=wiredTiger --directoryperdb --dbpath=\"test/mongo/\"",
 
-	"test": "jest entitySpec.js",
-    "jest": "jest"
+	"test": "jest --runInBand"
   },
   "readme": "README.md",
   "devDependencies": {
