@@ -18,7 +18,7 @@ describe("user", function(){
 
 	xit("clear empty databases",()=>{
 		jasmine.DEFAULT_TIMEOUT_INTERVAL
-		return Promise.all(``.split("          0.000GB")
+		return Promise.all(``.split("0.000GB")
 			.map(name=>config.dropDB(name.trim()))
 		)
 	})
@@ -26,7 +26,8 @@ describe("user", function(){
 	describe("Account service", function(){
 		it("post to signup", function(){
 			var username=`test${uid++}`,
-				user={username,password:`abc${uid++}`,verifyPhone:{phone:"7890-789",code,salt:config.createSalt(code,"7890-789")}}
+				phone=`${uid++}`,
+				user={username,password:`abc${uid++}`,verifyPhone:{phone,code,salt:config.createSalt(code,phone)}}
 			return $.ajax({
 				type:"post",
 				url: host+"/signup",
