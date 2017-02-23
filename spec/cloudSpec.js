@@ -210,20 +210,24 @@ describe("cloud", function(){
 	})
 
 	describe("of rest functions", function(){
-		it("can create", function(){
+		it("can create, req={user,params,method}, any method can call", function(){
 			return changeCloudCode(function(Cloud){
 				Cloud.define('test', function(req, res){
 					res.success(req)
 				})
 			}).then(function(){
-				return $.post(host+"/functions/test",{data:{hello:1}})
-				.then(function(m){
-					expect(m.user).toBeDefined()
-					expect(m.user._id).toBe(config.tester._id)
-					expect(m.params).toBeDefined()
-					expect(m.params.hello).toBe(1)
-
-				})
+				return Promise.all(
+					"get,post,put,patch,delete".split(",").map(
+						method=>$[method](host+"/functions/test",{data:{hello:1}})
+						.then(function(m){
+							expect(m.user).toBeDefined()
+							expect(m.user._id).toBe(config.tester._id)
+							expect(m.params).toBeDefined()
+							expect(m.params.hello).toBe(1)
+							expect(m.method).toBe(method.toUpperCase())
+						})
+					)
+				)
 			})
 		})
 	})
@@ -323,65 +327,28 @@ describe("cloud", function(){
 		})
 	})
 
-	describe("shared modules", function(){
-		"backbone,ajax".split(",").forEach(function(module){
-			describe(module, function(){
-				it("require", function(){
-					return changeCloudCode(function(Cloud,module){
-						Cloud.define('test',function(req, res){
-							res.success({required:require(module)&&true})
-						})
-					},module).then(function(){
-						return $.get(host+"/functions/test")
-						.then(function(m){
-							expect(m.required).toBe(true)
-
-						})
+	describe("cloud not support require", function(){
+		"ajax,backbone,fs,./app".split(",").forEach(function(module){
+			it(module, function(){
+				return changeCloudCode(function(Cloud,module){
+					Cloud.define('test',function(req, res){
+						require(module)
 					})
-				})
-
-				describe("seperation", function(){
-					it("application level", function(){
-						return createApp().then((app)=>
-							Promise.all([
-								changeCloudCode(function(Cloud,module){//change on Test app
-									var m=require(module);
-									m.imchanged=true
-									Cloud.define('test',function(req, res){
-										res.success({imchanged:m.imchanged})
-									})
-								},module),
-								changeCloudCode(function(Cloud,module){//change on Test1 app
-									var m=require(module);
-									Cloud.define('test',function(req, res){
-										res.success({imchanged:m.imchanged||false})
-									})
-								},module,app._id)
-								]).then(function(){
-									return Promise.all([
-										$.get(host+"/functions/test"),
-										$.get(host+"/functions/test",{headers:{"X-Application-Id":app.apiKey}})
-									]).then(function(results){
-										expect(results.length).toBe(2)
-										expect(results[0].imchanged).toBe(true)
-										expect(results[1].imchanged).toBe(false)
-
-									})
-								})
-							)
-					})
+				},module).then(function(){
+					return $.get(host+"/functions/test",{error:null})
+					.catch(data=>expect(data).toBe("require not supported in cloud"))
 				})
 			})
 		})
 	})
 
 
-	describe("server side require('ajax')", function(){
+	describe("server side fetch", function(){
 		it("not exists get with id return error", function(){
 				return changeCloudCode(function(Cloud,root){
-					var $=require('ajax')
+					
 					Cloud.define('test',function(req, res){
-						$.get(root+"/booknoexist")
+						fetch(root+"/booknoexist")
 						.then(res.success,res.error)
 					})
 				},root).then(function(){
@@ -397,9 +364,8 @@ describe("cloud", function(){
 			it(":id",function(){
 				return createBook().then((book)=>
 					changeCloudCode(function(Cloud,data){
-						var $=require('ajax')
 						Cloud.define('test',function(req, res){
-							$.get(`${data.root}/${data.book}`)
+							fetch(`${data.root}/${data.book}`)
 							.then(res.success,res.error)
 						})
 					},{root,book:book._id}).then(()=>
@@ -414,9 +380,9 @@ describe("cloud", function(){
 			it("[all]", function(){
 				return Promise.all([createBook(),createBook(),createBook()]).then(()=>
 					changeCloudCode(function(Cloud,root){
-						var $=require('ajax')
+						
 						Cloud.define('test',function(req, res){
-							$.get(root)
+							fetch(root)
 							.then(res.success,res.error)
 						})
 					},root).then(function(){
@@ -439,9 +405,9 @@ describe("cloud", function(){
 			it('?query={name}', function(){
 				return createBook().then((book)=>
 					changeCloudCode(function(Cloud,data){
-						var $=require('ajax')
+						
 						Cloud.define('test',function(req, res){
-							$.get(data.root+"?query="+JSON.stringify({name:data.name}))
+							fetch(data.root+"?query="+JSON.stringify({name:data.name}))
 							.then(res.success,res.error)
 						})
 					},{root,name:book._raw.name}).then(function(){
@@ -459,9 +425,9 @@ describe("cloud", function(){
 			it("?limit=n", function(){
 				return Promise.all([createBook(),createBook(),createBook()]).then(()=>
 					changeCloudCode(function(Cloud,root){
-						var $=require('ajax')
+						
 						Cloud.define('test',function(req, res){
-							$.get(root+"?limit=2&query="+JSON.stringify({__fortest:true}))
+							fetch(root+"?limit=2&query="+JSON.stringify({__fortest:true}))
 							.then(res.success,res.error)
 						})
 					},root).then(function(){
@@ -478,9 +444,9 @@ describe("cloud", function(){
 			it("direct doc recturned from ?limit=1", function(){
 				return Promise.all([createBook(),createBook(),createBook()]).then(()=>
 					changeCloudCode(function(Cloud,root){
-						var $=require('ajax')
+						
 						Cloud.define('test',function(req, res){
-							$.get(root+"?limit=1&query="+JSON.stringify({__fortest:true}))
+							fetch(root+"?limit=1&query="+JSON.stringify({__fortest:true}))
 							.then(res.success,res.error)
 						})
 					},root).then(function(){
@@ -496,9 +462,9 @@ describe("cloud", function(){
 			it("?skip=n", function(){
 				return Promise.all([createBook(),createBook(),createBook()]).then((books)=>
 					changeCloudCode(function(Cloud,root){
-						var $=require('ajax')
+						
 						Cloud.define('test',function(req, res){
-							$.get(root+"?skip=3")
+							fetch(root+"?skip=3")
 							.then(res.success,res.error)
 						})
 					},root).then(function(){
@@ -520,9 +486,9 @@ describe("cloud", function(){
 			it("?sort={name:1}", function(){
 				return Promise.all([createBook(),createBook(),createBook()]).then((books)=>
 					changeCloudCode(function(Cloud,root){
-						var $=require('ajax')
+						
 						Cloud.define('test',function(req, res){
-							$.get(root+"?limit=2&sort="+JSON.stringify({name:1}))
+							fetch(root+"?limit=2&sort="+JSON.stringify({name:1}))
 							.then(res.success,res.error)
 						})
 					},root).then(function(){
@@ -542,9 +508,9 @@ describe("cloud", function(){
 			it("?sort={name:-1}", function(){
 				return Promise.all([createBook(),createBook(),createBook()]).then((books)=>
 					changeCloudCode(function(Cloud,root){
-						var $=require('ajax')
+						
 						Cloud.define('test',function(req, res){
-							$.get(root+"?limit=2&sort="+JSON.stringify({name:-1}))
+							fetch(root+"?limit=2&sort="+JSON.stringify({name:-1}))
 							.then(res.success,res.error)
 						})
 					},root).then(function(){
@@ -564,9 +530,9 @@ describe("cloud", function(){
 			it("?fields={name:1}", function(){
 				return createBook().then((book)=>
 					changeCloudCode(function(Cloud,d){
-						var $=require('ajax')
+						
 						Cloud.define('test',function(req, res){
-							$.get(d.root+"/"+d.book+"?fields="+JSON.stringify({name:1}))
+							fetch(d.root+"/"+d.book+"?fields="+JSON.stringify({name:1}))
 							.then(res.success,res.error)
 						})
 					},{root,book:book._id}).then(function(){
@@ -583,9 +549,9 @@ describe("cloud", function(){
 			it("?fields={name:0}", function(){
 				return createBook().then((book)=>
 					changeCloudCode(function(Cloud,d){
-						var $=require('ajax')
+						
 						Cloud.define('test',function(req, res){
-							$.get(d.root+"/"+d.book+"?fields="+JSON.stringify({name:0}))
+							fetch(d.root+"/"+d.book+"?fields="+JSON.stringify({name:0}))
 							.then(res.success,res.error)
 						})
 					},{root,book:book._id}).then(function(){
@@ -603,10 +569,10 @@ describe("cloud", function(){
 			it("with _id", function(){
 				var id='a book created with _id';
 				return changeCloudCode(function(Cloud,root){
-					var $=require('ajax')
+					
 					Cloud.define('test',function(req, res){
 						var id='a book created with _id'
-						$.ajax({type:'post',url:root,data:{_id:id}})
+						fetch({type:'post',url:root,data:{_id:id}})
 						.then(res.success,res.error)
 					})
 				},root).then(function(){
@@ -622,10 +588,10 @@ describe("cloud", function(){
 			it("without _id", function(){
 				var name='a book created without _id'
 				return changeCloudCode(function(Cloud,root){
-					var $=require('ajax')
+					
 					Cloud.define('test',function(req, res){
 						var name='a book created without _id'
-						$.ajax({type:'post',url:root,data:{name:name}})
+						fetch({type:'post',url:root,data:{name:name}})
 						.then(res.success,res.error)
 					})
 				},root).then(function(){
@@ -642,9 +608,9 @@ describe("cloud", function(){
 			it("replace update with PUT", function(){
 				return createBook().then((book)=>
 					changeCloudCode(function(Cloud,d){
-						var $=require('ajax')
+						
 						Cloud.define('test',function(req, res){
-							$.ajax({
+							fetch({
 								type:'put',
 								url:d.root+"/"+d.book,
 								data:{title:'raymond'}
@@ -670,9 +636,9 @@ describe("cloud", function(){
 			it("patch update with PATCH", function(){
 				return createBook().then((book)=>
 					changeCloudCode(function(Cloud,d){
-						var $=require('ajax')
+						
 						Cloud.define('test',function(req, res){
-							$.ajax({
+							fetch({
 								type:'patch',
 								url:d.root+"/"+d.book,
 								data:{title:'raymond'}
@@ -699,9 +665,9 @@ describe("cloud", function(){
 		it("delete with DELETE", function(){
 			return createBook().then((book)=>
 				changeCloudCode(function(Cloud,d){
-					var $=require('ajax')
+					
 					Cloud.define('test',function(req, res){
-						$.ajax({
+						fetch({
 							type:'delete',
 							url:d.root+"/"+d.book
 						})
@@ -717,126 +683,6 @@ describe("cloud", function(){
 			)
 		})
 
-	})
-
-	describe("backbone in server side", function(){
-		it("get",function(){
-			return createBook().then((book)=>
-				changeCloudCode(function(Cloud,d){
-					var backbone=require('backbone'),
-						Book=backbone.Model.extend({urlRoot:d.root,idAttribute:'_id'});
-					Cloud.define('test',function(req, res){
-						(new Book({_id:d.book}))
-						.fetch()
-						.then(res.success,res.error)
-					})
-				},{root,book:book._id}).then(function(){
-					return $.get(host+"/functions/test")
-					.then(function(data){
-						expect(data._id).toBe(book._id)
-						expect(data.name).toBe(book._raw.name)
-
-					})
-				})
-			)
-		})
-
-		it("create",function(){
-			return changeCloudCode(function(Cloud,root){
-				var backbone=require('backbone'),
-					Book=backbone.Model.extend({urlRoot:root,idAttribute:'_id'});
-				Cloud.define('test',function(req, res){
-					(new Book({name:'a book created with _id'}))
-					.save()
-					.then(res.success,res.error)
-				})
-			},root).then(function(){
-				return $.get(host+"/functions/test")
-				.then(function(data){
-					expect(data._id).toBeDefined()
-					expect(data.updatedAt).toBeDefined()
-					return $.get(root+"/"+data._id)
-						.then(function(doc){
-							expect(doc.name).toBe('a book created with _id')
-
-						})
-				})
-			})
-		})
-
-		it("put update",function(){
-			return createBook().then((book)=>
-				changeCloudCode(function(Cloud,d){
-					var backbone=require('backbone'),
-						Book=backbone.Model.extend({urlRoot:d.root,idAttribute:'_id'});
-					Cloud.define('test',function(req, res){
-						(new Book({_id:d.book,title:'raymond'}))
-						.save()
-						.then(res.success,res.error)
-					})
-				},{root,book:book._id}).then(function(){
-					return $.get(host+"/functions/test")
-					.then(function(data){
-						expect(data.updatedAt).toBeDefined()
-						return $.get(root+"/"+book._id)
-							.then(function(doc){
-								expect(doc.name).toBeUndefined()
-								expect(doc.title).toBe('raymond')
-
-							})
-					})
-				})
-			)
-		})
-
-		it("patch update",function(){
-			return createBook().then((book)=>
-				changeCloudCode(function(Cloud,d){
-					var backbone=require('backbone'),
-						Book=backbone.Model.extend({urlRoot:d.root,idAttribute:'_id'});
-					Cloud.define('test',function(req, res){
-						(new Book({_id:d.book}))
-						.save({title:'raymond'},{patch:true})
-						.then(res.success,res.error)
-					})
-				},{root,book:book._id}).then(function(){
-					return $.get(host+"/functions/test")
-					.then(function(data){
-						expect(data.updatedAt).toBeDefined()
-						return $.get(root+"/"+book._id)
-							.then(function(doc){
-								expect(doc.name).toBeDefined()
-								expect(doc.title).toBe('raymond')
-
-							})
-					})
-				})
-			)
-		})
-
-		it("destroy",function(){
-			return changeCloudCode(function(Cloud,root){
-				var backbone=require('backbone'),
-					Book=backbone.Model.extend({urlRoot:root,idAttribute:'_id'});
-				Cloud.define('test',function(req, res){
-					(new Book({_id:'book0'}))
-					.destroy({wait:true})
-					.then(res.success,res.error)
-				})
-			},root).then(function(){
-				return $.get(host+"/functions/test")
-				.then(function(data){
-					return $.get(root+"/book0",{error:null})
-						.then(function(doc){
-							$.fail()
-
-						},function(error){
-							expect(error).toBe('Not exists')
-
-						})
-				})
-			})
-		})
 	})
 
 	describe("wechat (/:appkey/wechat)", function(){
@@ -939,6 +785,16 @@ describe("cloud", function(){
 	})
 	
 	describe("static service", function(){
+		it("not defined static url", function(){
+			return changeCloudCode((Cloud)=>{
+				Cloud.static.on("book",function(req, res){
+					res.success("<html><body>I have a book</body></html>")
+				})
+			}).then(()=>$.get(`${host}/${config.testApp.apiKey}/static/asdfd/reading.html`))
+			.then(data=>expect(data).toEqual("no static content"))
+		})
+		
+		
 		it(`static /${config.testApp.apiKey}/static/book/reading.html`, function(){
 			const book="<html><body>I have a book</body></html>"
 			return changeCloudCode((Cloud)=>{
@@ -953,8 +809,7 @@ describe("cloud", function(){
 			return createBook().then(({_raw:book})=>{
 				return changeCloudCode(function(Cloud,{root,id}){
 					Cloud.static.on("book",function(req, res){
-						const $=require("ajax")
-						$.get(`${root}/${id}`)
+						fetch(`${root}/${id}`)
 							.then(book=>res.success(`<html><body>${book.title}</body></html>`),res.error)
 					})
 				}, {root,id:book._id})
