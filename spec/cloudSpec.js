@@ -937,5 +937,31 @@ describe("cloud", function(){
 			})
 		})
 	})
+	
+	describe("static service", function(){
+		it(`static /${config.testApp.apiKey}/static/book/reading.html`, function(){
+			const book="<html><body>I have a book</body></html>"
+			return changeCloudCode((Cloud)=>{
+				Cloud.static.on("book",function(req, res){
+					res.success("<html><body>I have a book</body></html>")
+				})
+			}).then(()=>$.get(`${host}/${config.testApp.apiKey}/static/book/reading.html`))
+			.then(data=>expect(data).toEqual(book))
+		})
+		
+		it(`variant: /${config.testApp.apiKey}/static/book/{id}.html`, function(){
+			return createBook().then(({_raw:book})=>{
+				return changeCloudCode(function(Cloud,{root,id}){
+					Cloud.static.on("book",function(req, res){
+						const $=require("ajax")
+						$.get(`${root}/${id}`)
+							.then(book=>res.success(`<html><body>${book.title}</body></html>`),res.error)
+					})
+				}, {root,id:book._id})
+				.then(()=>$.get(`${host}/${config.testApp.apiKey}/static/book/${book._id}.html`))
+				.then(data=>expect(data).toEqual(`<html><body>${book.title}</body></html>`))
+			})
+		})
+	})
 
 })
