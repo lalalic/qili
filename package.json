@@ -12,9 +12,15 @@
     "body-parser": "~1.12.x",
     "connect-multiparty": "^2.0.0",
     "express": "^4.x",
+    "express-graphql": "^0.6.7",
+    "graphql": "^0.10.5",
+    "graphql-tools": "^1.1.0",
     "helmet": "^2.1.0",
     "mkdirp": "^0.5.1",
     "mongodb": "2.1.21",
+    "passwordless": "^1.1.2",
+    "passwordless-memorystore": "^0.0.1",
+    "passwordless-mongostore": "^0.1.4",
     "qiniu": "~6.1.x",
     "underscore": "^1.8.3",
     "wechat": "^2.0.1"
@@ -42,9 +48,9 @@
   "scripts": {
     "start": "node ./lib/index.js",
     "debug": "node --inspect --debug ./lib/index.js",
+    "debug2": "node --inspect --debug ./lib2/index.js",
     "mongo": "mongod  --storageEngine=wiredTiger --directoryperdb --dbpath=\"test/mongo/\"",
-
-	"test": "jest --runInBand"
+    "test": "jest --runInBand"
   },
   "readme": "README.md",
   "devDependencies": {
@@ -52,10 +58,10 @@
     "jest": "^18.1.0",
     "request": "^2.60.0"
   },
-  "jest":{
-	"testPathDirs": [
+  "jest": {
+    "testPathDirs": [
       "spec"
     ],
-	"testRegex":".*[sS]pec\\.js"
+    "testRegex": ".*[sS]pec\\.js"
   }
 }
