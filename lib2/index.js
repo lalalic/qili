@@ -1,4 +1,5 @@
 require("./utils/merge")
+
 const express = require('express')
 const bodyParser = require("body-parser")
 const graphql=require('express-graphql')
@@ -83,6 +84,3 @@ app.use('/graphql',
 		}
 	})
 )
-
-
-

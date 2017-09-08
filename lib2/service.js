@@ -37,6 +37,7 @@ class Service{
 	isAbleTo(doc, caps){
 		return true
 	}
+
 	log(message,level){
 		level=level||message.level||0
 		if((this.app.logLevel||0)<=level)
@@ -55,38 +56,29 @@ class Service{
 			error:m=>this.log(m,2)
 		}
 	}
+}
 
-	static get config(){
-		return config
-	}
-	
-	static 	checkApp(app){
-		if(!app)
-			this.noSupport()
-	}
-	
-	static send(res, data){
+Object.assign(module.exports=Service,{
+	config,
+	send(res, data){
 		if(res.ended) return;
 		res.ended=true
 
 		res.type('json');
 		res.send(data||{})
-	}
-	
-	static error(res){
+	},
+	error(res){
 		return function(error){
 			if(res.ended) return;
 			res.ended=true
 
 			res.status(400).send(error.message||error);
 		}
-	}
-	
-	static noSupport(){
+	},
+	noSupport(){
 		throw new Error("No hack.")
-	}
-	
-	static asObjectId(id){//always as string
+	},
+	asObjectId(id){//always as string
 		if(arguments.length==0)
 			return new ObjectID().toHexString();
 		return id;
@@ -97,4 +89,4 @@ class Service{
 			return id
 		}
 	}
-}
+})

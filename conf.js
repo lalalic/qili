@@ -20,12 +20,12 @@ module.exports={
 		expires:env.QINIU_EXPIRES || 600,
 	},
 	ali:{
-		ACCESS_KEY:env.ALI_ACCESS_KEY,
-		SECRET_KEY:env.ALI_SECRET_KEY,
+		ACCESS_KEY:env.ALI_ACCESS_KEY||"8me1cCfFgeU9uB9W",
+		SECRET_KEY:env.ALI_SECRET_KEY||"7UyMNSJmqVCC8YTOZR8kZpT4KORt6s",
 		sms:{
-			SIGN_NAME:env.ALI_SMS_SIGN_NAME,
+			SIGN_NAME:env.ALI_SMS_SIGN_NAME||"papazai网",
 			TEMPLATE_RESET: env.ALI_SMS_TEMPLATE_RESET,
-			TEMPLATE_CREATE:env.ALI_SMS_TEMPLATE_CREATE
+			TEMPLATE_CREATE:env.ALI_SMS_TEMPLATE_CREATE||"SMS_39690001"
 		}
 	},
 	domain: env.DOMAIN, //qiniu need it, if you don't use file, ignore it

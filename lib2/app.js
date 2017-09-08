@@ -75,6 +75,7 @@ class Application{
 		
 		let passwordless=this.passwordless=new Passwordless()
         passwordless.init(new MongoStore(`mongodb://${config.db.host}:${config.db.port}/${_id}}`))
+
         passwordless.addDelivery("sms", (tokenToSend, uidToSend, recipient, callback, req)=>{
             console.log(`http://${config.server.host}:${config.server.port}/?by=sms&token=${tokenToSend}&uid=${encodeURIComponent(uidToSend)}`)
             callback()
@@ -83,6 +84,7 @@ class Application{
         passwordless.addDelivery("email",(tokenToSend, uidToSend, recipient, callback, req)=>{
             console.log(`http://${config.server.host}:${config.server.port}/?by=email&token=${tokenToSend}&uid=${encodeURIComponent(uidToSend)}`)
             callback()
+			
             /*
             smtpServer.send({
                 text:    'Hello!\nYou can now access your account here: ' 
@@ -163,6 +165,4 @@ class Application{
 exports.App=class AppStore extends Entity{
 	
 }
-
-
 
