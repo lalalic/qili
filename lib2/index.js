@@ -6,6 +6,7 @@ const graphql=require('express-graphql')
 const jwt=require('express-jwt')
 const {graphql_auth}=require('./user')
 const {makeExecutableSchema}=require('graphql-tools')
+const cors=require("cors")
 
 const config=require("../conf")
 config.server.port=8080
@@ -24,7 +25,7 @@ app.use(bodyParser.json())
 
 app.use(require("./app").resolve)
 
-app.use('/graphql', 
+app.use('/graphql', cors(),
 	jwt({
 		secret:config.secret,
 		getToken: req=>req.header("X-Session-Token")||req.headers["X-Session-Token"]||req.query['X-Session-Token']
@@ -39,15 +40,14 @@ app.use('/graphql',
 					username: String
 					token: String
 				}
-				
+
 				type Query{
 					me: User
 				}
-				
+
 				type Mutation{
 					requestToken(emailOrPhone: String!): Boolean
-					login(token: String!): User
-					logout(token: String!): Boolean
+					login(emailOrPhone: String!, token: String!): User
 				}
 			`,
 			resolvers:{
@@ -60,16 +60,13 @@ app.use('/graphql',
 					me(){
 						throw new Error("Please login first!")
 					}
-				}, 
+				},
 				Mutation: {
 					requestToken(root,{emailOrPhone},{app}){
 						return app.requestToken(emailOrPhone)
 					},
-					login(root, {token}, {app}){
-						return app.login(token)
-					},
-					logout(root, {token}, {app}){
-						return app.logout(token)
+					login(root, {token,emailOrPhone}, {app}){
+						return app.login(emailOrPhone,token)
 					}
 				}
 			}

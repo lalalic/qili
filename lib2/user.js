@@ -1,3 +1,6 @@
+const isEmail = require("is-email")
+const {Entity}=require("./entity")
+
 const SCHEMA=exports.schema=`
 	type User{
 		_id: ID!
@@ -18,5 +21,17 @@ exports.graphql_auth=function(options){
 		}else{
 			middleware(req, res, next)
 		}
+	}
+}
+
+exports.User=class extends Entity{
+	get(){
+		return Promise.resolve({_id:"1234", username:"raymond"})
+	}
+
+	getByContact(emailOrPhone){
+		let bEmail=isEmail(emailOrPhone)
+		let query=bEmail ? {email:emailOrPhone} : {phone: emailOrPhone}
+		return this.get(query)
 	}
 }

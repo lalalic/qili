@@ -1,9 +1,12 @@
-const {Passwordless} = require('passwordless');
-const MongoStore = require('passwordless-memorystore');
+const mongo=require("mongodb")
+const PasswordlessStore = require('passwordless-memorystore');
 const {makeExecutableSchema}=require('graphql-tools')
 const {buildSchema} = require('graphql')
 const {printSchema} = require("graphql/utilities")
+const jwt = require("jsonwebtoken")
+const isEmail = require("is-email")
 
+const {User} = require("./user")
 const {Entity} = require("./entity")
 
 const config=require("../conf")
@@ -17,16 +20,16 @@ const SCHEMA=exports.schema=`
         createdAt: Date!
         updatedAt: Date
     }
-	
+
 	type User{
 		_apps: [Application]!
 	}
-	
+
 	type Mutation{
 		createApplication(name:String!): Application
 		updateApplication(id: ID!, name:String): Date
 	}
-	
+
 	type Query{
 		version: String!
 	}
@@ -37,10 +40,18 @@ const RESOLVER=exports.resolver={
 }
 
 exports.resolve=(req, res, next)=>{
-	req.app=new Application(req.headers['X-Application-Id']='596c7a5905d49ec80e48085a')
-	next()
+    Application.create(req.headers['X-Application-Id']='596c7a5905d49ec80e48085a')
+        .then(app=>{
+            req.app=app
+            next()
+        })
+        .catch(e=>{
+            console.error(e)
+            res.status(401).end()
+        })
 }
 
+const APPS={}
 class Application{
 	static get APP_SCHEMA(){
 		try{
@@ -56,8 +67,22 @@ class Application{
 			console.error(e)
 		}
 	}
-	constructor(_id){
-		this.app={
+
+    static get mongoServer(){
+        return new mongo.Server(config.db.host, config.db.port, {'auto_reconnect':true,safe:true})
+    }
+
+    static create(id){
+        if(APPS[id])
+            return Promise.resolve(APPS[id])
+
+        return Promise.resolve(APPS[id]=new Application(id))
+    }
+
+    constructor(_id){
+        this.db=new mongo.Db(_id, this.constructor.mongoServer,{w:1})
+
+        this.app={
 			_id,
 			schema: `
 				type Application{
@@ -66,73 +91,59 @@ class Application{
 				type Log{
 					_id: String!
 				}
-				
+
 				type Query{
 					log: Log
 				}
 			`
 		}
-		
-		let passwordless=this.passwordless=new Passwordless()
-        passwordless.init(new MongoStore(`mongodb://${config.db.host}:${config.db.port}/${_id}}`))
 
-        passwordless.addDelivery("sms", (tokenToSend, uidToSend, recipient, callback, req)=>{
-            console.log(`http://${config.server.host}:${config.server.port}/?by=sms&token=${tokenToSend}&uid=${encodeURIComponent(uidToSend)}`)
-            callback()
-        })
+		this.passwordless=new PasswordlessStore(`mongodb://${config.db.host}:${config.db.port}/${_id}}`)
+	}
 
-        passwordless.addDelivery("email",(tokenToSend, uidToSend, recipient, callback, req)=>{
-            console.log(`http://${config.server.host}:${config.server.port}/?by=email&token=${tokenToSend}&uid=${encodeURIComponent(uidToSend)}`)
-            callback()
-			
-            /*
-            smtpServer.send({
-                text:    'Hello!\nYou can now access your account here: ' 
-                    + host + '?token=' + tokenToSend + '&uid=' + encodeURIComponent(uidToSend), 
-                from:    yourEmail, 
-                to:      recipient,
-                subject: 'Token for ' + host
-            }, function(err, message) { 
-                if(err) {
-                    console.log(err);
-                }
-                callback(err);
-            });
-            */
-        })
+    sendEmailToken(email, uid){
+        let token="safasdxxx"
+        return Promise.resolve({token,uid})
+    }
+
+    sendPhoneToken(phone, uid){
+        let token="safasdxxx"
+        return Promise.resolve({token,uid})
+    }
+
+    requestToken(emailOrPhone){
+        return new User(this)
+			.getByContact(emailOrPhone)
+            .then(user=>this[`send${isEmail(emailOrPhone) ? "Email" : "Phone"}Token`](emailOrPhone, user._id))
+            .then(({token,uid})=>new Promise((ok,nok)=>{
+                this.passwordless.storeOrUpdate(token,uid,60*1000,null, e=>ok(!!!e))
+            }))
 	}
-	
-	getUserID(emailOrPhone){
-		return new User(this)
-			.get({})
+
+	login(emailOrPhone, token){
+        return new User(this)
+            .getByContact(emailOrPhone)
+            .then(user=>new Promise((resolve, reject)=>{
+                    let uid=user._id
+                    this.passwordless.authenticate(token,uid, (e,valid)=>{
+                        if(valid){
+                            this.passwordless.invalidateUser(uid,e=>e)
+                            resolve(user)
+                        }else{
+                            reject(e)
+                        }
+                    })
+            }))
 	}
-	
-	requestToken(emailOrPhone){
-		let query=isEmail(email) ? {email:emailOrPhone} : {phone: emailOrPhone}
-		this.passwordless.requestToken((emailOrPhone,delivery,callback)=>{
-			this.getUserID()
-				.then(id=>callback(null, id),e=>callback(e,null))
-		},{})({query:{}})
-		return true
+
+	encode({_id,username}){
+		return jwt.sign({_id,username},config.secret, {expiresIn: "1y"})
 	}
-	
-	login(token){
-		return "raymond"
-	}
-	
-	encode(user){
-		return 
-	}
-	
-	logout(token){
-		
-		return {_id:"raymond"}
-	}
-	
+
 	isAdmin(){
 		return config.adminKey==this.app._id
 	}
-	
+
     get schema(){
         return makeExecutableSchema({
             typeDefs:[
@@ -160,9 +171,8 @@ class Application{
 			console.error(e)
 		}
 	}
-}
 
-exports.App=class AppStore extends Entity{
-	
-}
+    entity(name){
 
+    }
+}
