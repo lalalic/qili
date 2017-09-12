@@ -1,54 +1,49 @@
-const typeDefs=`
+exports.schema=`
     scalar Date
-
-    type AccountID{
-        email: String
-        phone: String
-    }
 
     type User{
         _id: ID!
-        createdAt: Date!
-        updatedAt: Date
-        aid: AccountID!
-        name: String
+		email: String
+		phone: String
+		username: String
+		createdAt: Date!
+		updatedAt: Date
+		token: String
+		roles: [Role]
     }
 
-    type Role{
-        _id: ID!
+	type Role{
+        _id: String!
         createdAt: Date!
         updatedAt: Date
-    }
-
-    type Message{
-        url: String!
-        remote: String!
-        method: String!
-        path: String!
-        httpVersion: String!
-        contentLength: Int!
-        status: Int!
+		author: User
+		users: [User]
     }
 
     type Log{
         _id: ID!
         createdAt: Date!
-        level: Int!
-        message: Message!
+        author: User!
+		operationName: String!
+		variables: [String]!
     }
 
     type Query{
-        me{
-            ...User
-        }
+		version: String!
+        me:User!
     }
-
-    type Mutation{
-
-    }
+	
+	type Mutation{
+		logout:Boolean
+		role_create(name:String):Role
+		role_update(_id:String!,name:String):Date
+		role_remove(_id:String!):Boolean
+		role_user_add(_id:String!, users: [String!]!): [String]!
+		Role_user_remove(_id:String!, users: [String!]!): [String]!
+	}
 `
 
-const resolvers={
+exports.resolver={
     Date:{
         parseValue(value) {
           return new Date(value); // value from the client
@@ -63,10 +58,21 @@ const resolvers={
           return null;
         }
     },
-
-    AccountID:{
-
-    }
+	
+	
+	Query: {
+		version:()=>"2.0.1",
+		me:async (_,a,{app,{_id}})=>{
+			let conn=await app.collection("users")
+			try{
+				return await conn.findOne({_id})
+			}finally{
+				conn.close()
+			}
+		}
+	},
+	Mutation:{
+		logout:(_,a,{app,user})=>app.logout(user),
+		...require("./role").resolver
+	}
 }
-
-export default {typeDefs, resolvers}

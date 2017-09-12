@@ -1,18 +1,5 @@
-const isEmail = require("is-email")
-const {Entity}=require("./entity")
-
-const SCHEMA=exports.schema=`
-	type User{
-		_id: ID!
-		email: String
-		phone: String
-		username: String
-		createdAt: Date!
-		updatedAt: Date
-	}
-`
-
 const graphql=require('express-graphql')
+
 exports.graphql_auth=function(options){
 	let middleware=graphql(options)
 	return function(error, req, res, next){
@@ -24,14 +11,19 @@ exports.graphql_auth=function(options){
 	}
 }
 
-exports.User=class extends Entity{
-	get(){
-		return Promise.resolve({_id:"1234", username:"raymond"})
-	}
-
-	getByContact(emailOrPhone){
-		let bEmail=isEmail(emailOrPhone)
-		let query=bEmail ? {email:emailOrPhone} : {phone: emailOrPhone}
-		return this.get(query)
+exports.resolver={
+	User: {
+		token(user,args,{app}){
+			return app.encode(user)
+		},
+		
+		async roles({roles=[]},args,{app}){
+			let conn=await app.collection("roles")
+			try{
+				return Promise.all(roles.map(_id=>conn.findOne({_id})))
+			}finally{
+				conn.close()	
+			}
+		}
 	}
 }

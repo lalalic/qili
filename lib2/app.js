@@ -5,42 +5,14 @@ const {buildSchema} = require('graphql')
 const {printSchema} = require("graphql/utilities")
 const jwt = require("jsonwebtoken")
 const isEmail = require("is-email")
-
-const {User} = require("./user")
-const {Entity} = require("./entity")
+const merge = require("lodash.merge")
 
 const config=require("../conf")
-const SCHEMA=exports.schema=`
-    type Application{
-        _id: ID!
-        apiKey: String!
-        token: String!
-        name: String!
-        author: User!
-        createdAt: Date!
-        updatedAt: Date
-    }
 
-	type User{
-		_apps: [Application]!
-	}
-
-	type Mutation{
-		createApplication(name:String!): Application
-		updateApplication(id: ID!, name:String): Date
-	}
-
-	type Query{
-		version: String!
-	}
-`
-
-const RESOLVER=exports.resolver={
-
-}
+const APPS={}
 
 exports.resolve=(req, res, next)=>{
-    Application.create(req.headers['X-Application-Id']='596c7a5905d49ec80e48085a')
+    Application.create(req.headers['X-Application-Id']=config.adminKey)
         .then(app=>{
             req.app=app
             next()
@@ -51,18 +23,11 @@ exports.resolve=(req, res, next)=>{
         })
 }
 
-const APPS={}
+
 class Application{
 	static get APP_SCHEMA(){
 		try{
-			return buildSchema(`
-				${require("./types/date").schema}
-				${require("./user").schema}
-				type Query{
-					_version:String!
-				}
-				`
-			)
+			return buildSchema(require("./schema").schema)
 		}catch(e){
 			console.error(e)
 		}
@@ -80,22 +45,8 @@ class Application{
     }
 
     constructor(_id){
-        this.db=new mongo.Db(_id, this.constructor.mongoServer,{w:1})
-
         this.app={
-			_id,
-			schema: `
-				type Application{
-					logs: [Log]!
-				}
-				type Log{
-					_id: String!
-				}
-
-				type Query{
-					log: Log
-				}
-			`
+			_id
 		}
 
 		this.passwordless=new PasswordlessStore(`mongodb://${config.db.host}:${config.db.port}/${_id}}`)
@@ -111,18 +62,16 @@ class Application{
         return Promise.resolve({token,uid})
     }
 
-    requestToken(emailOrPhone){
-        return new User(this)
-			.getByContact(emailOrPhone)
-            .then(user=>this[`send${isEmail(emailOrPhone) ? "Email" : "Phone"}Token`](emailOrPhone, user._id))
+    requestToken(contact){
+        return this.getUserByContact(contact)
+            .then(user=>this[`send${isEmail(contact) ? "Email" : "Phone"}Token`](contact, user._id))
             .then(({token,uid})=>new Promise((ok,nok)=>{
                 this.passwordless.storeOrUpdate(token,uid,60*1000,null, e=>ok(!!!e))
             }))
 	}
 
-	login(emailOrPhone, token){
-        return new User(this)
-            .getByContact(emailOrPhone)
+	login(contact, token){
+        return this.getUserByContact(contact)
             .then(user=>new Promise((resolve, reject)=>{
                     let uid=user._id
                     this.passwordless.authenticate(token,uid, (e,valid)=>{
@@ -134,6 +83,10 @@ class Application{
                         }
                     })
             }))
+	}
+	
+	logout({_id:uid}){
+		this.passwordless.invalidateUser(uid,e=>e)
 	}
 
 	encode({_id,username}){
@@ -149,21 +102,19 @@ class Application{
             typeDefs:[
                 this.typeDefs
             ],
-            resolvers:{
-				version: "0.0.1",
-                ...require("./types/date").resolver,
-                ...require("./user").resolver,
-                ...require("./app").resolver
-            }
+            resolvers:merge(
+				require("./schema").resolver,
+                require("./user").resolver,
+				this.app.cloud
+            )
         })
     }
 
 	get	typeDefs(){
 		try{
 			let schema=this.constructor.APP_SCHEMA
-			schema=schema
-				.merge(buildSchema(SCHEMA))
-				.merge(buildSchema(this.app.schema))
+			if(this.app.schema)
+				schema=schema.merge(buildSchema(this.app.schema))
 			schema=printSchema(schema)
 			console.log(schema)
 			return schema
@@ -171,8 +122,25 @@ class Application{
 			console.error(e)
 		}
 	}
-
-    entity(name){
-
-    }
+	
+	async getUserByContact(contact){
+		let db=await this.collection("users")
+		try{
+			let bEmail=isEmail(contact)
+			let query=bEmail ? {email:contact} : {phone: contact}
+			
+			return await db.findOne(query)
+		}finally{
+			db.close()
+		}
+	}
+	
+	async collection(...names){
+		let db=await new mongo.Db(this.app._id, this.constructor.mongoServer,{w:1}).open()
+		let conns=names.map(name=>db.collection(name))
+		conns.forEach(conn=>conn.close=()=>db.close())
+		if(names.length==1)
+			return conns[0]
+		return conn
+	}
 }

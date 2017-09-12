@@ -42,12 +42,12 @@ app.use('/graphql', cors(),
 				}
 
 				type Query{
-					me: User
+					version: String!
 				}
 
 				type Mutation{
-					requestToken(emailOrPhone: String!): Boolean
-					login(emailOrPhone: String!, token: String!): User
+					requestToken(contact: String!): Boolean
+					login(contact: String!, token: String!): User
 				}
 			`,
 			resolvers:{
@@ -57,16 +57,14 @@ app.use('/graphql', cors(),
 					}
 				},
 				Query: {
-					me(){
-						throw new Error("Please login first!")
-					}
+					version:()=>"0.0.1"
 				},
 				Mutation: {
-					requestToken(root,{emailOrPhone},{app}){
-						return app.requestToken(emailOrPhone)
+					requestToken(root,{contact},{app}){
+						return app.requestToken(contact)
 					},
-					login(root, {token,emailOrPhone}, {app}){
-						return app.login(emailOrPhone,token)
+					login(root, {token,contact}, {app}){
+						return app.login(contact,token)
 					}
 				}
 			}
