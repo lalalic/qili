@@ -28,6 +28,16 @@ module.exports={
 			TEMPLATE_CREATE:env.ALI_SMS_TEMPLATE_CREATE||"SMS_39690001"
 		}
 	},
+	email:{
+		host: "",
+		port: 587,
+		from: "",
+		secure: false,
+		auth:{
+			user: "",
+			pass: ""
+		}
+	},
 	domain: env.DOMAIN, //qiniu need it, if you don't use file, ignore it
 	cloud:{
 		timeout: env.CLOUD_TIMEOUT || 3000
