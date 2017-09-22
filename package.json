@@ -45,7 +45,7 @@
   },
   "scripts": {
     "start": "node ./lib/index.js",
-    "debug": "node --inspect --debug ./lib/index.js",
+    "dev": "node --inspect --debug ./lib/index.js",
     "mongo": "mongod  --storageEngine=wiredTiger --directoryperdb --dbpath=\"test/mongo/\"",
     "test": "jest"
   },
