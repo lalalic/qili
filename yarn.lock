@@ -2,6 +2,10 @@
 # yarn lockfile v1
 
 
+"@types/graphql@^0.11.3":
+  version "0.11.4"
+  resolved "http://registry.npm.taobao.org/@types/graphql/download/@types/graphql-0.11.4.tgz#6e067838246ec741be3950211323726a77147472"
+
 "@types/graphql@^0.9.0":
   version "0.9.4"
   resolved "http://registry.npm.taobao.org/@types/graphql/download/@types/graphql-0.9.4.tgz#cdeb6bcbef9b6c584374b81aa7f48ecf3da404fa"
@@ -698,6 +702,10 @@ es6-promise@3.0.2:
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/es6-promise/-/es6-promise-3.0.2.tgz#010d5858423a5f118979665f46486a95c6ee2bb6"
 
+es6-promise@^4.0.5:
+  version "4.1.1"
+  resolved "http://registry.npm.taobao.org/es6-promise/download/es6-promise-4.1.1.tgz#8811e90915d9a0dba36274f0b242dbda78f9c92a"
+
 escape-html@~1.0.3:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/escape-html/-/escape-html-1.0.3.tgz#0258eae4d3d0c0974de1c169188ef0051d1d1988"
@@ -990,6 +998,14 @@ graceful-fs@^4.1.2, graceful-fs@^4.1.6:
 "graceful-readlink@>= 1.0.0":
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/graceful-readlink/-/graceful-readlink-1.0.1.tgz#4cafad76bc62f02fa039b2f94e9a3dd3a391a725"
+
+graphql-subscriptions@^0.5.1:
+  version "0.5.1"
+  resolved "http://registry.npm.taobao.org/graphql-subscriptions/download/graphql-subscriptions-0.5.1.tgz#64f527caf4de8a2c73aa7a7978e29f28d9c0cb90"
+  dependencies:
+    "@types/graphql" "^0.11.3"
+    es6-promise "^4.0.5"
+    iterall "^1.1.1"
 
 graphql-tools@^1.1.0:
   version "1.2.2"
@@ -1372,7 +1388,7 @@ istanbul-reports@^1.0.0:
   dependencies:
     handlebars "^4.0.3"
 
-iterall@^1.1.0:
+iterall@^1.1.0, iterall@^1.1.1:
   version "1.1.1"
   resolved "http://registry.npm.taobao.org/iterall/download/iterall-1.1.1.tgz#f7f0af11e9a04ec6426260f5019d9fcca4d50214"
 
