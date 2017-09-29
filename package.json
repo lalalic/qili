@@ -17,6 +17,7 @@
     "graphql": "^0.10.5",
     "graphql-subscriptions": "^0.5.1",
     "graphql-tools": "^1.1.0",
+    "graphql-type-json": "^0.1.4",
     "helmet": "^2.1.0",
     "is-email": "^1.0.0",
     "jsonwebtoken": "^8.0.0",
