@@ -54,6 +54,11 @@
   },
   "readme": "README.md",
   "devDependencies": {
-    "jest": "^18.1.0"
+    "jest": "^21.2.1"
+  },
+  "jest": {
+    "roots": ["__tests__"],
+	"automock": true,
+	"watchman": false
   }
 }
