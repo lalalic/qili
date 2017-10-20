@@ -58,7 +58,6 @@
     "roots": [
       "__tests__"
     ],
-    "automock": true,
     "watchman": false
   }
 }
