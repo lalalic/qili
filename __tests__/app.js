@@ -19,12 +19,14 @@ describe("authentication",()=>{
 				},fail)
 		})
 
-		it("request token",()=>{
+		it("request",()=>{
 			const app=new Application(APP)
 			app.getUserByContact=jest.fn()
 				.mockImplementation(()=>Promise.resolve(USER))
 			app.sendPhoneToken=jest.fn()
 				.mockImplementation((phone,uid,token)=>Promise.resolve({uid,token}))
+
+			expect(app.passwordless).toBeDefined()
 			app.passwordless.storeOrUpdate=jest.fn()
 				.mockImplementation((id,token,timeout,a,callback)=>callback())
 			return app.requestToken(USER.phone)
