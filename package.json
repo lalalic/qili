@@ -1,7 +1,7 @@
 {
   "name": "qili",
   "description": "graphql BAAS",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "author": {
     "name": "Raymond Li",
     "email": "lalalic@139.com"
@@ -19,9 +19,12 @@
     "graphql-subscriptions": "^0.5.1",
     "graphql-tools": "^1.1.0",
     "graphql-type-json": "^0.1.4",
+    "is-valid-email": "^0.0.2",
+    "lodash.merge": "^4.6.0",
+    "mongodb": "^2.2.33",
     "node-cache": "^4.1.1",
     "nodemailer": "^4.1.0",
-    "passwordless-memorystore": "^0.0.1",
+    "passwordless-nodecache": "^1.0.3",
     "qiniu": "~6.1.x",
     "wechat": "^2.0.1"
   },
@@ -52,8 +55,10 @@
     "jest": "^21.2.1"
   },
   "jest": {
-    "roots": ["__tests__"],
-	"automock": true,
-	"watchman": false
+    "roots": [
+      "__tests__"
+    ],
+    "automock": true,
+    "watchman": false
   }
 }
