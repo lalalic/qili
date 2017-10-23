@@ -1,10 +1,5 @@
 describe("admin console", ()=>{
-	
-	it("create app",()=>{
-
-	})
-
-	it("update app", ()=>{
+	it("app cache sync",()=>{
 
 	})
 })
