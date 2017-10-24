@@ -7,6 +7,7 @@ let uuid=Date.now()
 describe("authentication",()=>{
 	const USER={_id:"test", phone: "13901234567",username:"test"}
 	const TOKEN="857685"
+	const createApp=()=>new Application({apiKey:`${uuid++}`,_id:`${uuid-1}_id`})
 	beforeAll(()=>{
 		Application.prototype.cloudCode=jest.fn().mockImplementation(function(){
 			this.cloud={}
@@ -14,7 +15,7 @@ describe("authentication",()=>{
 	})
 	describe("request token", ()=>{
 		it.skip("phone", ()=>{
-			const app=new Application({apiKey:`${uuid++}`})
+			const app=createApp()
 			return app.sendPhoneToken(USER.phone,USER._id,TOKEN)
 				.then(({token,uid})=>{
 					expect(token).toBe(TOKEN)
@@ -23,7 +24,7 @@ describe("authentication",()=>{
 		})
 
 		it("request for existing user",()=>{
-			const app=new Application({apiKey:`${uuid++}`})
+			const app=createApp()
 			app.getUserByContact=jest.fn()
 				.mockImplementation(()=>Promise.resolve(USER))
 				
@@ -46,7 +47,7 @@ describe("authentication",()=>{
 		})
 		
 		it("request for new user", ()=>{
-			const app=new Application({apiKey:`${uuid++}`})
+			const app=createApp()
 			app.getUserByContact=jest.fn()
 				.mockImplementation(()=>Promise.resolve())
 			app.sendPhoneToken=jest.fn()
@@ -70,7 +71,7 @@ describe("authentication",()=>{
 	
 	describe("login", ()=>{
 		it("existing user",()=>{
-			const app=new Application({apiKey:`${uuid++}`})
+			const app=createApp()
 			app.getUserByContact=jest.fn()
 				.mockImplementation(()=>Promise.resolve(USER))
 				
@@ -92,7 +93,7 @@ describe("authentication",()=>{
 		})
 		
 		it("new user will be created when login", ()=>{
-			const app=new Application({apiKey:`${uuid++}`})
+			const app=createApp()
 			app.getUserByContact=jest.fn()
 				.mockImplementation(()=>Promise.resolve())
 				
@@ -116,7 +117,7 @@ describe("authentication",()=>{
 		})
 		
 		it("new user without login success will be created when login", ()=>{
-			const app=new Application({apiKey:`${uuid++}`})
+			const app=createApp()
 			app.getUserByContact=jest.fn()
 				.mockImplementation(()=>Promise.resolve())
 				
