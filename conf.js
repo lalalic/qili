@@ -13,9 +13,9 @@ module.exports={
 		timeout : 120
 	},
 	qiniu:{
-		ACCESS_KEY:env.QINIU_ACCESS_KEY,
-		SECRET_KEY:env.QINIU_SECRET_KEY,
-		bucket:env.QINIU_BUCKET,
+		ACCESS_KEY:env.QINIU_ACCESS_KEY||"test",
+		SECRET_KEY:env.QINIU_SECRET_KEY||"test",
+		bucket:env.QINIU_BUCKET||"test",
 		accessURL:env.QINIU_ACCESS_URL,
 		expires:env.QINIU_EXPIRES || 600,
 	},
