@@ -1,10 +1,10 @@
 const {resolver}=require("../lib/file")
 
 describe("file",()=>{
-	it("get tokens", ()=>{
-		let tokens=resolver.Mutation.file_tokens(null,{count:5},{app:{app:{apiKey:"test"}},user:{sessionToken:"456789ghjkl"}})
-		expect(Array.isArray(tokens)).toBe(true)
-		expect(tokens.length).toBe(5)	
+	it("get token", ()=>{
+		let {token,id}=resolver.Mutation.file_token(null,{},{app:{app:{apiKey:"test"}},user:{sessionToken:"456789ghjkl"}})
+		expect(token).toBeDefined()
+		expect(id).toBeDefined()
 	})
 	
 	it("user.sessionToken",()=>{
