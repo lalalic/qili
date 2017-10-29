@@ -7,7 +7,7 @@ let uuid=Date.now()
 describe("authentication",()=>{
 	const USER={_id:"test", phone: "13901234567",username:"test"}
 	const TOKEN="857685"
-	const createApp=()=>new Application({apiKey:`${uuid++}`,_id:`${uuid-1}_id`})
+	const createApp=()=>new Application({apiKey:`${uuid++}`,_id:`${uuid-1}_id`,isDev:false})
 	beforeAll(()=>{
 		Application.prototype.cloudCode=jest.fn().mockImplementation(function(){
 			this.cloud={}
@@ -27,7 +27,7 @@ describe("authentication",()=>{
 			const app=createApp()
 			app.getUserByContact=jest.fn()
 				.mockImplementation(()=>Promise.resolve(USER))
-				
+
 			app.sendPhoneToken=jest.fn()
 				.mockImplementation((phone,uid,token)=>Promise.resolve({uid,token}))
 
@@ -45,7 +45,7 @@ describe("authentication",()=>{
 					expect(uid).toBe(USER._id)
 				},fail)
 		})
-		
+
 		it("request for new user", ()=>{
 			const app=createApp()
 			app.getUserByContact=jest.fn()
@@ -68,20 +68,20 @@ describe("authentication",()=>{
 				},fail)
 		})
 	})
-	
+
 	describe("login", ()=>{
 		it("existing user",()=>{
 			const app=createApp()
 			app.getUserByContact=jest.fn()
 				.mockImplementation(()=>Promise.resolve(USER))
-				
+
 			expect(app.passwordless).toBeDefined()
 			app.passwordless.authenticate=jest.fn()
 				.mockImplementation((token,uid,callback)=>callback(null,true))
 			app.passwordless.invalidateUser=jest.fn()
 			app.createEntity=jest.fn()
 				.mockReturnValue(Promise.resolve(USER))
-			
+
 			return app.login(USER.phone, TOKEN)
 				.then(user=>{
 					expect(user).toBe(USER)
@@ -91,21 +91,21 @@ describe("authentication",()=>{
 					expect(app.createEntity).not.toHaveBeenCalled()
 				})
 		})
-		
+
 		it("new user will be created when login", ()=>{
 			const app=createApp()
 			app.getUserByContact=jest.fn()
 				.mockImplementation(()=>Promise.resolve())
-				
+
 			expect(app.passwordless).toBeDefined()
 			app.passwordless.authenticate=jest.fn()
 				.mockImplementation((token,uid,callback)=>callback(null,true))
 			app.passwordless.invalidateUser=jest.fn()
-			
+
 			let newUser={...USER,_id:"hello"}
 			app.createEntity=jest.fn()
 				.mockReturnValue(Promise.resolve(newUser))
-			
+
 			return app.login(USER.phone, TOKEN,USER.username)
 				.then(user=>{
 					expect(user).toBe(newUser)
@@ -115,21 +115,21 @@ describe("authentication",()=>{
 					expect(app.createEntity).toHaveBeenCalled()
 				})
 		})
-		
+
 		it("new user without login success will be created when login", ()=>{
 			const app=createApp()
 			app.getUserByContact=jest.fn()
 				.mockImplementation(()=>Promise.resolve())
-				
+
 			expect(app.passwordless).toBeDefined()
 			app.passwordless.authenticate=jest.fn()
 				.mockImplementation((token,uid,callback)=>callback(null,false))
 			app.passwordless.invalidateUser=jest.fn()
-			
+
 			let newUser={...USER,_id:"hello"}
 			app.createEntity=jest.fn()
 				.mockReturnValue(Promise.resolve(newUser))
-			
+
 			return app.login(USER.phone, TOKEN,USER.username)
 				.then(fail,e=>{
 					expect(e).toBeDefined()
