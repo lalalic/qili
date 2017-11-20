@@ -41,7 +41,7 @@ qili.server:
   - "${DATA_ROOT}/data:/data"
 
 qili.db:
- image: "${HUB}mongo:3.1"
+ image: "${HUB}mongo:3.4"
  expose:
   - "27017"
  volumes:
