@@ -6,6 +6,7 @@ qili.proxy:
  links:
   - qili.server
  volumes:
+  - "/etc/localtime:/etc/localtime:ro"
   - "${DATA_ROOT}/data:/data"
   - "${DATA_ROOT}/data/qili/deploy/nginx.conf:/etc/nginx/nginx.conf"
 
@@ -38,6 +39,7 @@ qili.server:
  links:
   - qili.db
  volumes:
+  - "/etc/localtime:/etc/localtime:ro"
   - "${DATA_ROOT}/data:/data"
 
 qili.db:
@@ -45,5 +47,6 @@ qili.db:
  expose:
   - "27017"
  volumes:
+  - "/etc/localtime:/etc/localtime:ro"
   - "${DATA_ROOT}/data/db:/data/db"
  command: --storageEngine=wiredTiger --directoryperdb
