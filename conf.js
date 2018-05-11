@@ -16,7 +16,7 @@ module.exports={
 		ACCESS_KEY:env.QINIU_ACCESS_KEY||"test",
 		SECRET_KEY:env.QINIU_SECRET_KEY||"test",
 		bucket:env.QINIU_BUCKET||"test",
-		accessURL:env.QINIU_ACCESS_URL,
+		accessURL:env.QINIU_ACCESS_URL||"",
 		expires:env.QINIU_EXPIRES || 600,
 	},
 	ali:{
@@ -42,7 +42,6 @@ module.exports={
 	cloud:{
 		timeout: env.CLOUD_TIMEOUT || 3000
 	},
-	appRoot: env.APPS_ROOT || `${__dirname}/test/apps`,
 	wechat:{
 		token: env.WECHAT_TOKEN||'myqili'//wechat api token, ignore it without wechat integration
 	},
@@ -52,14 +51,4 @@ module.exports={
 	root: env.ROOT || "root",
 	rootPassword:env.PASSWORD || "root",
 	adminKey: env.ADMIN_KEY || "qiliAdmin",
-
-	sharedModules:"backbone,ajax".split(","),
-	Internal_API:["users,roles,files,logs".split(",")],
-	DEFAULT_SCHEMA: {
-		users:[{username:1, $option:{unique:true}},{email:1, $option:{unique:true, sparse:true}}],
-		roles:[{name:1, $option:{unique:true}}],
-		apps:[{'author._id':1,'name':1, $option:{unique:true}}],
-		logs:[{level:1}, {'message.path':1, $option:{name:'accesspath', spare:true}}],
-		files:[{'entity.kind':1,'entity._id':1, $option:{name:'entity', spare:true}}]
-	}
 }
