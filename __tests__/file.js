@@ -1,8 +1,11 @@
 const {resolver}=require("../lib/file")
+const config=require("../conf")
+
 jest.mock("qiniu", ()=>{
 	class PutPolicy{
 		token(){
-			return this.scope.split(":")[1]
+			let data=this.scope.split(":")
+			return data.length==1 ? this.scope : data[1]
 		}
 	}
 	
@@ -45,5 +48,10 @@ describe("file",()=>{
 		expect(token)
 			.toMatch(`${context.app.app.apiKey}/users/${context.user._id}/book/a.pdf`)
 		expect(id).not.toBeDefined()
+	})
+	
+	it("{justToken:true}",()=>{ 
+		let token=resolver.Query.file_upload_token(null,{justToken:true},context)
+		expect(token).toBe(config.qiniu.bucket)
 	})
 })
