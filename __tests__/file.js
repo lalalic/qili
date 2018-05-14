@@ -32,7 +32,7 @@ describe("file",()=>{
 		context.app.app.storage=["xx.qiniu.com","bb.qiniu.com"]
 		it("parse",()=>{
 			expect(resolver.URL.parseValue("http://xx.qiniu.com/template/a.docx"))
-				.toBe("/template/a.docx")
+				.toBe("template/a.docx")
 			expect(resolver.URL.parseValue("http://xx.mydomain.com/template/a.docx"))
 				.toBe("http://xx.mydomain.com/template/a.docx")
 			expect(resolver.URL.parseValue("template/a.docx"))
@@ -40,11 +40,11 @@ describe("file",()=>{
 			expect(resolver.URL.parseValue(null))
 				.toBe(null)
 			expect(resolver.URL.parseValue("http://bb.qiniu.com/template/a.docx"))
-				.toBe("/template/a.docx")
+				.toBe("template/a.docx")
 
 		})
 		it("serialize", ()=>{
-			expect(resolver.URL.serialize("/template/a.docx"))
+			expect(resolver.URL.serialize("template/a.docx"))
 				.toBe("http://bb.qiniu.com/template/a.docx")
 
 			expect(resolver.URL.serialize("http://a.com/template/a.docx"))
