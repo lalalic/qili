@@ -586,7 +586,7 @@ combined-stream@^1.0.5, combined-stream@~1.0.5:
 
 commander@^2.15.1:
   version "2.15.1"
-  resolved "http://registry.npm.taobao.org/commander/download/commander-2.15.1.tgz#df46e867d0fc2aec66a34662b406a9ccafff5b0f"
+  resolved "http://registry.yarnpkg.com/commander/-/commander-2.15.1.tgz#df46e867d0fc2aec66a34662b406a9ccafff5b0f"
 
 concat-map@0.0.1:
   version "0.0.1"
