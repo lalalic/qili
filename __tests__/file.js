@@ -45,7 +45,7 @@ describe("file",()=>{
 		})
 		it("serialize", ()=>{
 			expect(resolver.URL.serialize("template/a.docx"))
-				.toBe("http://bb.qiniu.com/template/a.docx")
+				.toBe("https://bb.qiniu.com/template/a.docx")
 
 			expect(resolver.URL.serialize("http://a.com/template/a.docx"))
 				.toBe("http://a.com/template/a.docx")
