@@ -7,6 +7,5 @@ RUN yarn install --production
 EXPOSE 9080
 EXPOSE 9443
 
-CMD exec > /data/log/qili.log && \
-    yarn install --production && \
+CMD yarn install --production && \
     yarn start
