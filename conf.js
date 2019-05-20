@@ -24,7 +24,6 @@ module.exports={
 		SECRET_KEY:env.ALI_SECRET_KEY,
 		sms:{
 			SIGN_NAME:env.ALI_SMS_SIGN_NAME||"papazai网",
-			TEMPLATE_RESET: env.ALI_SMS_TEMPLATE_RESET,
 			TEMPLATE_CREATE:env.ALI_SMS_TEMPLATE_CREATE
 		}
 	},
