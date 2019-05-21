@@ -16,7 +16,7 @@ qili.server:
   - "9080"
   - "9443"
  environment:
-  - DOMAIN
+  - API
   - DB_HOST
   - DB_PORT
   - APPS_ROOT
@@ -26,8 +26,6 @@ qili.server:
   - ROOT_PASSWORD
   - QINIU_ACCESS_KEY
   - QINIU_SECRET_KEY
-  - QINIU_BUCKET
-  - QINIU_ACCESS_URL
   - ALI_ACCESS_KEY
   - ALI_SECRET_KEY
   - ALI_SMS_SIGN_NAME=papazai网

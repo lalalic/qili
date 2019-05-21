@@ -15,8 +15,6 @@ module.exports={
 	qiniu:{
 		ACCESS_KEY:env.QINIU_ACCESS_KEY||"test",
 		SECRET_KEY:env.QINIU_SECRET_KEY||"test",
-		bucket:env.QINIU_BUCKET||"test",
-		accessURL:env.QINIU_ACCESS_URL||"",
 		expires:env.QINIU_EXPIRES || 600,
 	},
 	ali:{
@@ -37,7 +35,7 @@ module.exports={
 			pass: ""
 		}
 	},
-	domain: env.DOMAIN, //qiniu need it, if you don't use file, ignore it
+	api: env.API, //qiniu need it, if you don't use file, ignore it
 	cloud:{
 		timeout: env.CLOUD_TIMEOUT || 3000
 	},
