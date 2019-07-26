@@ -33,6 +33,11 @@ describe("file",()=>{
 		it("parse",()=>{
 			expect(resolver.URL.parseValue("http://xx.qiniu.com/template/a.docx"))
 				.toBe("template/a.docx")
+			expect(resolver.URL.parseValue("https://xx.qiniu.com/template/a.docx"))
+				.toBe("template/a.docx")
+			expect(resolver.URL.parseValue("https://xx.qiniu.com/template/a.docx?12341442"))
+				.toBe("template/a.docx?12341442")
+
 			expect(resolver.URL.parseValue("https://xx.mydomain.com/template/a.docx"))
 				.toBe("https://xx.mydomain.com/template/a.docx")
 			expect(resolver.URL.parseValue("template/a.docx"))
