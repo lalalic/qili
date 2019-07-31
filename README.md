@@ -24,19 +24,98 @@ to extend server, with following API.
 		* support constant user token=1234
 
 * buildPagination(Type:String): {typeDefs, resolver}
-	* to build pagination for <Type>, you should manually merge returned typeDefs and resolver
-	* types
-		* <Type>Edge
-		* <Type>Connection
+	* to build pagination module for Type, you should manually merge returned typeDefs and resolver
+	* typeDefs
+		
+		type ${Type}Edge{
+			node: ${Type}
+			cursor: JSON
+		}
+
+		type ${Type}Connection{
+			edges: [${Type}Edge]
+			pageInfo: PageInfo
+		}
+
 		
 * buildComment(Type:String): {typeDefs, resolver}
-	* to build comment for <Type>, you should manually merge returned typeDefs and resolver
-	* types
-		* <Type>Comment
-		* <Type>CommentEdge
-		* <Type>CommentEdgeConnection
+	* to build comment module for Type, you should manually merge returned typeDefs and resolver
+	* typeDefs
 
-* file_link(id:ID,urls:[String]): to link uploaded resources at <urls> to node with <id>
+		enum CommentType {
+			photo
+			text
+		}
+
+		interface Comment{
+			id: ID!
+			content: String!
+			type: CommentType
+			author: User!
+			createdAt:  Date!
+			parent: ObjectID!
+			isOwner: Boolean
+		}
+
+		extend type Mutation{
+			comment_create(parent:ID,content:String!, type: CommentType, _id: ObjectID):Comment
+		}
+
+		type ${CommentType} implements Comment & Node {
+			id: ID!
+			content: String!
+			type: CommentType
+			author: User!
+			createdAt:  Date!
+			parent: ObjectID!
+			isOwner: Boolean
+		}
+
+		${Pagination.typeDefs}
+
+		extend type Query{
+			${type}_comments(parent:ObjectID,last:Int, before: JSON):${CommentType}Connection
+
+		}
+
+* buildFavorite(Type:String, statisticsFieldName[optional]): {typeDefs,resolver}
+	* to build favorite module for Type, you should manually merge returned typeDefs and resolver to Cloud
+	* typeDefs
+
+			type ${TypedFavorite} implements Node{
+                id: ID!
+                author: User!
+                ${type}: ${Type}!
+            }
+
+            extend type User{
+                ${typedFavorite}s:[${Type}]
+            }
+
+            extend type ${Type}{
+                isMyFavorite: Boolean
+                ${!statisticsFieldName ? "favorited: Int" : ""}
+            }
+
+            extend type Mutation{
+                ${typedFavorite}_toggle(_id:ObjectID!): ${Type}
+            }
+
+* buildStatistics(Type:String,fields:[String])
+	* to build statistics module for Type
+	* typeDefs
+
+			type ${TypedStatistics} implements Node{
+                id: ID!
+                ${fieldDefs}
+            }
+
+            extend type ${Type}{
+                ${fieldDefs}
+				
+				"""use query to auto count: _viewed in your query to inc viewed automatically"""
+                ${fields.map(a=>`_${a}: Boolean`).join("\n\r")}
+            }
 
 * merge(resolver1, resolver2, ...): to merge resolvers
 
