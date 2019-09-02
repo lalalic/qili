@@ -33,6 +33,7 @@ qili.server:
   - DEBUG
   - CLOUD_TIMEOUT
   - WECHAT_TOKEN
+  - NODE_ENV=production
  links:
   - qili.db
  volumes:
