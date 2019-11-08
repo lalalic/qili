@@ -17,11 +17,32 @@ Cloud
 ---
 to extend server, with following API.
 
-* isDev: Boolean
-	* true
-		* support profiling with extension: {...times}
-		* support persisted query || query
-		* support constant user token=1234
+* apiKey: readonly
+
+* merge(resolver1, resolver2, ...): a utility to deep merge objects
+
+* addModule({typeDefs, resolver, persistedQuery,static,wechat}) : to add a cloud module
+	* typeDefs: string, app's schema
+	* resolver: graphql resolver object, app's resolver
+	* persistedQuery: {<id>: <graphql:string>, ...}
+	* static(service)
+		* serve request at <version=1>/:appKey/static/<path>
+		* service
+			.on([regexp|string]/*path*/, function(req/*{path,app}*/, res/*{send}*/))
+			.on(path,callback)
+	* wechat(service)
+		* serve wechat request at <version=1>/:appKey/wechat
+		* service
+			.on(event/*event name*/,function(req/*{message,app}*/, res/*{send}*/))
+			> event could be text,image,voice, video,location,link, event,device_text,device_event,subcribe,unsubscribe,scan
+			> callback=function(req/*{message,app}*/, res/*{send}*/)
+			> when event name is empty, callback will be called on every event 
+
+* ID(...): a utility to extract id from type field resolver arguments
+
+* reportThreshold: write only, to a performance profiler threshold when app set isDev=true in app.qili2.com,default undefined
+
+* logVariables(operationName, variables): write only, returned value as log.variables, default undefined
 
 * buildPagination(Type:String): {typeDefs, resolver}
 	* to build pagination module for Type, you should manually merge returned typeDefs and resolver
@@ -116,30 +137,11 @@ to extend server, with following API.
 				"""use query to auto count: _viewed in your query to inc viewed automatically"""
                 ${fields.map(a=>`_${a}: Boolean`).join("\n\r")}
             }
+* statistics(typeName, statObject, {app}): function to call whenever you want to statistic for an type object
+	* typeName: such as "User"
+	* statObject: {_id, login:1, score:2,...}, the User[_id] login+=1, score+=2
+	* context: {app}
 
-* merge(resolver1, resolver2, ...): to merge resolvers
-
-* typeDefs: app's schema
-
-* resolver: app's resolver
-
-
-* persistedQuery: {<id>: <graphql:string>, ...}
-
-* static 
-	* <version=1>/:appKey/static/<path>
-		* Cloud.static
-			.on([regexp|string]/*path*/, function(req/*{path,app}*/, res/*{send}*/))
-			.on(path,callback)
-
-* wechat
-	* <version=1>/:appKey/wechat
-		* Cloud.wechat.on(/*event name*/,function(req/*{message,app}*/, res/*{send}*/)).on(event, callback)
-			> event could be text,image,voice, video,location,link, event,device_text,device_event,subcribe,unsubscribe,scan
-			> callback=function(req/*{message,app}*/, res/*{send}*/)
-			> when event name is empty, callback will be called on every event 
-
-			
 Schema
 ---
 
@@ -238,8 +240,10 @@ cloud example
 ----		
 <pre>
 	//localhost/1/<appKey>/book
-	Cloud.static.on("book",function(req, res){
-		res.send("<html>book</html>")
+	Cloud.addModule({
+		static.on("book",function(req, res){
+			res.send("<html>book</html>")
+		}
 	})
 	
 	Cloud.wechat.on(function(req, res){
