@@ -42,7 +42,7 @@ to extend server, with following API.
 
 * reportThreshold: write only, to a performance profiler threshold when app set isDev=true in app.qili2.com,default undefined
 
-* logVariables(operationName, variables): write only, returned value as log.variables, default undefined
+* logVariables(variables,operationName): write only, returned value as log.variables, default undefined
 
 * buildPagination(Type:String): {typeDefs, resolver}
 	* to build pagination module for Type, you should manually merge returned typeDefs and resolver
