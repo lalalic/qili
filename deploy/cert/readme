@@ -1,0 +1,5 @@
+#certbot/dns-aliyun is used for acme challenge
+
+create and sync certification to qiniu with following command line in linux:
+
+/data/qili/deploy/cert# ./qiniu-sync.sh {domain} {qiniu-user} {password}
