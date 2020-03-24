@@ -34,6 +34,9 @@ qili.server:
   - CLOUD_TIMEOUT
   - WECHAT_TOKEN
   - NODE_ENV=production
+  - LOG_DIR=/data/logs
+  - LOG_CATEGORY=default
+
  links:
   - qili.db
  volumes:
