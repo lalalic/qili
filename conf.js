@@ -43,7 +43,7 @@ module.exports={
 		token: env.WECHAT_TOKEN||'myqili'//wechat api token, ignore it without wechat integration
 	},
 	log:{
-		dir:env.LOG_DIR||"./logs",
+		dir:env.LOG_DIR||"./log",
 		category:env.LOG_CATEGORY||"default",
 	},
 
