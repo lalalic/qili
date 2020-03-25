@@ -37,7 +37,7 @@ module.exports={
 	},
 	api: env.API, //qiniu need it, if you don't use file, ignore it
 	cloud:{
-		timeout: env.CLOUD_TIMEOUT || 3000
+		timeout: env.CLOUD_TIMEOUT || 5000
 	},
 	wechat:{
 		token: env.WECHAT_TOKEN||'myqili'//wechat api token, ignore it without wechat integration
