@@ -11,7 +11,7 @@ Qiniu.conf.ACCESS_KEY=config.qiniu.ACCESS_KEY
 Qiniu.conf.SECRET_KEY=config.qiniu.SECRET_KEY
 const {conf:{API_HOST,RPC_TIMEOUT},rpc, util}=Qiniu
 
-async function syncCert(domain){
+module.exports.sync=async function syncCert(domain){
   const failedRenewCert = await renewCert(domain)
   if(failedRenewCert)
     return 
@@ -106,7 +106,7 @@ function readMyFile(path){
 function startQili(){
   console.log("starting qili....")
   return new Promise((resolve,reject)=>{
-    exec("/root/qili.travis.deploy.sh",(error, stdout, stderr)=>{
+    exec("/root/qili.start.sh",(error, stdout, stderr)=>{
       console.log(stdout)
       console.error(stderr)
       if(error){
@@ -116,7 +116,7 @@ function startQili(){
   })
 }
 
-async function schedule(){
+module.exports.schedule=async function schedule(){
   await startQili()
   const url=`${API_HOST}/sslcert`
   request(url,{
