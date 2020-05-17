@@ -106,7 +106,7 @@ function readMyFile(path){
 function startQili(){
   console.log("starting qili....")
   return new Promise((resolve,reject)=>{
-    exec("/root/qili.start.sh",(error, stdout, stderr)=>{
+    exec("/root/qili.travis.deploy.sh",(error, stdout, stderr)=>{
       console.log(stdout)
       console.error(stderr)
       if(error){
