@@ -33,6 +33,7 @@
     "react-dom": "^16.0.0",
     "react-router": "^3.0.0",
     "simplecrawler": "^1.1.9",
+    "subscriptions-transport-ws": "^0.9.18",
     "wechat": "^2.0.1"
   },
   "keywords": [
