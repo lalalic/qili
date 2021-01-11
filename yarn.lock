@@ -210,10 +210,6 @@ async@^2.1.4:
   dependencies:
     lodash "^4.14.0"
 
-async@^3.1.0:
-  version "3.2.0"
-  resolved "https://registry.npm.taobao.org/async/download/async-3.2.0.tgz#b3a2685c5ebb641d3de02d161002c60fc9f85720"
-
 asynckit@^0.4.0:
   version "0.4.0"
   resolved "https://registry.yarnpkg.com/asynckit/-/asynckit-0.4.0.tgz#c79ed97f7f34cb8f2ba1bc9790bcc366474b4b79"
@@ -1500,12 +1496,6 @@ iconv-lite@0.4.24, iconv-lite@~0.4.13:
 iconv-lite@0.4.8:
   version "0.4.8"
   resolved "https://registry.yarnpkg.com/iconv-lite/-/iconv-lite-0.4.8.tgz#c6019a7595f2cefca702eab694a010bcd9298d20"
-
-iconv-lite@^0.5.0:
-  version "0.5.2"
-  resolved "https://registry.npm.taobao.org/iconv-lite/download/iconv-lite-0.5.2.tgz?cache=0&sync_timestamp=1594184325364&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Ficonv-lite%2Fdownload%2Ficonv-lite-0.5.2.tgz#af6d628dccfb463b7364d97f715e4b74b8c8c2b8"
-  dependencies:
-    safer-buffer ">= 2.1.2 < 3"
 
 imurmurhash@^0.1.4:
   version "0.1.4"
@@ -2850,14 +2840,14 @@ rc@^1.1.7:
     minimist "^1.2.0"
     strip-json-comments "~2.0.1"
 
-react-dom@^16.0.0:
-  version "16.9.0"
-  resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-16.9.0.tgz#5e65527a5e26f22ae3701131bcccaee9fb0d3962"
+react-dom@^16.7.0:
+  version "16.14.0"
+  resolved "https://registry.npm.taobao.org/react-dom/download/react-dom-16.14.0.tgz#7ad838ec29a777fb3c75c3a190f661cf92ab8b89"
   dependencies:
     loose-envify "^1.1.0"
     object-assign "^4.1.1"
     prop-types "^15.6.2"
-    scheduler "^0.15.0"
+    scheduler "^0.19.1"
 
 react-is@^16.8.1, react-is@^16.8.6:
   version "16.9.0"
@@ -2876,9 +2866,9 @@ react-router@^3.0.0:
     react-is "^16.8.6"
     warning "^3.0.0"
 
-react@^16.0.0:
-  version "16.9.0"
-  resolved "https://registry.yarnpkg.com/react/-/react-16.9.0.tgz#40ba2f9af13bc1a38d75dbf2f4359a5185c4f7aa"
+react@^16.7.0:
+  version "16.14.0"
+  resolved "https://registry.npm.taobao.org/react/download/react-16.14.0.tgz?cache=0&sync_timestamp=1608327797370&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Freact%2Fdownload%2Freact-16.14.0.tgz#94d776ddd0aaa37da3eda8fc5b6b18a4c9a3114d"
   dependencies:
     loose-envify "^1.1.0"
     object-assign "^4.1.1"
@@ -3053,10 +3043,6 @@ rimraf@2, rimraf@^2.5.1, rimraf@^2.6.1:
   dependencies:
     glob "^7.0.5"
 
-robots-parser@^2.1.1:
-  version "2.1.1"
-  resolved "https://registry.npm.taobao.org/robots-parser/download/robots-parser-2.1.1.tgz#41b289cf44a6aa136dc62be0085adca954573ab0"
-
 safe-buffer@5.1.1, safe-buffer@^5.0.1, safe-buffer@^5.1.1, safe-buffer@~5.1.0:
   version "5.1.1"
   resolved "https://registry.yarnpkg.com/safe-buffer/-/safe-buffer-5.1.1.tgz#893312af69b2123def71f57889001671eeb2c853"
@@ -3083,9 +3069,9 @@ sax@>=0.6.0, sax@^1.2.1:
   version "1.2.4"
   resolved "https://registry.yarnpkg.com/sax/-/sax-1.2.4.tgz#2816234e2378bddc4e5354fab5caa895df7100d9"
 
-scheduler@^0.15.0:
-  version "0.15.0"
-  resolved "https://registry.yarnpkg.com/scheduler/-/scheduler-0.15.0.tgz#6bfcf80ff850b280fed4aeecc6513bc0b4f17f8e"
+scheduler@^0.19.1:
+  version "0.19.1"
+  resolved "https://registry.npm.taobao.org/scheduler/download/scheduler-0.19.1.tgz#4f3e2ed2c1a7d65681f4c854fa8c5a1ccb40f196"
   dependencies:
     loose-envify "^1.1.0"
     object-assign "^4.1.1"
@@ -3162,15 +3148,6 @@ sigmund@~1.0.0:
 signal-exit@^3.0.0, signal-exit@^3.0.2:
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/signal-exit/-/signal-exit-3.0.2.tgz#b5fdc08f1287ea1178628e415e25132b73646c6d"
-
-simplecrawler@^1.1.9:
-  version "1.1.9"
-  resolved "https://registry.npm.taobao.org/simplecrawler/download/simplecrawler-1.1.9.tgz#6e2a7a22b44c207584c30185b4f99a5224f403cc"
-  dependencies:
-    async "^3.1.0"
-    iconv-lite "^0.5.0"
-    robots-parser "^2.1.1"
-    urijs "^1.19.1"
 
 slash@^1.0.0:
   version "1.0.0"
@@ -3523,10 +3500,6 @@ universalify@^0.1.0:
 unpipe@1.0.0, unpipe@~1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/unpipe/-/unpipe-1.0.0.tgz#b2bf4ee8514aae6165b4817829d21b2ef49904ec"
-
-urijs@^1.19.1:
-  version "1.19.2"
-  resolved "https://registry.npm.taobao.org/urijs/download/urijs-1.19.2.tgz#f9be09f00c4c5134b7cb3cf475c1dd394526265a"
 
 urllib@0.5.1:
   version "0.5.1"
