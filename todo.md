@@ -5,7 +5,7 @@
 * create certificate for domain: xxx.com,*.xxx.com 
 >docker run --rm -it -v /data/certbot:/etc/letsencrypt certbot/certbot certonly --manual --preferred-challenges dns
 
-
+* resolve app and user before parse request body
 
 
 # tricks
