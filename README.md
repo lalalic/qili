@@ -13,6 +13,10 @@ http header or query
 * X-Application-Id=? : create an application from qili2.com to get appid
 * X-Session-Token=? : get a session token from following request as json data
 
+config
+---
+
+
 Cloud
 ---
 to extend server, with following API.

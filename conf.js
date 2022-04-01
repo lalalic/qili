@@ -13,8 +13,8 @@ module.exports={
 		timeout : 120
 	},
 	qiniu:{
-		ACCESS_KEY:env.QINIU_ACCESS_KEY||"test",
-		SECRET_KEY:env.QINIU_SECRET_KEY||"test",
+		ACCESS_KEY:env.QINIU_ACCESS_KEY||"1o_JaGUUb8nVxRpDGoAYB9tjLT10WD7PBFVtMmVT",
+		SECRET_KEY:env.QINIU_SECRET_KEY||"r2nd182ZXzuCiCN7ZLoJPFVPZHqCxaUaE73RjKaW",
 		expires:env.QINIU_EXPIRES || 600,
 	},
 	ali:{
@@ -35,9 +35,13 @@ module.exports={
 			pass: ""
 		}
 	},
-	api: env.API, //qiniu need it, if you don't use file, ignore it
+	api: env.API||"https://api.wenshubu.com/1/graphql", //qiniu need it, if you don't use file, ignore it
 	cloud:{
-		timeout: env.CLOUD_TIMEOUT || 5000
+		timeout: env.CLOUD_TIMEOUT || 5000,
+		"we-office":{
+			code:require("path").resolve(__dirname, "../we-office/cloud","debug__generated.js"),
+			root:require("path").resolve(__dirname, "../we-office/dist"),
+		}
 	},
 	wechat:{
 		token: env.WECHAT_TOKEN||'myqili'//wechat api token, ignore it without wechat integration
