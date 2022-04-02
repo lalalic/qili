@@ -9,7 +9,7 @@ on:
 
 jobs:
   build:
-    environment: DEPLOYMENT
+    environment: ALI
     runs-on: ubuntu-latest
 
     strategy:
