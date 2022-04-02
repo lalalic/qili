@@ -10,7 +10,7 @@ on:
 jobs:
   build:
 
-    runs-on: ubuntu-16
+    runs-on: ubuntu-latest
 
     strategy:
       matrix:
@@ -26,3 +26,11 @@ jobs:
         cache: 'yarn'
     - run: yarn
     - run: yarn test
+    - name: run sshpass commands
+      uses: matheusvanzan/sshpass-action@v2
+      with:
+        host: ${{ secrets.SERVER_HOST }}
+        user: ${{ secrets.SERVER_USER }}
+        key: ${{ secrets.SERVER_KEY }}
+        run: |
+          ./qili.travis.deploy.sh
