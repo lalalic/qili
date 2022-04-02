@@ -9,7 +9,7 @@ on:
 
 jobs:
   build:
-
+    environment: DEPLOYMENT
     runs-on: ubuntu-latest
 
     strategy:
@@ -26,8 +26,8 @@ jobs:
         cache: 'yarn'
     - run: yarn
     - run: yarn test
-    - name: run sshpass commands
-      uses: matheusvanzan/sshpass-action@v2
+    - name: deploy to ali cloud
+      uses: lalalic/sshpass-action@master
       with:
         host: ${{ secrets.SERVER_HOST }}
         user: ${{ secrets.SERVER_USER }}
