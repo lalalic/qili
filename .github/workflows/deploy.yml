@@ -26,6 +26,7 @@ jobs:
         cache: 'yarn'
     - run: yarn
     - run: yarn test
+    - run: echo "${{ secrets.SERVER_HOST }}"
     - name: run sshpass commands
       uses: lalalic/sshpass-action@master
       with:
