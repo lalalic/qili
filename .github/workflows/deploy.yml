@@ -26,11 +26,10 @@ jobs:
         cache: 'yarn'
     - run: yarn
     - run: yarn test
-    - run: echo "${{ secrets.SERVER_HOST }}"
     - name: run sshpass commands
       uses: lalalic/sshpass-action@master
       with:
         host: ${{ secrets.SERVER_HOST }}
         user: ${{ secrets.SERVER_USER }}
         pass: ${{ secrets.SERVER_PASS }}
-        run: pwd
+        run: ./qili.travis.deploy.sh
