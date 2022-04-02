@@ -32,5 +32,4 @@ jobs:
         host: ${{ secrets.SERVER_HOST }}
         user: ${{ secrets.SERVER_USER }}
         pass: ${{ secrets.SERVER_PASS }}
-        run: |
-          pwd
+        run: pwd
