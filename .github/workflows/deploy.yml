@@ -26,11 +26,6 @@ jobs:
         cache: 'yarn'
     - run: yarn
     - run: yarn test
-    - name: run sshpass commands
-      uses: matheusvanzan/sshpass-action@v2
-      with:
-        host: ${{ secrets.SERVER_HOST }}
-        user: ${{ secrets.SERVER_USER }}
-        pass: ${{ secrets.SERVER_PASS }}
-        run: |
-          ./qili.travis.deploy.sh
+    - run: apt-get update && apt-get install -y sshpass
+    - run: export SSHPASS=${{ secrets.SERVER_PASS }}
+    - run: sshpass -e ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} "./qili.travis.deploy.sh"
