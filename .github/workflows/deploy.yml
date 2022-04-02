@@ -27,7 +27,7 @@ jobs:
     - run: yarn
     - run: yarn test
     - name: run sshpass commands
-      uses: matheusvanzan/sshpass-action@v2
+      uses: lalalic/sshpass-action@master
       with:
         host: ${{ secrets.SERVER_HOST }}
         user: ${{ secrets.SERVER_USER }}
