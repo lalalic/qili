@@ -29,8 +29,9 @@ jobs:
           echo "::set-output name=lastversion::$(node -p 'require(`./package.json`).version')"
           git checkout master
           echo "::set-output name=currentversion::$(node -p 'require(`./package.json`).version')" 
-          echo "${{steps.versions.outputs.lastversion}},${{steps.versions.outputs.currentversion}} "
         id: versions
+      - run: echo "${{steps.versions.outputs.lastversion}},${{steps.versions.outputs.currentversion}} "
+      
 
   deploy:
     needs: last-current-version
