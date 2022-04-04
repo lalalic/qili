@@ -31,7 +31,8 @@ jobs:
       - run: git checkout master
       #- run: echo "currentversion=$(node -p 'require(`./package.json`).version')" >> $GITHUB_ENV
       - id: currentversion
-        run: echo "::set-output name=currentversion::$(node -p 'require(`./package.json`).version')"      
+        run: echo "::set-output name=currentversion::$(node -p 'require(`./package.json`).version')"   
+      - run: echo "${{steps.lastversion.outputs.lastversion}} ${{steps.currentversion.outputs.currentversion}} "   
 
   deploy:
     needs: last-current-version
