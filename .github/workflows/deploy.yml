@@ -8,7 +8,34 @@ on:
     branches: [ master ]
 
 jobs:
-  build:
+  check-version-change:
+    runs-on: ubuntu-latest
+    outputs:
+      lastversion: ${{ steps.verchange.outputs.lastversion }}
+      currentversion: ${{ steps.verchange.outputs.currentversion }}
+    strategy:
+      matrix:
+        node-version: [14.x]
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: HEAD^1
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: lastversion=node -p "require('./package.json').version"
+      - id: lastversion
+        run: echo ::set-output name=lastversion::$lastversion
+      - uses: actions/checkout@v3
+      - run: currentversion=node -p "require('./package.json').version"
+      - id: currentversion
+        run: echo ::set-output name=currentversion::$currentversion
+      
+
+  deploy:
+    needs: check-version-change
+    if: ${{ needs.check-version-change.outputs.lastversion }} != ${{needs.check-version-change.outputs.currentversion}}
     environment: ALI
     runs-on: ubuntu-latest
 
