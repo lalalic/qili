@@ -25,16 +25,19 @@ jobs:
         with:
           fetch-depth: 2
       - run: git checkout HEAD^
+      - run: echo "lastversion=$(node -p 'require(`./package.json`).version')" >> $GITHUB_ENV
       - id: lastversion
-        run: echo ::set-output name=lastversion::$(node -p 'require(`./package.json`).version')
+        run: echo ::set-output name=lastversion::$lastversion
       - run: git checkout HEAD
+      - run: echo "currentversion=$(node -p 'require(`./package.json`).version')" >> $GITHUB_ENV
+      - run: echo "$lastversion, $currentversion"
       - id: currentversion
-        run: echo ::set-output name=currentversion::$(node -p 'require(`./package.json`).version')
+        run: echo ::set-output name=currentversion::$currentversion
       
 
   deploy:
-    if: ${{ needs.check-version-change.outputs.lastversion !=  needs.check-version-change.outputs.currentversion}}
     needs: check-version-change
+    if: ${{ needs.check-version-change.outputs.lastversion !=  needs.check-version-change.outputs.currentversion}}
     environment: ALI
     runs-on: ubuntu-latest
 
