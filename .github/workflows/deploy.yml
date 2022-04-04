@@ -17,17 +17,18 @@ jobs:
       matrix:
         node-version: [14.x]
     steps:
-      - uses: actions/checkout@v3
-        with:
-          ref: HEAD^1
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 2
+      - run: git checkout HEAD^
       - run: lastversion=node -p "require('./package.json').version"
       - id: lastversion
         run: echo ::set-output name=lastversion::$lastversion
-      - uses: actions/checkout@v3
+      - run: git checkout HEAD
       - run: currentversion=node -p "require('./package.json').version"
       - id: currentversion
         run: echo ::set-output name=currentversion::$currentversion
