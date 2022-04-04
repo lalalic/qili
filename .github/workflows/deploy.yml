@@ -11,8 +11,8 @@ jobs:
   check-version-change:
     runs-on: ubuntu-latest
     outputs:
-      lastversion: ${{ steps.verchange.outputs.lastversion }}
-      currentversion: ${{ steps.verchange.outputs.currentversion }}
+      lastversion: ${{ steps.lastversion.outputs.lastversion }}
+      currentversion: ${{ steps.currentversion.outputs.currentversion }}
     strategy:
       matrix:
         node-version: [14.x]
@@ -28,7 +28,7 @@ jobs:
       - run: echo "lastversion=$(node -p 'require(`./package.json`).version')" >> $GITHUB_ENV
       - id: lastversion
         run: echo ::set-output name=lastversion::$lastversion
-      - run: git checkout HEAD
+      - run: git checkout master
       - run: echo "currentversion=$(node -p 'require(`./package.json`).version')" >> $GITHUB_ENV
       - run: echo "$lastversion, $currentversion"
       - id: currentversion
