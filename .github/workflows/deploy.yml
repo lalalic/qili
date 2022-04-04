@@ -25,11 +25,11 @@ jobs:
         with:
           fetch-depth: 2
       - run: git checkout HEAD^
-      - run: lastversion=node -p "require('./package.json').version"
+      - run: echo "lastversion=$(nodejs -p 'require(`./package.json`).version')" >> $GITHUB_ENV
       - id: lastversion
         run: echo ::set-output name=lastversion::$lastversion
       - run: git checkout HEAD
-      - run: currentversion=node -p "require('./package.json').version"
+      - run: echo "currentversion=$(nodejs -p 'require(`./package.json`).version')" >> $GITHUB_ENV
       - id: currentversion
         run: echo ::set-output name=currentversion::$currentversion
       
