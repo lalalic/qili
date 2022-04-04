@@ -11,8 +11,8 @@ jobs:
   last-current-version:
     runs-on: ubuntu-latest
     outputs:
-      lastversion: ${{ steps.lastversion.outputs.lastversion }}
-      currentversion: ${{ steps.currentversion.outputs.currentversion }}
+      lastversion: ${{ steps.versions.outputs.lastversion }}
+      currentversion: ${{ steps.versions.outputs.currentversion }}
     strategy:
       matrix:
         node-version: [14.x]
@@ -24,15 +24,13 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 2
-      - run: git checkout HEAD^
-      #- run: echo "lastversion=$(node -p 'require(`./package.json`).version')" >> $GITHUB_ENV
-      - id: lastversion
-        run: echo "::set-output name=lastversion::$(node -p 'require(`./package.json`).version')"
-      - run: git checkout master
-      #- run: echo "currentversion=$(node -p 'require(`./package.json`).version')" >> $GITHUB_ENV
-      - id: currentversion
-        run: echo "::set-output name=currentversion::$(node -p 'require(`./package.json`).version')"   
-      - run: echo "${{steps.lastversion.outputs.lastversion}} ${{steps.currentversion.outputs.currentversion}} "   
+      - run: |
+          git checkout HEAD^
+          echo "::set-output name=lastversion::$(node -p 'require(`./package.json`).version')"
+          git checkout master
+          echo "::set-output name=currentversion::$(node -p 'require(`./package.json`).version')" 
+          echo "${{steps.versions.outputs.lastversion}},${{steps.versions.outputs.currentversion}} "
+        id: versions
 
   deploy:
     needs: last-current-version
