@@ -8,11 +8,11 @@ on:
     branches: [ master ]
 
 jobs:
-  last-current-version:
+  versions:
     runs-on: ubuntu-latest
     outputs:
-      lastversion: ${{ steps.versions.outputs.lastversion }}
-      currentversion: ${{ steps.versions.outputs.currentversion }}
+      last: ${{ steps.versions.outputs.last }}
+      current: ${{ steps.versions.outputs.current }}
     strategy:
       matrix:
         node-version: [14.x]
@@ -26,23 +26,22 @@ jobs:
           fetch-depth: 2
       - run: |
           git checkout HEAD^
-          echo "::set-output name=lastversion::$(node -p 'require(`./package.json`).version')"
+          echo "::set-output name=last::$(node -p 'require(`./package.json`).version')"
           git checkout master
-          echo "::set-output name=currentversion::$(node -p 'require(`./package.json`).version')" 
+          echo "::set-output name=current::$(node -p 'require(`./package.json`).version')" 
         id: versions
-      - run: echo "${{steps.versions.outputs.lastversion}},${{steps.versions.outputs.currentversion}} "
+      - run: echo "${{steps.versions.outputs.last}},${{steps.versions.outputs.current}} "
       
 
   deploy:
-    needs: last-current-version
-    if: ${{ needs.check-version-change.outputs.lastversion !=  needs.check-version-change.outputs.currentversion}}
+    needs: versions
+    if: ${{ needs.versions.outputs.last !=  needs.versions.outputs.current}}
     environment: ALI
     runs-on: ubuntu-latest
 
     strategy:
       matrix:
         node-version: [14.x]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
     - uses: actions/checkout@v3
