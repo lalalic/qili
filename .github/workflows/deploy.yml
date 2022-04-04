@@ -8,7 +8,7 @@ on:
     branches: [ master ]
 
 jobs:
-  check-version-change:
+  last-current-version:
     runs-on: ubuntu-latest
     outputs:
       lastversion: ${{ steps.lastversion.outputs.lastversion }}
@@ -25,18 +25,14 @@ jobs:
         with:
           fetch-depth: 2
       - run: git checkout HEAD^
-      - run: echo "lastversion=$(node -p 'require(`./package.json`).version')" >> $GITHUB_ENV
       - id: lastversion
-        run: echo ::set-output name=lastversion::$lastversion
+        run: echo ::set-output name=lastversion::$(node -p 'require(`./package.json`).version')
       - run: git checkout master
-      - run: echo "currentversion=$(node -p 'require(`./package.json`).version')" >> $GITHUB_ENV
-      - run: echo "$lastversion, $currentversion"
       - id: currentversion
-        run: echo ::set-output name=currentversion::$currentversion
-      
+        run: echo ::set-output name=currentversion::$(node -p 'require(`./package.json`).version')      
 
   deploy:
-    needs: check-version-change
+    needs: last-current-version
     if: ${{ needs.check-version-change.outputs.lastversion !=  needs.check-version-change.outputs.currentversion}}
     environment: ALI
     runs-on: ubuntu-latest
