@@ -36,8 +36,8 @@ jobs:
       
 
   deploy:
+    if: ${{ needs.check-version-change.outputs.lastversion !=  needs.check-version-change.outputs.currentversion}}
     needs: check-version-change
-    if: ${{ needs.check-version-change.outputs.lastversion }} != ${{needs.check-version-change.outputs.currentversion}}
     environment: ALI
     runs-on: ubuntu-latest
 
