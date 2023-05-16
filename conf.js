@@ -3,20 +3,52 @@ var env=process.env
 module.exports={
 	version:"1",
 	debug: env.DEBUG || false,
+	//keep it secret
+	secret: env.SECRET || "abcdef",
+	//root user name and password to manage applications
+	root: env.ROOT || "root",
+	rootPassword:env.PASSWORD || "root",
+	//admin application slug
+	adminKey: env.ADMIN_KEY || "qiliAdmin",
+
+	www:require("express-http-proxy")("localhost:9081",{
+		filter(req){
+			console.debug(`redirecting to ${req.url}`)
+			return true
+		}
+	}),
+
+	/**
+	 * mongo database host and port
+	 */
 	db : {
 		port : env.DB_PORT || 27017,
 		host : env.DB_HOST || "qili.db"
 	},
+
+	/**
+	 * server service port
+	 */
 	server : {
 		port : 9080,
 		https : 9443,
 		timeout : 120
 	},
+
+
+	/**
+	 * qili use qiniu.com as storage provider
+	 */
 	qiniu:{
 		ACCESS_KEY:env.QINIU_ACCESS_KEY||"1o_JaGUUb8nVxRpDGoAYB9tjLT10WD7PBFVtMmVT",
 		SECRET_KEY:env.QINIU_SECRET_KEY||"r2nd182ZXzuCiCN7ZLoJPFVPZHqCxaUaE73RjKaW",
 		expires:env.QINIU_EXPIRES || 600,
 	},
+	api: env.API||"https://api.wenshubu.com/1/graphql", //qiniu need it, if you don't use file, ignore it
+
+	/**
+	 * qili use ali sms service to send verification code
+	 */
 	ali:{
 		ACCESS_KEY:env.ALI_ACCESS_KEY,
 		SECRET_KEY:env.ALI_SECRET_KEY,
@@ -25,6 +57,18 @@ module.exports={
 			TEMPLATE_CREATE:env.ALI_SMS_TEMPLATE_CREATE
 		}
 	},
+
+	/**
+	 * wechat api token, ignore it without wechat integration
+	 */
+	wechat:{
+		token: env.WECHAT_TOKEN||'myqili'
+	},
+	
+
+	/**
+	 * Not used
+	 */
 	email:{
 		host: "",
 		port: 587,
@@ -35,24 +79,12 @@ module.exports={
 			pass: ""
 		}
 	},
-	api: env.API||"https://api.wenshubu.com/1/graphql", //qiniu need it, if you don't use file, ignore it
+	
 	cloud:{
 		timeout: env.CLOUD_TIMEOUT || 5000,
-		"we-office":{
-			code:require("path").resolve(__dirname, "../we-office/cloud","debug__generated.js"),
-			root:require("path").resolve(__dirname, "../we-office/dist"),
-		}
-	},
-	wechat:{
-		token: env.WECHAT_TOKEN||'myqili'//wechat api token, ignore it without wechat integration
 	},
 	log:{
 		dir:env.LOG_DIR||"./log",
 		category:env.LOG_CATEGORY||"default",
 	},
-
-	secret: env.SECRET || "abcdef",
-	root: env.ROOT || "root",
-	rootPassword:env.PASSWORD || "root",
-	adminKey: env.ADMIN_KEY || "qiliAdmin",
 }

@@ -13,14 +13,11 @@ jobs:
     outputs:
       last: ${{ steps.versions.outputs.last }}
       current: ${{ steps.versions.outputs.current }}
-    strategy:
-      matrix:
-        node-version: [14.x]
     steps:
-      - name: Use Node.js ${{ matrix.node-version }}
+      - name: Use Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: 14.x
       - uses: actions/checkout@v3
         with:
           fetch-depth: 2
@@ -35,21 +32,17 @@ jobs:
 
   deploy:
     needs: versions
-    #if: ${{ needs.versions.outputs.last !=  needs.versions.outputs.current}}
+    if: ${{ needs.versions.outputs.last !=  needs.versions.outputs.current}}
     environment: ALI
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [14.x]
 
     steps:
     - run: sudo apt-get install -y sshpass
     - uses: actions/checkout@v3
-    - name: Use Node.js ${{ matrix.node-version }}
+    - name: Use Node.js
       uses: actions/setup-node@v3
       with:
-        node-version: ${{ matrix.node-version }}
+        node-version: 14.x
         cache: 'yarn'
     - run: yarn
     - run: yarn test
