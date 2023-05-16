@@ -26,6 +26,8 @@ module.exports={
 		host : env.DB_HOST || "qili.db"
 	},
 
+	//db: "data"
+
 	/**
 	 * server service port
 	 */
