@@ -120,8 +120,8 @@ module.exports={
 				}
 			})
 		}
-		
-		const mongo=require('node:child_process').spawn("yarn",["mongo"],{stdio:'ignore',cwd:__dirname})
+		require('node:child_process').exec(`mkdir mongo`)
+		const mongo=require('node:child_process').spawn("mongod",["--storageEngine=wiredTiger", "--directoryperdb", `--dbpath=mongo`],{stdio:'inherit'})
 
 		require("./lib")
 		require('node:child_process').exec(`open http://localhost:${serverPort}`)
