@@ -50,6 +50,7 @@
   "directories": {
     "lib": "./lib"
   },
+  "main": "./conf.js",
   "engines": {
     "node": ">= 8.4.0"
   },

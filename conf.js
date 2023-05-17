@@ -11,12 +11,7 @@ module.exports={
 	//admin application slug
 	adminKey: env.ADMIN_KEY || "qiliAdmin",
 
-	www:require("express-http-proxy")("localhost:9081",{
-		filter(req){
-			console.debug(`redirecting to ${req.url}`)
-			return true
-		}
-	}),
+	www:"www",
 
 	/**
 	 * mongo database host and port
@@ -89,4 +84,47 @@ module.exports={
 		dir:env.LOG_DIR||"./log",
 		category:env.LOG_CATEGORY||"default",
 	},
+	dev({clientPort=9081,serverPort=9080, cloudCodeFile, appId}={}){
+		this.server.port=serverPort
+		console.debug(`Qili Dev Server is on localhost:${serverPort}`)
+		this.www=require("express-http-proxy")(`localhost:${clientPort}`,{
+			filter(req,res){
+				if(req.url=="/app.apk.version"){
+					res.send('1.0.x')
+					return false
+				}
+				console.debug(`redirecting to ${req.url}`)
+				return true
+			}
+		})
+		
+		if(cloudCodeFile){
+			appId=appId||this.adminKey
+			const fs=require("fs")
+			let cloudCode=""
+			
+			Object.defineProperties(this,{
+				cloudCode:{
+					get(){
+						if(!cloudCode){
+							cloudCode=fs.readFileSync(cloudCodeFile,{encoding:"utf-8"})
+							fs.watchFile(cloudCodeFile,(event)=>{
+								if(event=="change"){
+									require("./lib/app").Cache.remove(appId)
+									cloudCode=fs.readFileSync(cloudCodeFile,{encoding:"utf-8"})
+								}
+							})
+						}
+						return cloudCode
+					}
+				}
+			})
+		}
+		
+		const mongo=require('node:child_process').spawn("yarn",["mongo"],{stdio:'ignore',cwd:__dirname})
+
+		require("./lib")
+		require('node:child_process').exec(`open http://localhost:${serverPort}`)
+		return mongo
+	}
 }
