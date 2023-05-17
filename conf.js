@@ -84,7 +84,7 @@ module.exports={
 		dir:env.LOG_DIR||"./log",
 		category:env.LOG_CATEGORY||"default",
 	},
-	dev({clientPort=9081,serverPort=9080, cloudCodeFile, appId}={}){
+	dev({clientPort=9081,serverPort=parseInt(`1${clientPort}`), cloudCodeFile, appId}={}){
 		this.server.port=serverPort
 		console.debug(`Qili Dev Server is on localhost:${serverPort}`)
 		this.www=require("express-http-proxy")(`localhost:${clientPort}`,{
@@ -120,8 +120,8 @@ module.exports={
 				}
 			})
 		}
-		require('node:child_process').exec(`mkdir mongo`)
-		const mongo=require('node:child_process').spawn("mongod",["--storageEngine=wiredTiger", "--directoryperdb", `--dbpath=mongo`],{stdio:'inherit'})
+		require('node:child_process').exec(`mkdir _data_`)
+		const mongo=require('node:child_process').spawn("mongod",["--storageEngine=wiredTiger", "--directoryperdb", `--dbpath="_data_"`],{stdio:'inherit'})
 
 		require("./lib")
 		require('node:child_process').exec(`open http://localhost:${serverPort}`)
