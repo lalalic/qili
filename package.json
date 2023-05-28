@@ -1,7 +1,7 @@
 {
   "name": "qili",
   "description": "graphql BAAS",
-  "version": "2.2.11",
+  "version": "2.2.12",
   "author": {
     "name": "Raymond Li",
     "email": "lalalic@139.com"
@@ -21,6 +21,7 @@
     "graphql-subscriptions": "^1.1.0",
     "graphql-tools": "^4.0.5",
     "graphql-type-json": "^0.3.0",
+    "http-proxy-middleware": "^2.0.6",
     "is-valid-email": "^0.0.2",
     "lodash.merge": "^4.6.0",
     "log4js": "^6.1.2",
@@ -57,7 +58,7 @@
   "scripts": {
     "start": "node ./lib/index.js",
     "dev": "node --inspect ./lib/index.js",
-    "mongo": "mongod  --storageEngine=wiredTiger --directoryperdb --dbpath=\"test/mongo1/\"",
+    "mongo": "mongod  --storageEngine=wiredTiger --directoryperdb --dbpath=test/mongo",
     "test": "jest"
   },
   "readme": "README.md",

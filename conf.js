@@ -62,7 +62,6 @@ module.exports={
 		token: env.WECHAT_TOKEN||'myqili'
 	},
 	
-
 	/**
 	 * Not used
 	 */
@@ -77,14 +76,26 @@ module.exports={
 		}
 	},
 	
-	cloud:{
-		timeout: env.CLOUD_TIMEOUT || 5000,
-	},
 	log:{
 		dir:env.LOG_DIR||"./log",
 		category:env.LOG_CATEGORY||"default",
 	},
-	dev({clientPort=9081,serverPort=parseInt(`1${clientPort}`), cloudCodeFile, appId}={}){
+	cloud:{
+		timeout: env.CLOUD_TIMEOUT || 5000,
+		/** 
+		 * to config app's www root and cloud code
+		 * code file is watched 
+		admin:{
+			root:"/usr/root/www",
+			code:"/usr/root/test.js"
+		}
+		*/
+		test:{
+			root:`${__dirname}/cloud/test/www`,
+			code:`${__dirname}/cloud/test/code.js`,
+		}
+	},
+	dev({clientPort=9081,serverPort=parseInt(`1${clientPort}`), cloudCodeFile, appId, dbpath="testdata", www, }={}){
 		this.server.port=serverPort
 		console.debug(`Qili Dev Server is on localhost:${serverPort}`)
 		this.www=require("express-http-proxy")(`localhost:${clientPort}`,{
@@ -99,32 +110,15 @@ module.exports={
 		})
 		
 		if(cloudCodeFile){
-			appId=appId||this.adminKey
-			const fs=require("fs")
-			let cloudCode=""
-			
-			Object.defineProperties(this,{
-				cloudCode:{
-					get(){
-						if(!cloudCode){
-							cloudCode=fs.readFileSync(cloudCodeFile,{encoding:"utf-8"})
-							fs.watchFile(cloudCodeFile,(event)=>{
-								if(event=="change"){
-									require("./lib/app").Cache.remove(appId)
-									cloudCode=fs.readFileSync(cloudCodeFile,{encoding:"utf-8"})
-								}
-							})
-						}
-						return cloudCode
-					}
-				}
-			})
+			this.cloud[appId]={
+				root:www,
+				...this.cloud[appId],
+				code:cloudCodeFile,
+			}
 		}
-		require('node:child_process').exec(`mkdir _data_`)
-		const mongo=require('node:child_process').spawn("mongod",["--storageEngine=wiredTiger", "--directoryperdb", `--dbpath="_data_"`],{stdio:'inherit'})
+		//require('node:child_process').exec(`mkdir ${dbpath}`)
+		//require('node:child_process').spawn("mongod",["--storageEngine=wiredTiger", "--directoryperdb", `--dbpath=${dbpath}`],{stdio:'inherit'})
 
 		require("./lib")
-		require('node:child_process').exec(`open http://localhost:${serverPort}`)
-		return mongo
-	}
+		require('node:child_process').exec(`open http://localhost:${serverPort}`)	}
 }
