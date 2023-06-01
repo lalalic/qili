@@ -90,9 +90,10 @@ module.exports={
 			code:"/usr/root/test.js"
 		}
 		*/
-		test:{
-			root:`${__dirname}/cloud/test/www`,
-			code:`${__dirname}/cloud/test/code.js`,
+		parrot:{
+			root:`${__dirname}/../parrot/cloud/resources`,
+			code:`${__dirname}/../parrot/cloud/index.js`,
+			storage:"http://localhost:9080/1/parrot/static/upload",
 		}
 	},
 	dev({clientPort=9081,serverPort=parseInt(`1${clientPort}`), cloudCodeFile, appId, dbpath="testdata", www, }={}){
