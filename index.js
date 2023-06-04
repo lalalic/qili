@@ -1,7 +1,6 @@
 const fs=require("fs"), readFile=fs.readFile
 const cp = require('child_process'), spawn=cp.spawn, exec=cp.exec
 const urllib=require("urllib"), request=urllib.request
-const scheduler=require("node-schedule")
 const querystring = require('querystring');
 
   
@@ -100,45 +99,6 @@ function readMyFile(path){
     readFile(path, "ascii", (error, data)=>{
       error ? reject(error) : resolve(data)
     })
-  })
-}
-
-function startQili(){
-  console.log("starting qili....")
-  return new Promise((resolve,reject)=>{
-    exec("/root/qili.travis.deploy.sh",(error, stdout, stderr)=>{
-      console.log(stdout)
-      console.error(stderr)
-      if(error){
-        reject(error)
-      }
-    }).on('exit', resolve)
-  })
-}
-
-module.exports.schedule=async function schedule(){
-  await startQili()
-  const url=`${API_HOST}/sslcert`
-  request(url,{
-    headers:{Authorization:util.generateAccessToken(url)},
-    dataType: 'json',
-    timeout: RPC_TIMEOUT,
-  },(err, result, res)=>{
-    if(!isError(err, result, res, e=>e) && result && result.certs && result.certs.length){
-      const now=Date.now()
-      const validCerts=result.certs.filter(({not_after})=>not_after*1000>=now)
-      const domains=validCerts.map(a=>a.name), not_before=Math.min(...validCerts.map(a=>a.not_before))*1000
-      console.log('scheduling cert update for domains: '+domains.join(","))
-      const j=scheduler.scheduleJob({start:new Date(not_before-5*24*60*60*1000), rule: '*/3 *'}, ()=>{
-          Promise.all(domains.map(domain=>syncCert(domain)))
-            .then(startQili)
-      })
-      if(j){
-        console.log('next time on : '+j.nextInvocation())
-      }else{
-        console.error(`failed scheduling cert update`)
-      }
-    }
   })
 }
 
