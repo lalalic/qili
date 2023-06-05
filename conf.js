@@ -41,7 +41,7 @@ module.exports={
 		SECRET_KEY:env.QINIU_SECRET_KEY||"r2nd182ZXzuCiCN7ZLoJPFVPZHqCxaUaE73RjKaW",
 		expires:env.QINIU_EXPIRES || 600,
 	},
-	api: env.API||"https://api.wenshubu.com/1/graphql", //qiniu need it, if you don't use file, ignore it
+	api: env.API||"https://api.qili2.com/1/graphql", //qiniu need it, if you don't use file, ignore it
 
 	/**
 	 * qili use ali sms service to send verification code
