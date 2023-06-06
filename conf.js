@@ -93,6 +93,7 @@ module.exports={
 		parrot:{
 			root:`${__dirname}/../parrot/cloud/resources`,
 			code:`${__dirname}/../parrot/cloud/index.js`,
+			isDev:true,
 			storage:"http://localhost:9080/1/parrot/static/upload",
 		}
 	},
