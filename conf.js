@@ -117,8 +117,8 @@ module.exports={
 				code:cloudCodeFile,
 			}
 		}
-		//require('node:child_process').exec(`mkdir ${dbpath}`)
-		//require('node:child_process').spawn("mongod",["--storageEngine=wiredTiger", "--directoryperdb", `--dbpath=${dbpath}`],{stdio:'inherit'})
+		
+		require('node:child_process').spawn("mongod",["--storageEngine=wiredTiger", "--directoryperdb", `--dbpath=${dbpath}`],{stdio:'inherit'})
 
 		require("./lib")
 		require('node:child_process').exec(`open http://localhost:${serverPort}`)	}
