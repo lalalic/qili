@@ -94,7 +94,8 @@ module.exports={
 			root:`${__dirname}/../parrot/cloud/resources`,
 			code:`${__dirname}/../parrot/cloud/index.js`,
 			isDev:true,
-			storage:"http://localhost:9080/1/parrot/static/upload",
+			//storage:"http://localhost:9080/1/parrot/static/upload",
+			bucket:"qiliadmin",
 		}
 	},
 	dev({clientPort=9081,serverPort=parseInt(`1${clientPort}`), cloudCodeFile, appId, dbpath="testdata", www, }={}){
