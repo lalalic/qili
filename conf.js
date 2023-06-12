@@ -37,8 +37,8 @@ module.exports={
 	 * qili use qiniu.com as storage provider
 	 */
 	qiniu:{
-		ACCESS_KEY:env.QINIU_ACCESS_KEY||"1o_JaGUUb8nVxRpDGoAYB9tjLT10WD7PBFVtMmVT",
-		SECRET_KEY:env.QINIU_SECRET_KEY||"r2nd182ZXzuCiCN7ZLoJPFVPZHqCxaUaE73RjKaW",
+		ACCESS_KEY:env.QINIU_ACCESS_KEY,
+		SECRET_KEY:env.QINIU_SECRET_KEY,
 		expires:env.QINIU_EXPIRES || 600,
 	},
 	api: env.API||"https://api.qili2.com/1/graphql", //qiniu need it, if you don't use file, ignore it
@@ -94,34 +94,9 @@ module.exports={
 			root:`${__dirname}/../parrot/cloud/resources`,
 			code:`${__dirname}/../parrot/cloud/index.js`,
 			isDev:true,
+			canRunInCore:true,
 			//storage:"http://localhost:9080/1/parrot/static/upload",
 			bucket:"qiliadmin",
 		}
-	},
-	dev({clientPort=9081,serverPort=parseInt(`1${clientPort}`), cloudCodeFile, appId, dbpath="testdata", www, }={}){
-		this.server.port=serverPort
-		console.debug(`Qili Dev Server is on localhost:${serverPort}`)
-		this.www=require("express-http-proxy")(`localhost:${clientPort}`,{
-			filter(req,res){
-				if(req.url=="/app.apk.version"){
-					res.send('1.0.x')
-					return false
-				}
-				console.debug(`redirecting to ${req.url}`)
-				return true
-			}
-		})
-		
-		if(cloudCodeFile){
-			this.cloud[appId]={
-				root:www,
-				...this.cloud[appId],
-				code:cloudCodeFile,
-			}
-		}
-		
-		require('node:child_process').spawn("mongod",["--storageEngine=wiredTiger", "--directoryperdb", `--dbpath=${dbpath}`],{stdio:'inherit'})
-
-		require("./lib")
-		require('node:child_process').exec(`open http://localhost:${serverPort}`)	}
+	}
 }
