@@ -14,11 +14,26 @@ http header or query
 * X-Session-Token=? : get a session token from following request as json data
 
 config
----
+-----
+	* cloud: support local app
+		* [apiKey]
+			* root: optional static root
+			* code: cloud code file path
+			* [any app entity keys, such as isDev, canRunInCore, bucket: use qiliadmin as default]
+			* appUpdates : see expo-updates-server
+				* UPDATES: update assets folder 
+				* PRIVATE_KEY_PATH: 
+				* HOSTNAME({runtimeVersion, platform, assetFilePath}): return asset url
 
+
+File
+----
+	* qiniu is the file storage service
+	* temp file: key like temp/[x:1, ...]/... would be removed after x minutes, x is optional and default is 1
+	* 
 
 Cloud
----
+-----
 to extend server, with following API.
 
 * apiKey: readonly
@@ -26,6 +41,7 @@ to extend server, with following API.
 * merge(resolver1, resolver2, ...): a utility to deep merge objects
 
 * addModule({typeDefs, resolver, persistedQuery,static,wechat}) : to add a cloud module
+	* name: optional module name
 	* typeDefs: string, app's schema
 	* resolver: graphql resolver object, app's resolver
 	* persistedQuery: {<id>: <graphql:string>, ...}
@@ -41,6 +57,16 @@ to extend server, with following API.
 			> event could be text,image,voice, video,location,link, event,device_text,device_event,subcribe,unsubscribe,scan
 			> callback=function(req/*{message,app}*/, res/*{send}*/)
 			> when event name is empty, callback will be called on every event 
+	* pubsub:
+		* init: return a pubsub object, or nothing to use in-memory built-in
+		* onConnect: a callback for subscription connection
+		* onDisconnect
+	* appUpdates: support 2 ways
+		* fromManifestURI({runtimeVersion, platform}, app): return manifest url
+		* an extension of expo-updates-server
+	* proxy: http-proxy-middleware.createProxyMiddleware is used to serve 
+		* [ key ]
+			* options: used by createProxyMiddleware
 
 * ID(...): a utility to extract id from type field resolver arguments
 
@@ -242,40 +268,85 @@ How to Start
 
 cloud example
 ----		
-<pre>
+```javascript
 	//localhost/1/<appKey>/book
 	Cloud.addModule({
-		static.on("book",function(req, res){
-			res.send("<html>book</html>")
-		}
-	})
-	
-	Cloud.wechat.on(function(req, res){
-		res.send("hello, wechat")
-	}).on("text",function(req,res){
-		res.send(req.message.Content)
-	})
-	
-	const BookComment=Cloud.buildComment("Book")
-	
-	Cloud.typeDefs=`
-		type Book implements Node{
-			id:ID
-			title: String
-		}
-		extend type  User{
-			firstName: String
-		}
-	`
-	
-	Cloud.resolver=merge(BookComment.resolver,{
-		Book:{
-			id(book, root, {app,user}){
-				return `books:${book._id}`
+		name: 'test',
+		typeDefs:`
+			type Book implements Node{
+				id:ID
+				title: String
 			}
+			extend type  User{
+				firstName: String
+			}
+			extend type Query{
+				ping: Boolean
+			}
+			extend type Mutation{
+				ding(dong:String): Boolean
+			}
+			extend type Subscription{
+				ping: Boolean
+			}
+		`,
+		persistedQuery:{//use ping, ding as request {id:ding, variables:{dong:"ding"}}
+			ping: `query {
+				ping
+			}`,
+			ding: `mutation a($dong:String){
+				ding(dong:$dong)
+			}`
+		},
+		resolve:Cloud.merge({
+			Book:{},
+			User:{},
+			Query:{},
+			Mutation:{},
+			Subscription:{}
+		},Cloud.buildComment("Book"), Cloud.buildComment("User")),
+
+		pubsub:{
+			init(){
+				return new YourPubsub()
+			},
+			onConnect(){},
+			onDisconnect(){}
+		},
+		appUpdates:{
+			context:"updates",
+			fromManifestURI({runtimeVersion, platform}, app){
+				return `https://cdn.qili2.com/${app.app.apiKey}/updates/${runtimeVersion}/${platform}-manifest.json`
+			}
+		},
+
+		proxy:{
+			chatgpt: "https://chat.openai.com",
+			twitter: {
+				
+			}
+		},
+
+		static(service){
+			service
+				.on("/book",function(req, res){// /1/static/book
+					res.send("<html>book</html>")
+				}
+				.on(/^\/book\/done/g, (req,res)=>{
+					res.send("hello")
+				})	
+		},
+
+		wechat(service){
+			service
+				.on((req, res)=>{
+					res.send("hello, wechat")
+				})
+				.on("text",function(req,res){
+					res.send(req.message.Content)
+				})
 		}
+		
 	})
-	
-	Cloud.isDev=true
-</pre>
+```
 	
