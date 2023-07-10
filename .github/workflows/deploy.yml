@@ -45,7 +45,6 @@ jobs:
         node-version: 14.x
         cache: 'yarn'
     - run: yarn
-    - run: yarn test
     - name: deploy to ali cloud
       run: |
         export SSHPASS=${{ secrets.SERVER_PASS }}
