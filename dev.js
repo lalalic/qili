@@ -21,13 +21,14 @@ module.exports=function dev({clientPort,serverPort, conf, apiKey, dbpath="testda
     
     qiliConfig.cloud[apiKey]=conf
     
-    require('node:child_process')
+    require('child_process')
         .spawn(
             "mongod",
             ["--storageEngine=wiredTiger", "--directoryperdb", `--dbpath=${dbpath}`],
             {stdio:['ignore','ignore','inherit'], killSignal:'SIGINT'}
         )
 
+    console.debug(qiliConfig)
     require("./lib")
     console.debug(`Qili Dev Server is on localhost:${qiliConfig.server.port}`)
 }

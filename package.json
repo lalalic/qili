@@ -1,7 +1,7 @@
 {
   "name": "qili",
   "description": "graphql BAAS",
-  "version": "2.2.20",
+  "version": "2.2.21",
   "author": {
     "name": "Raymond Li",
     "email": "lalalic@139.com"
