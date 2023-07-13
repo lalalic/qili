@@ -2,6 +2,28 @@ require("dotenv").config()
 
 var env=process.env
 
+function autoCollectApps(){
+	const {APPS_ROOT:appRoot}=env
+	if(!appRoot){
+		console.log('no APPS_ROOT')
+		return {}
+	}
+
+	const fs=require("fs")
+	const apps=fs.readdirSync(appRoot).reduce((apps, a)=>{
+		if(fs.statSync(`${appRoot}/${a}`).isDirectory()){
+			if(fs.existsSync(`${appRoot}/${a}/qili.conf.js`)){
+				const conf=require(`${appRoot}/${a}/qili.conf.js`)
+				apps[a]=conf
+			}
+		}
+		return apps
+	},{})
+	const keys=Object.keys(apps)
+	keys.length>0 && console.log(`found ${keys.length} apps: ${keys.join(",")}`)
+	return apps
+}
+
 module.exports={
 	version:"1",
 	debug: env.DEBUG,
@@ -101,5 +123,6 @@ module.exports={
 			},
 		}
 		*/
+		...autoCollectApps(),
 	}
 }

@@ -22,18 +22,16 @@ qili.server:
   - "9443"
  environment:
   - API
-  - DB_HOST
+  - DB_HOST=qili.db
   - DB_PORT
   - APPS_ROOT
   - ADMIN_KEY
   - SECRET
-  - ROOT
-  - ROOT_PASSWORD
   - QINIU_ACCESS_KEY
   - QINIU_SECRET_KEY
   - ALI_ACCESS_KEY
   - ALI_SECRET_KEY
-  - ALI_SMS_SIGN_NAME=papazai网
+  - ALI_SMS_SIGN_NAME
   - ALI_SMS_TEMPLATE_CREATE
   - DEBUG
   - CLOUD_TIMEOUT
