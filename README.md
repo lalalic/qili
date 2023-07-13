@@ -1,6 +1,5 @@
 QiLi
 ====
-
 A graphql server
 
 Install
@@ -16,15 +15,16 @@ http header or query
 config
 -----
 	* cloud: support local app
+		* __installDir: folder to install application 
+		* __unsupportedModules: restricted built-in modules
 		* [apiKey]
 			* root: optional static root
-			* code: cloud code file path
+			* code: cloud code project path, local folder, or a git project url
 			* [any app entity keys, such as isDev, canRunInCore, bucket: use qiliadmin as default]
 			* appUpdates : see expo-updates-server
 				* UPDATES: update assets folder 
 				* PRIVATE_KEY_PATH: 
 				* HOSTNAME({runtimeVersion, platform, assetFilePath}): return asset url
-
 
 File
 ----
@@ -32,16 +32,22 @@ File
 	* temp file: key like temp/[x:1, ...]/... would be removed after x minutes, x is optional and default is 1
 	* 
 
-Cloud
+Extension
 -----
-to extend server, with following API.
+cloud module is used to extend server. cloud module is a regular nodejs module, with a built-in object Cloud with following properties and functions, and some limitations on require.
 
+require
+=====
+* not supported modules: fs, path, process, vm, domain, dns, debugger 
+
+Cloud
+=====
 * apiKey: readonly
 
-* merge(resolver1, resolver2, ...): a utility to deep merge objects
-
-* addModule({typeDefs, resolver, persistedQuery,static,wechat}) : to add a cloud module
-	* name: optional module name
+* addModule({typeDefs, resolver, persistedQuery,static,wechat}) : to add a cloud module, everything is optional.
+	* name: module name
+	* init(app): called every time the module starts
+	* finalize(app): called every time the module stops
 	* typeDefs: string, app's schema
 	* resolver: graphql resolver object, app's resolver
 	* persistedQuery: {<id>: <graphql:string>, ...}
@@ -58,7 +64,7 @@ to extend server, with following API.
 			> callback=function(req/*{message,app}*/, res/*{send}*/)
 			> when event name is empty, callback will be called on every event 
 	* pubsub:
-		* init: return a pubsub object, or nothing to use in-memory built-in
+		* init(app): return a pubsub object, or nothing to use in-memory built-in
 		* onConnect: a callback for subscription connection
 		* onDisconnect
 	* appUpdates: support 2 ways
@@ -69,6 +75,8 @@ to extend server, with following API.
 			* options: used by createProxyMiddleware
 
 * ID(...): a utility to extract id from type field resolver arguments
+
+* merge(resolver1, resolver2, ...): a utility to deep merge objects
 
 * reportThreshold: write only, to a performance profiler threshold when app set isDev=true in app.qili2.com,default undefined
 
@@ -308,7 +316,7 @@ cloud example
 
 		pubsub:{
 			init(){
-				return new YourPubsub()
+				//return new YourPubsub()
 			},
 			onConnect(){},
 			onDisconnect(){}
@@ -321,7 +329,9 @@ cloud example
 		},
 
 		proxy:{
-			chatgpt: "https://chat.openai.com",
+			chatgpt: {//any options supported by http-proxy-middleware
+				target:"https://chat.openai.com"
+			},
 			twitter: {
 				
 			}
@@ -330,10 +340,10 @@ cloud example
 		static(service){
 			service
 				.on("/book",function(req, res){// /1/static/book
-					res.send("<html>book</html>")
+					res.reply("<html>book</html>")
 				}
 				.on(/^\/book\/done/g, (req,res)=>{
-					res.send("hello")
+					res.reply("hello")
 				})	
 		},
 
@@ -345,8 +355,14 @@ cloud example
 				.on("text",function(req,res){
 					res.send(req.message.Content)
 				})
+		},
+
+		init(app){
+
+		},
+		finalize(app){
+
 		}
-		
 	})
 ```
 	
