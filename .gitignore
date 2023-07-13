@@ -29,3 +29,6 @@ view/dashboard
 .lock-wscript
 
 test/
+.env
+log/
+apps/
