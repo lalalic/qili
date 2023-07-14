@@ -1,3 +1,5 @@
+require("dotenv").config()
+
 module.exports=function dev({clientPort,serverPort, conf, apiKey, dbpath="testdata"}={}){
     console.assert(!!conf && !!apiKey)
     const qiliConfig=require("./conf")
