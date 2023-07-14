@@ -1,5 +1,3 @@
-require("dotenv").config()
-
 var env=process.env
 
 function autoCollectApps(){
