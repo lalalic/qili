@@ -35,7 +35,10 @@ jobs:
     if: ${{ needs.versions.outputs.last !=  needs.versions.outputs.current}}
     environment: ALI
     runs-on: ubuntu-latest
-
+    env:
+      DEPLOY_HOST: ${{ secrets.SERVER_HOST }}
+      DEPLOY_USER: ${{ secrets.SERVER_USER }}
+      
     steps:
     - run: sudo apt-get install -y sshpass
     - uses: actions/checkout@v3
@@ -48,4 +51,11 @@ jobs:
     - name: deploy to ali cloud
       run: |
         export SSHPASS=${{ secrets.SERVER_PASS }}
+        sshpass -e scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -r deploy "$DEPLOY_USER@$DEPLOY_HOST:/data/qili"
+        sshpass -e scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -r lib "$DEPLOY_USER@$DEPLOY_HOST:/data/qili"
+        sshpass -e scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -r www "$DEPLOY_USER@$DEPLOY_HOST:/data/qili"
+        sshpass -e scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null conf.js "$DEPLOY_USER@$DEPLOY_HOST:/data/qili"
+        sshpass -e scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null package.json "$DEPLOY_USER@$DEPLOY_HOST:/data/qili"
+        sshpass -e scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null index.js "$DEPLOY_USER@$DEPLOY_HOST:/data/qili"
+        sshpass -e scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null yarn.lock "$DEPLOY_USER@$DEPLOY_HOST:/data/qili"
         sshpass -e ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} "./qili.travis.deploy.sh"
