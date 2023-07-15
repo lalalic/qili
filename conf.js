@@ -103,6 +103,7 @@ module.exports={
 		timeout: env.CLOUD_TIMEOUT || 5000,
 		__installDir:require("path").resolve("./apps"),
 		__unsupportedModules:["fs", "path", "process", "vm", "domain", "dns", "debugger"],
+		__requireExcludes:["graphql-redis-subscriptions"],
 		/** 
 		 * to config app's www root and cloud code
 		 * code file is watched 
