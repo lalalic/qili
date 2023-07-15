@@ -39,7 +39,6 @@
     "qiniu": "~6.1.x",
     "require-from-path": "^1.0.4",
     "subscriptions-transport-ws": "^0.9.18",
-    "vm2": "^3.9.19",
     "wechat": "^2.0.1"
   },
   "keywords": [
