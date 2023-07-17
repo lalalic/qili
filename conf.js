@@ -1,7 +1,6 @@
 var env=process.env
 
-function autoCollectApps(){
-	const {APPS_ROOT:appRoot}=env
+function autoCollectApps(appRoot){
 	if(!appRoot){
 		console.log('no APPS_ROOT')
 		return {}
@@ -101,7 +100,7 @@ module.exports={
 	},
 	cloud:{
 		timeout: env.CLOUD_TIMEOUT || 5000,
-		__installDir:require("path").resolve("./apps"),
+		__installDir:require("path").resolve(env.APPS_ROOT||"./apps"),
 		__unsupportedModules:["fs", "path", "process", "vm", "domain", "dns", "debugger"],
 		__requireExcludes:["graphql-redis-subscriptions"],
 		/** 
@@ -122,6 +121,7 @@ module.exports={
 			},
 		}
 		*/
-		...autoCollectApps(),
 	}
 }
+
+Object.assign(module.exports.cloud,autoCollectApps(module.exports.cloud.__installDir))
