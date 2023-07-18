@@ -73,6 +73,8 @@ Cloud
 	* proxy: http-proxy-middleware.createProxyMiddleware is used to serve 
 		* [ key ]
 			* options: used by createProxyMiddleware
+	* events: {[eventName]:function(){}}
+		* auth, auth.request, graphql, static, static.matched, login, load, compileCloudCode
 
 * ID(...): a utility to extract id from type field resolver arguments
 
@@ -362,6 +364,11 @@ cloud example
 		},
 		finalize(app){
 
+		},
+		events:{
+			load(){
+				console.debug('is ready')
+			}
 		}
 	})
 ```
