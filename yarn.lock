@@ -242,6 +242,10 @@ asynckit@^0.4.0:
   version "0.4.0"
   resolved "https://registry.yarnpkg.com/asynckit/-/asynckit-0.4.0.tgz#c79ed97f7f34cb8f2ba1bc9790bcc366474b4b79"
 
+atomic-write@^0.1.1:
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/atomic-write/-/atomic-write-0.1.1.tgz#0e9d36885f355dc72c837c8fffb12704d9e3e6da"
+
 aws-sign2@~0.6.0:
   version "0.6.0"
   resolved "https://registry.yarnpkg.com/aws-sign2/-/aws-sign2-0.6.0.tgz#14342dd38dbcc94d0e5b87d763cd63612c0e794f"
@@ -1019,7 +1023,7 @@ eventemitter3@^3.1.0:
   version "3.1.2"
   resolved "https://registry.npm.taobao.org/eventemitter3/download/eventemitter3-3.1.2.tgz#2d3d48f9c346698fce83a85d7d664e98535df6e7"
 
-eventemitter3@^4.0.0:
+eventemitter3@^4.0.0, eventemitter3@^4.0.7:
   version "4.0.7"
   resolved "https://registry.yarnpkg.com/eventemitter3/-/eventemitter3-4.0.7.tgz#2de9b68f6528d5644ef5c59526a1b4a07306169f"
 
@@ -1518,6 +1522,13 @@ home-or-tmp@^2.0.0:
 hosted-git-info@^2.1.4:
   version "2.5.0"
   resolved "https://registry.yarnpkg.com/hosted-git-info/-/hosted-git-info-2.5.0.tgz#6d60e34b3abbc8313062c3b798ef8d901a07af3c"
+
+hosts-so-easy@^1.2.9:
+  version "1.2.9"
+  resolved "https://registry.yarnpkg.com/hosts-so-easy/-/hosts-so-easy-1.2.9.tgz#cfd50e8c18030969130e165413c3bacd6d6263d8"
+  dependencies:
+    atomic-write "^0.1.1"
+    eventemitter3 "^4.0.7"
 
 html-encoding-sniffer@^1.0.1:
   version "1.0.2"
@@ -3685,6 +3696,10 @@ verror@1.10.0:
     assert-plus "^1.0.0"
     core-util-is "1.0.2"
     extsprintf "^1.2.0"
+
+vhost@^3.0.2:
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/vhost/-/vhost-3.0.2.tgz#2fb1decd4c466aa88b0f9341af33dc1aff2478d5"
 
 walker@~1.0.5:
   version "1.0.7"

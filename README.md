@@ -15,7 +15,7 @@ http header or query
 config
 -----
 	* cloud: support local app
-		* __installDir: folder to install application 
+		* __installDir: folder to install application, qili will collect apps from this folder also if a subfolder has qili.conf.js, then subfolder will be cloud project root 
 		* __unsupportedModules: restricted built-in modules
 		* [apiKey]
 			* root: optional static root
@@ -275,6 +275,29 @@ How to Start
 4. create your client app, 
 	* yarn add github.com/lalalic/qili-app, and check qili-app tutorial
 	* or create your own client app from  scratch
+
+dev tools: qili/dev.js
+======
+it help to dev your app on localhost
+
+```javascript
+//suppose qili.conf.js exports your app's config
+require(`qili/dev`)({
+    conf:require("./qili.conf.js"), 
+    apiKey:"test", 
+	//optional, otherwise access http://localhost:9080/1/...
+    vhost:"mydomain.com",
+    credentials:(()=>{//optional: for https
+        const fs=require('fs')
+        const path=require('path')
+        return {
+            key: fs.readFileSync(`/certs/privkey.pem`, 'utf8'),
+            cert: fs.readFileSync(`/certs/cert.pem`, 'utf8')
+        }
+    })(),
+})	
+	
+```
 
 cloud example
 ----		

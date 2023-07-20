@@ -1,12 +1,12 @@
-var env=process.env
+const fs=require("fs")
+let env=process.env
 
 function autoCollectApps(appRoot){
-	if(!appRoot){
+	if(!appRoot || !fs.existsSync(appRoot)){
 		console.log('no APPS_ROOT')
 		return {}
 	}
 
-	const fs=require("fs")
 	const apps=fs.readdirSync(appRoot).reduce((apps, a)=>{
 		if(fs.statSync(`${appRoot}/${a}`).isDirectory()){
 			if(fs.existsSync(`${appRoot}/${a}/qili.conf.js`)){
