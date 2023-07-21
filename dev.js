@@ -1,9 +1,9 @@
 require("dotenv").config()
 
-module.exports=function dev({clientPort,serverPort, conf, apiKey, dbpath="testdata", vhost, credentials}={}){
+module.exports=function dev({clientPort,serverPort, conf, apiKey, dbpath="testdata", vhost, credentials, services}={}){
     console.assert(!!conf && !!apiKey)
     const qiliConfig=require("./conf")
-
+console.log(process.env)
     if(serverPort){
         qiliConfig.server.port=serverPort
     }
@@ -20,8 +20,9 @@ module.exports=function dev({clientPort,serverPort, conf, apiKey, dbpath="testda
             }
         })
     }
-    
+
     qiliConfig.cloud[apiKey]=conf
+    services && Object.assign(qiliConfig.cloud, services)
     
     require('child_process')
         .spawn(
@@ -29,12 +30,12 @@ module.exports=function dev({clientPort,serverPort, conf, apiKey, dbpath="testda
             ["--storageEngine=wiredTiger", "--directoryperdb", `--dbpath=${dbpath}`],
             {stdio:['ignore','ignore','inherit'], killSignal:'SIGINT'}
         )
-
+    
+    
     console.debug(qiliConfig)
     const server=require("./lib")
 
     if(vhost){
-        let notifyNoSubput=false
         console.warn('vhost is enabled. use> sudo yarn ')
         const express=require('express')
         const vhostMiddleware=require('vhost')
@@ -44,22 +45,26 @@ module.exports=function dev({clientPort,serverPort, conf, apiKey, dbpath="testda
             const ctx=req.vhost[0]
             switch(ctx){
                 case apiKey:
-                    req.url=`/${qiliConfig.version}/${apiKey}/static${req.url}`
-                    break
-                case "proxy":
-                    req.url=`/${qiliConfig.version}${apiKey}/proxy${req.url}`
+                    if(req.path!=="/graphql"){
+                        req.url=`/${qiliConfig.version}/${apiKey}/static${req.url}`
+                    }else if(conf.graphiql){
+                        req.url=`/${qiliConfig.version}${req.url}`
+                        if(!req.headers['x-application-id']){
+                            req.headers['x-application-id']=apiKey
+                        }
+                        const {QILI_TOKEN:token=""}=process.env
+                        if(token.length==0){
+                            console.warn(`graphiql need, but can't find token from env.QILI_TOKEN`)
+                        }else{
+                            req.headers[token.length>100 ? 'x-session-token' : "x-access-token"]=token
+                        }
+                    }
                     break
                 case "api":{
-                    if(req.headers.upgrade=="websocket"){
-                        if(!notifyNoSubput){
-                            console.error(`vhost can't support subscription, skip`)
-                            notifyNoSubput=true
-                        }
-                        res.status(401).end()
-                        return 
-                    }
                     req.url=`/${qiliConfig.version}/graphql`
-                    req.headers['x-application-id']=apiKey
+                    if(!req.headers['x-application-id']){
+                        req.headers['x-application-id']=apiKey
+                    }
                     break
                 }
             }
@@ -78,9 +83,11 @@ module.exports=function dev({clientPort,serverPort, conf, apiKey, dbpath="testda
                 const https = require('https');
                 const httpServer=http.createServer({},vApp)
                 httpServer.listen(80)
+                require("./lib/subscription").extend({server:httpServer,qiliConfig, path:`/${qiliConfig.version}/graphql`})
                 if(credentials){
                     const httpsServer = https.createServer(credentials, vApp);
                     httpsServer.listen(443)
+                    require("./lib/subscription").extend({server:httpsServer,qiliConfig, path:`/${qiliConfig.version}/graphql`})
                 }
             })
             .then(()=>{
