@@ -26,6 +26,12 @@ config
 				* PRIVATE_KEY_PATH: 
 				* HOSTNAME({runtimeVersion, platform, assetFilePath}): return asset url
 
+globalThis
+----
+> console
+> fetch
+
+
 File
 ----
 	* qiniu is the file storage service

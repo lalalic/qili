@@ -30,6 +30,7 @@ view/dashboard
 
 test/
 .env
+.env.server
 log/
 apps/
 certs/

@@ -1,6 +1,6 @@
 require("dotenv").config()
 
-module.exports=function dev({clientPort,serverPort, conf, apiKey, dbpath="testdata", vhost, credentials, services}={}){
+module.exports=function dev({clientPort,serverPort, conf, apiKey, dbpath="testdata", vhost, alias, credentials, services}={}){
     console.assert(!!conf && !!apiKey)
     const qiliConfig=require("./conf")
 console.log(process.env)
@@ -23,6 +23,8 @@ console.log(process.env)
 
     qiliConfig.cloud[apiKey]=conf
     services && Object.assign(qiliConfig.cloud, services)
+
+    require('fs').mkdirSync(require('path').resolve(process.cwd(),dbpath),{recursive:true})
     
     require('child_process')
         .spawn(
@@ -44,6 +46,7 @@ console.log(process.env)
         vApp.use(vhostMiddleware(`*.${vhost}`,function(req, res){
             const ctx=req.vhost[0]
             switch(ctx){
+                case alias:
                 case apiKey:
                     if(req.path!=="/graphql"){
                         req.url=`/${qiliConfig.version}/${apiKey}/static${req.url}`
@@ -71,7 +74,7 @@ console.log(process.env)
             server(...arguments)
         }))
 
-        const all=[`api.${vhost}`, `${apiKey}.${vhost}`, `proxy.${vhost}`]
+        const all=[`api.${vhost}`, `${apiKey}.${vhost}`, `proxy.${vhost}`, `${alias}.${vhost}`]
         const removeLocalhosts=()=>{
             require('fs').writeFileSync(hosts.config.hostsFile, hosts.hostsFile.raw,{encoding:"utf8"})
             console.log('hosts is recovered')
@@ -95,7 +98,7 @@ console.log(process.env)
                 process.on('exit',removeLocalhosts)
                 process.on('SIGINT',removeLocalhosts)
                 process.on('SIGTERM',removeLocalhosts)
-                console.debug(`Qili Dev Server is on localhost -> https://[${apiKey}|api|proxy].${vhost}`)
+                console.debug(`Qili Dev Server is on localhost -> https://[${apiKey}|${alias}|api|proxy].${vhost}`)
             })
             .catch(e=>console.error(e.message))
     }else{
