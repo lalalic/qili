@@ -21,6 +21,9 @@ config
 			* root: optional static root
 			* code: cloud code project path, local folder, or a git project url
 			* [any app entity keys, such as isDev, canRunInCore, bucket: use qiliadmin as default]
+			* isDev
+			* testLoginCode: login request code for test only isDev=true
+			* bucket: qiniu bucket name
 			* appUpdates : see expo-updates-server
 				* UPDATES: update assets folder 
 				* PRIVATE_KEY_PATH: 
