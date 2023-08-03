@@ -11,7 +11,7 @@ function autoCollectApps(appRoot){
 		if(fs.statSync(`${appRoot}/${a}`).isDirectory()){
 			if(fs.existsSync(`${appRoot}/${a}/qili.conf.js`)){
 				const conf=require(`${appRoot}/${a}/qili.conf.js`)
-				apps[a]=conf
+				apps[a]=applyConfFromEnv(a, conf)
 			}
 		}
 		return apps
@@ -19,6 +19,18 @@ function autoCollectApps(appRoot){
 	const keys=Object.keys(apps)
 	keys.length>0 && console.log(`found ${keys.length} apps: ${keys.join(",")}`)
 	return apps
+}
+
+function applyConfFromEnv(apiKey, conf){
+	Object.entries(env).forEach((key, value)=>{
+		if(key.startsWith(`${apiKey}.`)){
+			const [,confKey]=key.split(".")
+			if(!(confKey in conf)){
+				conf[confKey]=value
+			}
+		}
+	})
+	return conf
 }
 
 module.exports={
