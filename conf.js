@@ -22,7 +22,7 @@ function autoCollectApps(appRoot){
 }
 
 function applyConfFromEnv(apiKey, conf){
-	Object.entries(env).forEach((key, value)=>{
+	Object.entries(env).forEach(([key, value])=>{
 		if(key.startsWith(`${apiKey}.`)){
 			const [,confKey]=key.split(".")
 			if(!(confKey in conf)){
@@ -133,7 +133,8 @@ module.exports={
 			},
 		}
 		*/
-	}
+	},
+	applyConfFromEnv//internal for dev
 }
 
 Object.assign(module.exports.cloud,autoCollectApps(module.exports.cloud.__installDir))
