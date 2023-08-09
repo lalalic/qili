@@ -4,6 +4,7 @@ module.exports=function dev({clientPort,serverPort, conf, apiKey, dbpath="testda
     console.assert(!!conf && !!apiKey)
     const qiliConfig=require("./conf")
     qiliConfig.applyConfFromEnv(apiKey,conf)
+    Object.entries(services).forEach(([serviceApiKey,serviceConf])=>qiliConfig.applyConfFromEnv(serviceApiKey,serviceConf))
     
 console.log(process.env)
     if(serverPort){
@@ -24,7 +25,7 @@ console.log(process.env)
     }
 
     qiliConfig.cloud[apiKey]=conf
-    services && Object.assign(qiliConfig.cloud, services)
+    Object.assign(qiliConfig.cloud, services)
 
     require('fs').mkdirSync(require('path').resolve(process.cwd(),dbpath),{recursive:true})
     
@@ -72,16 +73,22 @@ console.log(process.env)
                     }
                     break
                 }
+                default:{
+                    if(!services[ctx]){
+                        break
+                    }
+                    req.url=`/${qiliConfig.version}/${ctx}/static${req.url}`
+                }
             }
             server(...arguments)
         }))
 
-        const all=[`api.${vhost}`, `${apiKey}.${vhost}`, `proxy.${vhost}`, `${alias}.${vhost}`]
+        const all=[`api`, apiKey, `proxy`, alias, ...Object.keys(services)]
         const removeLocalhosts=()=>{
             require('fs').writeFileSync(hosts.config.hostsFile, hosts.hostsFile.raw,{encoding:"utf8"})
             console.log('hosts is recovered')
         }
-        hosts.add('127.0.0.1',all)
+        hosts.add('127.0.0.1',all.map(a=>`${a}.${vhost}`))
         hosts.updateFinish()
             .then(()=>{
                 const http=require('http')
@@ -100,7 +107,7 @@ console.log(process.env)
                 process.on('exit',removeLocalhosts)
                 process.on('SIGINT',removeLocalhosts)
                 process.on('SIGTERM',removeLocalhosts)
-                console.debug(`Qili Dev Server is on localhost -> https://[${apiKey}|${alias}|api|proxy].${vhost}`)
+                console.debug(`Qili Dev Server is on localhost -> https://[${all.join("|")}].${vhost}`)
             })
             .catch(e=>console.error(e.message))
     }else{
