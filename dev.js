@@ -1,6 +1,6 @@
 require("dotenv").config()
 
-module.exports=function dev({clientPort,serverPort, conf, apiKey, dbpath="testdata", vhost, alias, credentials, services}={}){
+module.exports=function dev({clientPort,serverPort, conf, apiKey, dbpath="testdata", vhost, alias, credentials, services={}}={}){
     console.assert(!!conf && !!apiKey)
     const qiliConfig=require("./conf")
     qiliConfig.applyConfFromEnv(apiKey,conf)
