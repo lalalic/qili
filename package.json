@@ -20,6 +20,8 @@
     "express-http-proxy": "^1.6.3",
     "express-jwt": "^8.4.1",
     "express-ws": "^5.0.2",
+    "flowise": "^1.3.8-rc.1",
+    "global-agent": "^3.0.0",
     "graphql": "^14.5.3",
     "graphql-redis-subscriptions": "^2.6.0",
     "graphql-subscriptions": "^1.1.0",
@@ -39,6 +41,9 @@
     "qiniu": "~6.1.x",
     "subscriptions-transport-ws": "^0.9.18",
     "wechat": "^2.0.1"
+  },
+  "resolutions": {
+    "flowise/flowise-ui": "./fakes/flowise-ui"
   },
   "keywords": [
     "mongodb",
@@ -61,13 +66,15 @@
     "start": "node ./lib/index.js",
     "dev": "node --inspect ./lib/index.js",
     "mongo": "mongod  --storageEngine=wiredTiger --directoryperdb --dbpath=test/mongo",
-    "test": "jest"
+    "test": "jest",
+    "flowise": "node ./flowise.test.js"
   },
   "readme": "README.md",
   "devDependencies": {
-    "vhost": "^3.0.2",
     "hosts-so-easy": "^1.2.9",
-    "jest": "^21.2.1"
+    "jest": "^21.2.1",
+    "mkdirp": "^3.0.1",
+    "vhost": "^3.0.2"
   },
   "jest": {
     "roots": [

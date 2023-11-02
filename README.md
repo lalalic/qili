@@ -21,7 +21,7 @@ config
 			* root: optional static root
 			* code: cloud code project path, local folder, or a git project url
 			* [any app entity keys, such as isDev, canRunInCore, bucket: use qiliadmin as default]
-			* bucket: qiniu bucket name
+			* bucket: qiniu bucket name; /static/aaa/xx will create local storage on ${root}/aaa/xx
 			* appUpdates : see expo-updates-server
 				* UPDATES: update assets folder 
 				* PRIVATE_KEY_PATH: 

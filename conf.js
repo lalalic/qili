@@ -1,3 +1,13 @@
+process.on('SIGINT',()=>process.exit(0))
+process.on('SIGTERM',()=>process.exit(0))
+process.on('uncaughtException', (error) => {
+    console.error('Uncaught Exception:', error);
+});
+  
+process.on('unhandledRejection', (reason, promise) => {
+    console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+});
+
 const fs=require("fs")
 let env=process.env
 
@@ -59,7 +69,7 @@ module.exports={
 	 */
 	server : {
 		port : env.PORT||9080,
-		timeout : 5000
+		timeout : 50000
 	},
 
 
@@ -138,3 +148,5 @@ module.exports={
 }
 
 Object.assign(module.exports.cloud,autoCollectApps(module.exports.cloud.__installDir))
+
+
