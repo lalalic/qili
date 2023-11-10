@@ -54,7 +54,9 @@ console.log(process.env)
             switch(ctx){
                 case alias:
                 case apiKey:
-                    if(req.path!=="/graphql"){
+                    if(req.path.startsWith("/socket.io")){
+                        req.url=`/${qiliConfig.version}/${apiKey}${req.url}`
+                    }else if(req.path!=="/graphql"){
                         req.url=`/${qiliConfig.version}/${apiKey}/static${req.url}`
                     }else if(conf.graphiql){
                         req.url=`/${qiliConfig.version}${req.url}`
