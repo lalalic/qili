@@ -80,6 +80,9 @@
     "roots": [
       "__tests__"
     ],
-    "watchman": false
+    "testPathIgnorePatterns":["vm-require/root"],
+    "transformIgnorePatterns":[".*"],
+    "watchPathIgnorePatterns":["vm-require/root"],
+    "watchman": true
   }
 }
