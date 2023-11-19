@@ -39,6 +39,12 @@ console.log(process.env)
             {stdio:['ignore','ignore','inherit'], killSignal:'SIGINT'}
         )
     
+    // require('child_process')
+    //     .spawn(
+    //         "redis-stack-server",
+    //         [],
+    //         {stdio:['inherit','inherit','inherit'], killSignal:'SIGINT'}
+    //     )
     
     console.debug(qiliConfig)
     const server=require("./lib")
@@ -93,7 +99,7 @@ console.log(process.env)
             require('fs').writeFileSync(hosts.config.hostsFile, hosts.hostsFile.raw,{encoding:"utf8"})
             console.log('hosts is recovered')
         }
-        hosts.add('127.0.0.1',all.map(a=>`${a}.${vhost}`))
+        hosts.add('127.0.0.1',[...all.map(a=>`${a}.${vhost}`), 'qili.pubsub'])
         hosts.updateFinish()
             .then(()=>{
                 const http=require('http')

@@ -66,23 +66,30 @@
     "start": "node ./lib/index.js",
     "dev": "node --inspect ./lib/index.js",
     "mongo": "mongod  --storageEngine=wiredTiger --directoryperdb --dbpath=test/mongo",
-    "test": "jest",
-    "flowise": "node ./flowise.test.js"
+    "test": "jest"
   },
   "readme": "README.md",
   "devDependencies": {
     "hosts-so-easy": "^1.2.9",
     "jest": "^21.2.1",
     "mkdirp": "^3.0.1",
-    "vhost": "^3.0.2"
+    "vhost": "^3.0.2",
+    "webpack": "^5.89.0",
+    "webpack-cli": "^5.1.4"
   },
   "jest": {
     "roots": [
       "__tests__"
     ],
-    "testPathIgnorePatterns":["vm-require/root"],
-    "transformIgnorePatterns":[".*"],
-    "watchPathIgnorePatterns":["vm-require/root"],
+    "testPathIgnorePatterns": [
+      "vm-require/root"
+    ],
+    "transformIgnorePatterns": [
+      ".*"
+    ],
+    "watchPathIgnorePatterns": [
+      "vm-require/root"
+    ],
     "watchman": true
   }
 }
