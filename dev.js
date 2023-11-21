@@ -36,7 +36,7 @@ console.log(process.env)
         .spawn(
             "mongod",
             ["--storageEngine=wiredTiger", "--directoryperdb", `--dbpath=${dbpath}`],
-            {stdio:['ignore','ignore','inherit'], killSignal:'SIGINT'}
+            {stdio:['ignore','ignore','ignore'], killSignal:'SIGINT'}
         )
     
     // require('child_process')
