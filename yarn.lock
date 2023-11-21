@@ -5148,10 +5148,10 @@ flowise-components@*:
 flowise-ui@*, flowise-ui@./fakes/flowise-ui:
   version "1.0.0"
 
-flowise@^1.4.2:
-  version "1.4.2"
-  resolved "https://registry.yarnpkg.com/flowise/-/flowise-1.4.2.tgz#ed1df2d04b4b35258e058f4dd86e7030c102a599"
-  integrity sha512-ohx82AVmptz5VavG1kYLdkFs8IZfLcPJEcCE8xfnSiCFC2gpTmYw6AJFZKcsVTwiiiLg7xMoeKTK493gMdL3QA==
+flowise@1.3.8:
+  version "1.3.8"
+  resolved "https://registry.yarnpkg.com/flowise/-/flowise-1.3.8.tgz#1a9981231c034184bde819c9f7d2159c6c76d5af"
+  integrity sha512-AisgTzqhkjQMCgaQfZrme/jPNSOtdY0IBxmO4HRdavlch71+XpMruGGhRylzTgACuiaX1jMoRnRJtxoq7f6vhg==
   dependencies:
     "@oclif/core" "^1.13.10"
     async-mutex "^0.4.0"
@@ -5172,7 +5172,6 @@ flowise@^1.4.2:
     socket.io "^4.6.1"
     sqlite3 "^5.1.6"
     typeorm "^0.3.6"
-    uuid "^9.0.1"
     winston "^3.9.0"
 
 fn.name@1.x.x:
@@ -5303,6 +5302,9 @@ fs-minipass@^2.0.0:
 fs.realpath@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/fs.realpath/-/fs.realpath-1.0.0.tgz#1504ad2523158caa40db4a2787cb01411994ea4f"
+
+fsevents@./fakes/fsevents:
+  version "1.0.0"
 
 fsevents@2.3.2:
   version "2.3.2"
@@ -10581,7 +10583,7 @@ uuid@^8.3.2:
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-8.3.2.tgz#80d5b5ced271bb9af6c445f21a1a04c606cefbe2"
   integrity sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==
 
-uuid@^9.0.0, uuid@^9.0.1:
+uuid@^9.0.0:
   version "9.0.1"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-9.0.1.tgz#e188d4c8853cc722220392c424cd637f32293f30"
   integrity sha512-b+1eJOlsR9K8HJpow9Ok3fiWOWSIcIzXodvv0rQjVoOVNpWMpxf1wZNpt4y9h10odCNrqnYp1OBzRktckBe3sA==
