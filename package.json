@@ -1,7 +1,7 @@
 {
   "name": "qili",
   "description": "graphql BAAS",
-  "version": "2.2.61",
+  "version": "2.2.62",
   "author": {
     "name": "Raymond Li",
     "email": "lalalic@139.com"
@@ -47,6 +47,7 @@
     "**/fsevents": "link:./.yarn/empty",
     "**/mysql":"link:./.yarn/empty",
     "**/faiss-node":"link:./.yarn/empty",
+    "**/canvas":"link:./.yarn/empty",
     "**/puppeteer":"link:./.yarn/empty"
   },
   "keywords": [
