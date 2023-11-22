@@ -1,7 +1,0 @@
-{
-    "name":"fsevents",
-    "version":"1.0.0",
-    "files": [
-        "build"
-    ]
-}

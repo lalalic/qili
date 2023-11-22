@@ -43,10 +43,14 @@
     "wechat": "^2.0.1"
   },
   "resolutions": {
-    "flowise/flowise-ui": "./fakes/flowise-ui",
-    "sane/fsevents": "./fakes/fsevents",
-    "chokidar/fsevents": "./fakes/fsevents",
-    "playwright/fsevents": "./fakes/fsevents"
+    "flowise/flowise-ui": "link:./.yarn/empty",
+    "**/fsevents": "link:./.yarn/empty",
+    "**/mysql":"link:./.yarn/empty",
+    "**/sqlite3":"link:./.yarn/empty",
+    "**/faiss-node":"link:./.yarn/empty",
+    "**/chromadb":"link:./.yarn/empty",
+    "**/puppeteer":"link:./.yarn/empty",
+    "**/mysql2":"link:./.yarn/empty"
   },
   "keywords": [
     "mongodb",

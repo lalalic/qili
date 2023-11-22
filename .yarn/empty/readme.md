@@ -1,0 +1,1 @@
+empty package for any ignored package

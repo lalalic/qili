@@ -53,7 +53,7 @@ jobs:
         export SSHPASS=${{ secrets.SERVER_PASS }}
         sshpass -e scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -r deploy "$DEPLOY_USER@$DEPLOY_HOST:/data/qili"
         sshpass -e scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -r lib "$DEPLOY_USER@$DEPLOY_HOST:/data/qili"
-        sshpass -e scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -r fakes "$DEPLOY_USER@$DEPLOY_HOST:/data/qili"
+        sshpass -e scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -r .yarn "$DEPLOY_USER@$DEPLOY_HOST:/data/qili"
         sshpass -e scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -r www "$DEPLOY_USER@$DEPLOY_HOST:/data/qili"
         sshpass -e scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null conf.js "$DEPLOY_USER@$DEPLOY_HOST:/data/qili"
         sshpass -e scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null package.json "$DEPLOY_USER@$DEPLOY_HOST:/data/qili"
