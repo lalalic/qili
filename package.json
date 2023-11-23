@@ -1,7 +1,7 @@
 {
   "name": "qili",
   "description": "graphql BAAS",
-  "version": "2.2.62",
+  "version": "2.2.63",
   "author": {
     "name": "Raymond Li",
     "email": "lalalic@139.com"
@@ -45,10 +45,12 @@
   "resolutions": {
     "flowise/flowise-ui": "link:./.yarn/empty",
     "**/fsevents": "link:./.yarn/empty",
-    "**/mysql":"link:./.yarn/empty",
-    "**/faiss-node":"link:./.yarn/empty",
-    "**/canvas":"link:./.yarn/empty",
-    "**/puppeteer":"link:./.yarn/empty"
+    "**/mysql": "link:./.yarn/empty",
+    "**/sqlite3": "link:./.yarn/empty",
+    "**/faiss-node": "link:./.yarn/empty",
+    "**/canvas": "link:./.yarn/empty",
+    "**/puppeteer": "link:./.yarn/empty",
+    "**/express": "link:./.yarn/empty"
   },
   "keywords": [
     "mongodb",
