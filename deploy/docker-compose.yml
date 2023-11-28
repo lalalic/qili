@@ -13,7 +13,6 @@ qili.pubsub:
   - "6379"
  volumes:
   - "${DATA_ROOT}/data/redis:/data"
- 
 
 qili.server:
  build: "${DATA_ROOT}/data/qili/deploy/"

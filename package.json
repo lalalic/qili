@@ -38,6 +38,7 @@
     "node-schedule": "^1.3.2",
     "nodemailer": "^4.1.0",
     "passwordless-nodecache": "^1.0.3",
+    "pngjs": "^7.0.0",
     "qiniu": "~6.1.x",
     "subscriptions-transport-ws": "^0.9.18",
     "wechat": "^2.0.1"
@@ -50,7 +51,11 @@
     "**/faiss-node": "link:./.yarn/empty",
     "**/canvas": "link:./.yarn/empty",
     "**/puppeteer": "link:./.yarn/empty",
-    "**/express": "link:./.yarn/empty"
+    "**/express": "link:./.yarn/empty",
+    "**/openai": "^4.20.0"
+  },
+  "optionalDependencies": {
+    "jsdom": "*"
   },
   "keywords": [
     "mongodb",

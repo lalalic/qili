@@ -27,7 +27,7 @@ console.log(process.env)
         })
     }
 
-    qiliConfig.cloud[apiKey]=conf
+    qiliConfig.cloud[apiKey]={...conf}
     Object.assign(qiliConfig.cloud, services)
 
     require('fs').mkdirSync(require('path').resolve(process.cwd(),dbpath),{recursive:true})
@@ -38,7 +38,7 @@ console.log(process.env)
             ["--storageEngine=wiredTiger", "--directoryperdb", `--dbpath=${dbpath}`],
             {stdio:['ignore','ignore','ignore'], killSignal:'SIGINT'}
         )
-    
+
     // require('child_process')
     //     .spawn(
     //         "redis-stack-server",
@@ -46,10 +46,20 @@ console.log(process.env)
     //         {stdio:['inherit','inherit','inherit'], killSignal:'SIGINT'}
     //     )
     
+    // const postgres=require('path').resolve(process.cwd(),`${dbpath}/postgres`)
+    // require('fs').mkdirSync(postgres,{recursive:true})
+    // require('child_process')
+    //     .spawn(
+    //         "/Library/PostgreSQL/16/bin/pg_ctl",
+    //         ["-D", postgres, "start"],
+    //         {stdio:['inherit','inherit','inherit'], killSignal:'SIGINT'}
+    //     )
+
     console.debug(qiliConfig)
     const server=require("./lib")
 
     if(vhost){
+        qiliConfig.cloud[apiKey].vhost=vhost
         console.warn('vhost is enabled. use> sudo yarn ')
         const express=require('express')
         const vhostMiddleware=require('vhost')
