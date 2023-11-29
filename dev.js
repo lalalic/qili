@@ -104,12 +104,13 @@ console.log(process.env)
             server(...arguments)
         }))
 
-        const all=[`api`, apiKey, `proxy`, alias, ...Object.keys(services)]
+        const all=[`api`, apiKey, `proxy`, alias, ...Object.keys(services)].filter(a=>!!a)
         const removeLocalhosts=()=>{
             require('fs').writeFileSync(hosts.config.hostsFile, hosts.hostsFile.raw,{encoding:"utf8"})
             console.log('hosts is recovered')
         }
         hosts.add('127.0.0.1',[...all.map(a=>`${a}.${vhost}`), 'qili.pubsub'])
+
         hosts.updateFinish()
             .then(()=>{
                 const http=require('http')
