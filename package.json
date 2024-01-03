@@ -1,7 +1,7 @@
 {
   "name": "qili",
   "description": "graphql BAAS",
-  "version": "2.2.65",
+  "version": "2.2.66",
   "author": {
     "name": "Raymond Li",
     "email": "lalalic@139.com"
@@ -79,7 +79,7 @@
     "start": "node ./lib/index.js",
     "dev": "node --inspect ./lib/index.js",
     "mongo": "mongod  --storageEngine=wiredTiger --directoryperdb --dbpath=test/mongo",
-    "test": "jest"
+    "test": "NODE_OPTIONS=\"--inspect-brk=9220\" jest"
   },
   "readme": "README.md",
   "devDependencies": {
@@ -98,11 +98,12 @@
       "vm-require/root"
     ],
     "transformIgnorePatterns": [
-      ".*"
+    ".*"
     ],
     "watchPathIgnorePatterns": [
       "vm-require/root"
     ],
-    "watchman": true
+    "watchman": true,
+    "maxWorkers":1
   }
 }
