@@ -64,14 +64,14 @@ console.log(process.env)
         const express=require('express')
         const vhostMiddleware=require('vhost')
         const hosts=new (require('hosts-so-easy').default)();
-        const vApp=express()
+        const vApp= express()
         vApp.use(vhostMiddleware(`*.${vhost}`,function(req, res){
             const ctx=req.vhost[0]
             switch(ctx){
                 case alias:
                 case apiKey:
-                    if(req.path.startsWith("/socket.io")){
-                        req.url=`/${qiliConfig.version}/${apiKey}${req.url}`
+                    if(req.path.startsWith("/websocket")){
+                        req.url=`/${qiliConfig.version}${req.url}`
                     }else if(req.path!=="/graphql"){
                         req.url=`/${qiliConfig.version}/${apiKey}/static${req.url}`
                     }else if(conf.graphiql){
@@ -113,15 +113,11 @@ console.log(process.env)
 
         hosts.updateFinish()
             .then(()=>{
-                const http=require('http')
-                const https = require('https');
-                const httpServer=http.createServer({},vApp)
-                httpServer.listen(80)
-                require("./lib/subscription").extend({server:httpServer,qiliConfig, path:`/${qiliConfig.version}/graphql`})
+                const http=require('http').createServer({},vApp).listen(80)
+                require("./lib/web-socket").extend(http)
                 if(credentials){
-                    const httpsServer = https.createServer(credentials, vApp);
-                    httpsServer.listen(443)
-                    require("./lib/subscription").extend({server:httpsServer,qiliConfig, path:`/${qiliConfig.version}/graphql`})
+                    const https=require('https').createServer(credentials, vApp).listen(443)
+                    require("./lib/web-socket").extend(https)
                 }
             })
             .then(()=>{
