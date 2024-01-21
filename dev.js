@@ -70,9 +70,7 @@ console.log(process.env)
             switch(ctx){
                 case alias:
                 case apiKey:
-                    if(req.path.startsWith("/websocket")){
-                        req.url=`/${qiliConfig.version}${req.url}`
-                    }else if(req.path!=="/graphql"){
+                    if(req.path!=="/graphql"){
                         req.url=`/${qiliConfig.version}/${apiKey}/static${req.url}`
                     }else if(conf.graphiql){
                         req.url=`/${qiliConfig.version}${req.url}`
@@ -87,6 +85,7 @@ console.log(process.env)
                         }
                     }
                     break
+                case `${apiKey}api`:
                 case "api":{
                     req.url=`/${qiliConfig.version}/graphql`
                     if(!req.headers['x-application-id']){
@@ -104,7 +103,7 @@ console.log(process.env)
             server(...arguments)
         }))
 
-        const all=[`api`, apiKey, `proxy`, alias, ...Object.keys(services)].filter(a=>!!a)
+        const all=[`api`, `${apiKey}api`, apiKey, `proxy`, alias, ...Object.keys(services)].filter(a=>!!a)
         const removeLocalhosts=()=>{
             require('fs').writeFileSync(hosts.config.hostsFile, hosts.hostsFile.raw,{encoding:"utf8"})
             console.log('hosts is recovered')
