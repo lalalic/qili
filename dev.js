@@ -65,46 +65,52 @@ console.log(process.env)
         const vhostMiddleware=require('vhost')
         const hosts=new (require('hosts-so-easy').default)();
         const vApp= express()
-        vApp.use(vhostMiddleware(`*.${vhost}`,function(req, res){
+        vApp.use(vhostMiddleware(`*.${vhost}`,function(req, res, next){
             const ctx=req.vhost[0]
-            switch(ctx){
-                case alias:
-                case apiKey:
-                    if(req.path!=="/graphql"){
-                        req.url=`/${qiliConfig.version}/${apiKey}/static${req.url}`
-                    }else if(conf.graphiql){
-                        req.url=`/${qiliConfig.version}${req.url}`
+            function handle(apiKey){
+                switch(ctx){
+                    case alias:
+                    case apiKey:
+                        if(req.path!=="/graphql"){
+                            req.url=`/${qiliConfig.version}/${apiKey}/static${req.url}`
+                        }else if(conf.graphiql){
+                            req.url=`/${qiliConfig.version}${req.url}`
+                            if(!req.headers['x-application-id']){
+                                req.headers['x-application-id']=apiKey
+                            }
+                            const {QILI_TOKEN:token=""}=process.env
+                            if(token.length==0){
+                                console.warn(`graphiql need, but can't find token from env.QILI_TOKEN`)
+                            }else{
+                                req.headers[token.length>100 ? 'x-session-token' : "x-access-token"]=token
+                            }
+                        }
+                        break
+                    case `${apiKey}api`:
+                    case "api":{
+                        req.url=`/${qiliConfig.version}/graphql`
                         if(!req.headers['x-application-id']){
                             req.headers['x-application-id']=apiKey
                         }
-                        const {QILI_TOKEN:token=""}=process.env
-                        if(token.length==0){
-                            console.warn(`graphiql need, but can't find token from env.QILI_TOKEN`)
-                        }else{
-                            req.headers[token.length>100 ? 'x-session-token' : "x-access-token"]=token
-                        }
-                    }
-                    break
-                case `${apiKey}api`:
-                case "api":{
-                    req.url=`/${qiliConfig.version}/graphql`
-                    if(!req.headers['x-application-id']){
-                        req.headers['x-application-id']=apiKey
-                    }
-                    break
-                }
-                default:{
-                    if(!services[ctx]){
                         break
                     }
-                    req.url=`/${qiliConfig.version}/${ctx}/static${req.url}`
+                    default:{
+                        if(!services[ctx]){
+                            break
+                        }else{
+                            return handle(ctx)
+                        }
+                    }
                 }
+                server(req, res, next)
             }
-            server(...arguments)
+
+            handle(apiKey)
         }))
 
         const all=[`api`, `${apiKey}api`, apiKey, `proxy`, alias, ...Object.keys(services)].filter(a=>!!a)
-        const removeLocalhosts=()=>{
+        const removeLocalhosts=(servers)=>{
+            servers?.forEach(server=>server.close())
             require('fs').writeFileSync(hosts.config.hostsFile, hosts.hostsFile.raw,{encoding:"utf8"})
             console.log('hosts is recovered')
         }
@@ -112,18 +118,21 @@ console.log(process.env)
 
         hosts.updateFinish()
             .then(()=>{
-                const http=require('http').createServer({},vApp).listen(80)
+                const servers=[]
+                const http=(servers[0]=require('http').createServer({},vApp)).listen(80)
                 require("./lib/web-socket").extend(http)
                 if(credentials){
-                    const https=require('https').createServer(credentials, vApp).listen(443)
+                    const https=(servers[1]=require('https').createServer(credentials, vApp)).listen(443)
                     require("./lib/web-socket").extend(https)
                 }
+                servers.push(server.httpServer)
+                return servers
             })
-            .then(()=>{
+            .then((servers)=>{
                 console.log('vhost is ready in hosts. hosts will be clear once exit')
-                process.on('exit',removeLocalhosts)
-                process.on('SIGINT',removeLocalhosts)
-                process.on('SIGTERM',removeLocalhosts)
+                process.on('exit',()=>removeLocalhosts(servers))
+                process.on('SIGINT',()=>removeLocalhosts(servers))
+                process.on('SIGTERM',()=>removeLocalhosts(servers))
                 console.debug(`Qili Dev Server is on localhost -> https://[${all.join("|")}].${vhost}`)
             })
             .catch(e=>console.error(e.message))
