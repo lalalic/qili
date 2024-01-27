@@ -5,6 +5,7 @@ require("dotenv").config()
 module.exports=function dev({clientPort,serverPort, conf, apiKey, dbpath="testdata", vhost, alias, credentials, services={}}={}){
     console.assert(!!conf && !!apiKey)
     const qiliConfig=require("./conf")
+    qiliConfig.debug=true
     qiliConfig.server.timeout=100000000
     qiliConfig.applyConfFromEnv(apiKey,conf)
     Object.entries(services).forEach(([serviceApiKey,serviceConf])=>qiliConfig.applyConfFromEnv(serviceApiKey,serviceConf))
@@ -117,7 +118,7 @@ console.log(process.env)
         handle(apiKey)
     }))
 
-    const all=[`api`, `${apiKey}api`, apiKey, `proxy`, alias, ...Object.keys(services)].filter(a=>!!a)
+    const all=[`api`, `proxy`, alias, ...[apiKey,...Object.keys(services)].map(a=>[a, `${a}api`]).flat()].filter(a=>!!a)
     const removeLocalhosts=(servers)=>{
         servers?.forEach(server=>server.close())
         require('fs').writeFileSync(hosts.config.hostsFile, hosts.hostsFile.raw,{encoding:"utf8"})
