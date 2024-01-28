@@ -50,8 +50,8 @@ services:
   qili.proxy:
     image: "${HUB}nginx:1.9.3"
     ports:
-      - "80"
-      - "443"
+      - "80:80"
+      - "443:443"
     links:
       - qili.server
     volumes:
@@ -62,7 +62,7 @@ services:
   qili.postgres:
     image: "${HUB}ankane/pgvector"
     ports:
-      - "5432"
+      - "5432:5432"
     environment:
      - POSTGRES_PASSWORD=start123
     links:
