@@ -1,20 +1,4 @@
 services:
-  qili.db:
-    image: "${HUB}mongo:3.4"
-    expose:
-      - "27017"
-    volumes:
-      - "/etc/localtime:/etc/localtime:ro"
-      - "${DATA_ROOT}/data/db:/data/db"
-    command: --storageEngine=wiredTiger --directoryperdb
-
-  qili.pubsub:
-    image: "${HUB}redis:6-alpine"
-    expose: 
-      - "6379"
-    volumes:
-      - "${DATA_ROOT}/data/redis:/data"
-
   qili.server:
     build: "${DATA_ROOT}/data/qili/deploy/"
     expose:
@@ -22,7 +6,7 @@ services:
       - "9443"
     environment:
       - API
-      - DB_HOST=qili.db
+      - DB_HOST
       - DB_PORT
       - APPS_ROOT
       - ADMIN_KEY
@@ -39,10 +23,8 @@ services:
       - NODE_ENV=production
       - LOG_DIR
       - LOG_CATEGORY
-
     links:
-      - qili.db
-      - qili.pubsub
+     - qili.postgres
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "${DATA_ROOT}/data:/data"
@@ -61,13 +43,10 @@ services:
   
   qili.postgres:
     image: "${HUB}ankane/pgvector"
-    ports:
-      - "5432:5432"
+    expose:
+      - "5432"
     environment:
      - POSTGRES_PASSWORD=start123
-    links:
-      - qili.server
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "${DATA_ROOT}/data/postgres:/var/lib/postgresql/data"
-

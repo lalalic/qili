@@ -2,17 +2,19 @@ qili.db:
  image: "${HUB}mongo:3.4"
  expose:
   - "27017"
+ ports:
+  - "27017:27017"
  volumes:
   - "/etc/localtime:/etc/localtime:ro"
   - "${DATA_ROOT}/data/db:/data/db"
  command: --storageEngine=wiredTiger --directoryperdb
 
-qili.pubsub:
- image: "${HUB}redis:6-alpine"
- expose: 
-  - "6379"
- volumes:
-  - "${DATA_ROOT}/data/redis:/data"
+# qili.pubsub:
+#  image: "${HUB}redis:6-alpine"
+#  expose: 
+#   - "6379"
+#  volumes:
+#   - "${DATA_ROOT}/data/redis:/data"
 
 qili.server:
  build: "${DATA_ROOT}/data/qili/deploy/"
@@ -21,7 +23,7 @@ qili.server:
   - "9443"
  environment:
   - API
-  - DB_HOST=qili.db
+  - DB_HOST
   - DB_PORT
   - APPS_ROOT
   - ADMIN_KEY
