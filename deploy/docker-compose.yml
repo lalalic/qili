@@ -43,7 +43,7 @@ qili.server:
 
  links:
   - qili.db
-  - qili.pubsub
+  #- qili.pubsub
  volumes:
   - "/etc/localtime:/etc/localtime:ro"
   - "${DATA_ROOT}/data:/data"
