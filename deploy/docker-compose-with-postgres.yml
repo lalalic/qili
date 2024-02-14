@@ -45,6 +45,8 @@ services:
     image: "${HUB}ankane/pgvector"
     expose:
       - "5432"
+    ports:
+      - "5432:5432"
     environment:
      - POSTGRES_PASSWORD=start123
     volumes:
