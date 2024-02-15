@@ -5,7 +5,7 @@ server{
     root /data/apps;
 
     set $app_key ai;
-    server_name	$app_key.qili2.com;
+    server_name	ai.qili2.com;
     access_log /data/log/$app_key.log main;
     
     location @static {
