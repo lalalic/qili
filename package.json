@@ -1,7 +1,7 @@
 {
   "name": "qili",
   "description": "graphql BAAS",
-  "version": "2.2.85",
+  "version": "2.2.86",
   "author": {
     "name": "Raymond Li",
     "email": "lalalic@139.com"
@@ -11,6 +11,7 @@
     "ali-sms": "^1.0.1",
     "body-parser": "~1.12.x",
     "commander": "^2.15.1",
+    "cookie-parser": "^1.4.6",
     "cors": "^2.8.4",
     "dataloader": "^1.3.0",
     "dotenv": "^16.3.1",
@@ -37,6 +38,7 @@
     "node-fetch2": "^1.6.3",
     "node-schedule": "^1.3.2",
     "nodemailer": "^4.1.0",
+    "passport": "^0.7.0",
     "passwordless-nodecache": "^1.0.3",
     "pngjs": "^7.0.0",
     "qiniu": "~6.1.x",
@@ -98,12 +100,12 @@
       "vm-require/root"
     ],
     "transformIgnorePatterns": [
-    ".*"
+      ".*"
     ],
     "watchPathIgnorePatterns": [
       "vm-require/root"
     ],
     "watchman": true,
-    "maxWorkers":1
+    "maxWorkers": 1
   }
 }
