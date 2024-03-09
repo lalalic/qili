@@ -7171,6 +7171,18 @@ one-time@^1.0.0:
   dependencies:
     fn.name "1.x.x"
 
+openai-cost-calculator@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/openai-cost-calculator/-/openai-cost-calculator-1.0.1.tgz#4e88f6276cb9b064bc93b10f2399b0b9c2911c80"
+  integrity sha512-vAsvIpYOrJ9PZklfxGZ0z3JTu4v8ZXjUN2F8xdDpdWl+Li/A/hyp1gcq8LJtHz8+VLREoBavtzGI9FT3dyU6OQ==
+
+openai-gpt-token-counter@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/openai-gpt-token-counter/-/openai-gpt-token-counter-1.1.1.tgz#661749ade60ce421f3064096193bc875d15cc0e1"
+  integrity sha512-kR+igUKHR01Ygm2BmUITAEAmVsOFcHS0KOnkRNjJR0YeSczJ+PYFjUpnE6TNRoqNPVINECVe5VfkxDAf8MU3eA==
+  dependencies:
+    tiktoken "^1.0.10"
+
 openai@^4.20.0, openai@~4.4.0:
   version "4.20.0"
   resolved "https://registry.yarnpkg.com/openai/-/openai-4.20.0.tgz#d171b5afb38e0c5ba07f9dd7b15b5c4bbc1f1bda"
@@ -9043,6 +9055,11 @@ throat@^4.0.0:
 through@~2.3, through@~2.3.4:
   version "2.3.8"
   resolved "https://registry.yarnpkg.com/through/-/through-2.3.8.tgz#0dd4c9ffaabc357960b1b724115d7e0e86a2e1f5"
+
+tiktoken@^1.0.10:
+  version "1.0.13"
+  resolved "https://registry.yarnpkg.com/tiktoken/-/tiktoken-1.0.13.tgz#39e3d10a1c134d8dd98d88b023a9963c0f061b21"
+  integrity sha512-JaL9ZnvTbGFMDIBeGdVkLt4qWTeCPw+n7Ock+wceAGRenuHA6nOOvMJFliNDyXsjg2osGKJWsXtO2xc74VxyDw==
 
 tmp@^0.2.1:
   version "0.2.1"
