@@ -68,6 +68,7 @@ Cloud
 			.on([regexp|string]/*path*/, function(req/*{path,app}*/, res/*{send}*/))
 			.on(path,callback)
 			.auth2({[name]:{strategy, scope, redirectUrl}})//support oauth2 based on passport
+				redirectUrl: fn(req,res), "...", or, {[key](req, res){return "..."}}
 	* wechat(service)
 		* serve wechat request at <version=1>/:appKey/wechat
 		* service
