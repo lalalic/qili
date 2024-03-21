@@ -55,8 +55,8 @@ Cloud
 =====
 * apiKey: readonly
 
-* addModule({typeDefs, resolver, persistedQuery,static,wechat}) : to add a cloud module, everything is optional.
-	* name: module name
+* addModule({name, typeDefs, resolver, persistedQuery,static,wechat}) : to add a cloud module, everything is optional.
+	* name: module name; unique in app scope;
 	* init(app): called every time the module starts
 	* finalize(app): called every time the module stops
 	* typeDefs: string, app's schema

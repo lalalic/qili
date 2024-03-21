@@ -2,7 +2,7 @@ process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
 require("dotenv").config()
 
-module.exports=function dev({clientPort,serverPort, conf, apiKey, dbpath="testdata", vhost, alias, credentials, services={}}={}){
+module.exports=function dev({clientPort,serverPort, conf, apiKey, logmongo=false, dbpath="testdata", vhost, alias, credentials, services={}}={}){
     console.assert(!!conf && !!apiKey)
     const qiliConfig=require("./conf")
     qiliConfig.debug=true
@@ -33,11 +33,12 @@ console.log(process.env)
 
     require('fs').mkdirSync(require('path').resolve(process.cwd(),dbpath),{recursive:true})
     
+    const stdio=logmongo ? "inherit" : "ignore"
     require('child_process')
         .spawn(
             "mongod",
             ["--storageEngine=wiredTiger", "--directoryperdb", `--dbpath=${dbpath}`],
-            {stdio:['ignore','ignore','ignore'], killSignal:'SIGINT'}
+            {stdio:[stdio, stdio, stdio], killSignal:'SIGINT'}
         )
 
     // require('child_process')
@@ -91,7 +92,7 @@ console.log(process.env)
                         const {QILI_TOKEN:token=""}=process.env
                         if(token.length==0){
                             console.warn(`graphiql need, but can't find token from env.QILI_TOKEN`)
-                        }else{
+                        }else if(!(req.headers['x-session-token']||req.headers['x-access-token'])){
                             req.headers[token.length>100 ? 'x-session-token' : "x-access-token"]=token
                         }
                     }
