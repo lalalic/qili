@@ -194,6 +194,10 @@ Cloud
 	* typeName: such as "User"
 	* statObject: {_id, login:1, score:2,...}, the User[_id] login+=1, score+=2
 	* context: {app}
+* built-in modules: 
+	* AI: flowise server
+	* Python: flask server, support blueprint from <code>/<apiKey>-main.py
+		* leverage requirements.txt 
 
 Schema
 ---

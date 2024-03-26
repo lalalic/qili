@@ -74,7 +74,6 @@ console.log(process.env)
     console.warn('vhost is enabled. use> sudo yarn ')
     const express=require('express')
     const vhostMiddleware=require('vhost')
-    const hosts=new (require('hosts-so-easy').default)();
     const vApp= express()
     vApp.use(vhostMiddleware(`*.${vhost}`,function(req, res, next){
         const ctx=req.vhost[0]
@@ -120,14 +119,51 @@ console.log(process.env)
     }))
 
     const all=[`api`, `proxy`, alias, ...[apiKey,...Object.keys(services)].map(a=>[a, `${a}api`]).flat()].filter(a=>!!a)
-    const removeLocalhosts=(servers)=>{
+    const hosts=new (
+        class{
+            constructor(){
+                this.path="/etc/hosts"
+                this.raw=require('fs').readFileSync(this.path,{encoding:"utf8"})
+                this.updated=""
+            }
+
+            updateFinish(){
+                return new Promise((resolve,reject)=>{
+                    require("child_process").exec(`echo '${this.raw}${this.updated}' | sudo tee ${this.path}`,{name:"qili hosts"},(error,stdout, stderr)=>{
+                        if(error){
+                            console.error(error)
+                            reject(error)
+                            return 
+                        }
+                        resolve()
+                    })
+                })
+            }
+            restore(){
+                this.updated=""
+                return this.updateFinish()
+            }
+            add(host, vhosts){
+                this.updated=`${this.updated}\n${host} ${vhosts.join(" ")}`
+            }
+        }
+    )();
+
+    const removeLocalhosts=async (servers)=>{
         servers?.forEach(server=>server.close())
-        require('fs').writeFileSync(hosts.config.hostsFile, hosts.hostsFile.raw,{encoding:"utf8"})
+        await hosts.restore()
         console.log('hosts is recovered')
     }
     hosts.add('127.0.0.1',[...all.map(a=>`${a}.${vhost}`), 'qili.pubsub'])
 
     hosts.updateFinish()
+        .finally((servers)=>{
+            console.log('vhost is ready in hosts. hosts will be clear once exit')
+            process.on('exit',()=>removeLocalhosts(servers))
+            process.on('SIGINT',()=>removeLocalhosts(servers))
+            process.on('SIGTERM',()=>removeLocalhosts(servers))
+            process.on('uncaughtException', ()=>removeLocalhosts(servers))
+        })
         .then(()=>{
             const servers=[]
             const http=(servers[0]=require('http').createServer({},vApp)).listen(80)
@@ -137,14 +173,8 @@ console.log(process.env)
                 require("./lib/web-socket").extend(https)
             }
             servers.push(server.httpServer)
+            console.debug(`Qili Dev Server is on localhost -> https://[${all.join("|")}].${vhost}`)
             return servers
         })
-        .then((servers)=>{
-            console.log('vhost is ready in hosts. hosts will be clear once exit')
-            process.on('exit',()=>removeLocalhosts(servers))
-            process.on('SIGINT',()=>removeLocalhosts(servers))
-            process.on('SIGTERM',()=>removeLocalhosts(servers))
-            console.debug(`Qili Dev Server is on localhost -> https://[${all.join("|")}].${vhost}`)
-        })
-        .catch(e=>console.error(e.message))
+        
 }

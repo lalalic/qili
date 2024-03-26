@@ -1,7 +1,7 @@
 {
   "name": "qili",
   "description": "graphql BAAS",
-  "version": "2.2.93",
+  "version": "2.3.0",
   "author": {
     "name": "Raymond Li",
     "email": "lalalic@139.com"
@@ -83,13 +83,15 @@
     "start": "node ./lib/index.js",
     "dev": "node --inspect ./lib/index.js",
     "mongo": "mongod  --storageEngine=wiredTiger --directoryperdb --dbpath=test/mongo",
-    "test": "NODE_OPTIONS=\"--inspect-brk=9220\" jest"
+    "test": "NODE_OPTIONS=\"--inspect-brk=9220\" jest",
+    "python": "python lib/modules/python/run.py"
   },
   "readme": "README.md",
   "devDependencies": {
     "hosts-so-easy": "^1.2.9",
     "jest": "^21.2.1",
     "mkdirp": "^3.0.1",
+    "sudo-prompt": "^9.2.1",
     "vhost": "^3.0.2",
     "webpack": "^5.89.0",
     "webpack-cli": "^5.1.4"
