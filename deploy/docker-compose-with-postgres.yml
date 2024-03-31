@@ -26,7 +26,7 @@ services:
     links:
      - qili.postgres
      - qili.db
-     - qili.python
+#     - qili.python
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "${DATA_ROOT}/data:/data"
