@@ -1,3 +1,6 @@
+/**
+ * must run sudo: 80/443 need it
+ */
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
 require("dotenv").config()

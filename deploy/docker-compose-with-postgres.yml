@@ -62,15 +62,16 @@ services:
       - "/etc/localtime:/etc/localtime:ro"
       - "${DATA_ROOT}/data/postgres:/var/lib/postgresql/data"
   
-  qili.python:
-    image: "${HUB}python:3.9"
-    command: /bin/sh -c "cd /data && pip install -r requirements.txt && python run.py"
-    expose:
-      - "5001"
-    environment:
-      - XTTS_SAMPLE_DIR=/data/apps/ai/xtts/samples
+  # qili.python:
+  #   image: "${HUB}python:3.9"
+  #   command: /bin/sh -c "cd /data && pip install -r requirements.txt --target ${PYTHONPATH} && python run.py"
+  #   expose:
+  #     - "5001"
+  #   environment:
+  #     - XTTS_SAMPLE_DIR=/data/apps/ai/xtts/samples
+  #     - PYTHONPATH=/data/packages
 
-    volumes:
-      - "/etc/localtime:/etc/localtime:ro"
-      - "${DATA_ROOT}/data/qili/lib/modules/python:/data"
-      - "${DATA_ROOT}/data/apps:/data/apps"
+  #   volumes:
+  #     - "/etc/localtime:/etc/localtime:ro"
+  #     - "${DATA_ROOT}/data/qili/lib/modules/python:/data"
+  #     - "${DATA_ROOT}/data/apps:/data/apps"

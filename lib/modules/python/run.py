@@ -13,8 +13,11 @@ def register_service(service, path=None):
             if not os.path.exists(f"{path}/{service}-main.py"):
                 return
             if os.path.exists(f"{path}/requirements.txt"):
+                shells=["pip", "install", "-r", f"{path}/requirements.txt"]
+                if(os.environ.get('PYTHONPATH') != None):
+                    shells.extend(["--target", os.environ.get('PYTHONPATH')])
                 subprocess.run(
-                    ["pip", "install", "-r", f"{path}/requirements.txt"], 
+                    shells, 
                     capture_output=False, 
                     text=True, 
                     check=True
@@ -62,5 +65,5 @@ def conf():
 
 if __name__ == '__main__':
     print(f"python service is running on 5001")
-    app.run(port=5001, debug=True)
+    app.run(host="0.0.0.0", port=5001, debug=False)
     
