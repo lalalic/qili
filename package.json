@@ -84,7 +84,7 @@
     "start": "node ./lib/index.js",
     "dev": "node --inspect ./lib/index.js",
     "mongo": "mongod  --storageEngine=wiredTiger --directoryperdb --dbpath=test/mongo",
-    "test": "NODE_OPTIONS=\"--inspect-brk=9220\" jest",
+    "test": "jest",
     "python": "python lib/modules/python/run.py"
   },
   "readme": "README.md",
