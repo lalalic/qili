@@ -1,7 +1,7 @@
 {
   "name": "qili",
   "description": "graphql BAAS",
-  "version": "2.3.4",
+  "version": "2.3.5",
   "author": {
     "name": "Raymond Li",
     "email": "lalalic@139.com"
@@ -33,7 +33,7 @@
     "is-valid-email": "^0.0.2",
     "lodash.merge": "^4.6.0",
     "log4js": "^6.1.2",
-    "mongodb": "latest",
+    "mongodb": "^2.2.33",
     "multer": "^1.4.5-lts.1",
     "node-cache": "^4.1.1",
     "node-fetch2": "^1.6.3",

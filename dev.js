@@ -39,7 +39,7 @@ console.log(process.env)
     const stdio=logmongo ? "inherit" : "ignore"
     require('child_process')
         .spawn(
-            "mongod",
+            `${dbpath}/bin/mongod`,
             ["--storageEngine=wiredTiger", "--directoryperdb", `--dbpath=${dbpath}`],
             {stdio:[stdio, stdio, stdio], killSignal:'SIGINT'}
         )

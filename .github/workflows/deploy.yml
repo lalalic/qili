@@ -36,7 +36,6 @@ jobs:
     environment: ALI
     runs-on: ubuntu-latest
     env:
-      DEPLOY_HOST_SINGAPORE: 8.219.135.58
       DEPLOY_HOST: ${{ secrets.SERVER_HOST }}
       DEPLOY_USER: ${{ secrets.SERVER_USER }}
       
