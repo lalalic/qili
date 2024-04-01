@@ -1,77 +1,76 @@
-services:
-  qili.server:
-    build: "${DATA_ROOT}/data/qili/deploy/"
-    expose:
-      - "9080"
-      - "9443"
-    environment:
-      - API
-      - DB_HOST
-      - DB_PORT
-      - APPS_ROOT
-      - ADMIN_KEY
-      - SECRET
-      - QINIU_ACCESS_KEY
-      - QINIU_SECRET_KEY
-      - ALI_ACCESS_KEY
-      - ALI_SECRET_KEY
-      - ALI_SMS_SIGN_NAME
-      - ALI_SMS_TEMPLATE_CREATE
-      - DEBUG
-      - CLOUD_TIMEOUT
-      - WECHAT_TOKEN
-      - NODE_ENV=production
-      - LOG_DIR
-      - LOG_CATEGORY
-    links:
-     - qili.postgres
-     - qili.db
-#     - qili.python
-    volumes:
-      - "/etc/localtime:/etc/localtime:ro"
-      - "${DATA_ROOT}/data:/data"
-  qili.db:
-    image: "${HUB}mongo:3.4"
-    expose:
-      - "27017"
-    volumes:
-      - "/etc/localtime:/etc/localtime:ro"
-      - "${DATA_ROOT}/data/mongo/3:/data/db"
-    command: --storageEngine=wiredTiger --directoryperdb
-  qili.proxy:
-    image: "${HUB}nginx:1.9.3"
-    ports:
-      - "80:80"
-      - "443:443"
-    links:
-      - qili.server
-    volumes:
-      - "/etc/localtime:/etc/localtime:ro"
-      - "${DATA_ROOT}/data:/data"
-      - "${DATA_ROOT}/data/qili/deploy/nginx.conf:/etc/nginx/nginx.conf"
-  
-  qili.postgres:
-    image: "${HUB}ankane/pgvector"
-    expose:
-      - "5432"
-    ports:
-      - "5432:5432"
-    environment:
-     - POSTGRES_PASSWORD=start123
-    volumes:
-      - "/etc/localtime:/etc/localtime:ro"
-      - "${DATA_ROOT}/data/postgres:/var/lib/postgresql/data"
-  
-  # qili.python:
-  #   image: "${HUB}python:3.9"
-  #   command: /bin/sh -c "cd /data && pip install -r requirements.txt --target ${PYTHONPATH} && python run.py"
-  #   expose:
-  #     - "5001"
-  #   environment:
-  #     - XTTS_SAMPLE_DIR=/data/apps/ai/xtts/samples
-  #     - PYTHONPATH=/data/packages
+qili.server:
+  build: "${DATA_ROOT}/data/qili/deploy/"
+  expose:
+    - "9080"
+    - "9443"
+  environment:
+    - API
+    - DB_HOST
+    - DB_PORT
+    - APPS_ROOT
+    - ADMIN_KEY
+    - SECRET
+    - QINIU_ACCESS_KEY
+    - QINIU_SECRET_KEY
+    - ALI_ACCESS_KEY
+    - ALI_SECRET_KEY
+    - ALI_SMS_SIGN_NAME
+    - ALI_SMS_TEMPLATE_CREATE
+    - DEBUG
+    - CLOUD_TIMEOUT
+    - WECHAT_TOKEN
+    - NODE_ENV=production
+    - LOG_DIR
+    - LOG_CATEGORY
+  links:
+    - qili.postgres
+    - qili.db
+    # - qili.python
+  volumes:
+    - "/etc/localtime:/etc/localtime:ro"
+    - "${DATA_ROOT}/data:/data"
+qili.db:
+  image: "${HUB}mongo:3.4"
+  expose:
+    - "27017"
+  volumes:
+    - "/etc/localtime:/etc/localtime:ro"
+    - "${DATA_ROOT}/data/mongo/3:/data/db"
+  command: --storageEngine=wiredTiger --directoryperdb
+qili.proxy:
+  image: "${HUB}nginx:1.9.3"
+  ports:
+    - "80:80"
+    - "443:443"
+  links:
+    - qili.server
+  volumes:
+    - "/etc/localtime:/etc/localtime:ro"
+    - "${DATA_ROOT}/data:/data"
+    - "${DATA_ROOT}/data/qili/deploy/nginx.conf:/etc/nginx/nginx.conf"
 
-  #   volumes:
-  #     - "/etc/localtime:/etc/localtime:ro"
-  #     - "${DATA_ROOT}/data/qili/lib/modules/python:/data"
-  #     - "${DATA_ROOT}/data/apps:/data/apps"
+qili.postgres:
+  image: "${HUB}ankane/pgvector"
+  expose:
+    - "5432"
+  ports:
+    - "5432:5432"
+  environment:
+    - POSTGRES_PASSWORD=start123
+  volumes:
+    - "/etc/localtime:/etc/localtime:ro"
+    - "${DATA_ROOT}/data/postgres:/var/lib/postgresql/data"
+
+# qili.python:
+#   image: "${HUB}python:3.9"
+#   command: /bin/sh -c "cd /data && pip install -r requirements.txt --target ${PYTHONPATH} && python run.py"
+#   expose:
+#     - "5001"
+#   environment:
+#     - XTTS_SAMPLE_DIR=/data/apps/ai/xtts/samples
+#     - PYTHONPATH=/data/packages
+
+#   volumes:
+#     - "/etc/localtime:/etc/localtime:ro"
+#     - "${DATA_ROOT}/data/qili/lib/modules/python:/data"
+#     - "${DATA_ROOT}/data/apps:/data/apps"
