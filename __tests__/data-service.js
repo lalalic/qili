@@ -8,11 +8,12 @@ jest.mock("../conf",()=>({
 
 jest.mock("../lib/logger",()=>({
     error(m){
-        console.error(m)
+        console.warn(m)
     }
 }))
+
 const MongoDataService=require("../lib/data-service")
-describe("data service: MongoDB 3.4",()=>{
+describe("data service: MongoDB",()=>{
     let db, mongoProcess
     const Table="Test", apiKey=`DBTest${Date.now()}`
     const TEST={name:"tester", age:40, gender: 'male'}
@@ -22,7 +23,7 @@ describe("data service: MongoDB 3.4",()=>{
         const stdio="ignore"
         mongoProcess=require('child_process')
             .spawn(
-                "mongod",
+                `mongod`,
                 ["--storageEngine=wiredTiger", "--directoryperdb", `--dbpath=${dbpath}`],
                 {stdio:[stdio, stdio, stdio], killSignal:'SIGINT'}
             )
@@ -31,11 +32,13 @@ describe("data service: MongoDB 3.4",()=>{
         db.resolver={Mutation:{file_clean(){}}}
     },30000)
 
-    afterAll(async ()=>{
+    afterAll(()=>{
         mongoProcess.kill()
-        await new Promise(resolve=>setTimeout(resolve, 2*1000))
-        require('fs').rmdirSync(dbpath, {recursive:true, force:true})
-    })
+        return new Promise(resolve=>setTimeout(()=>resolve(), 1000))
+            .then(()=>{
+                require('fs').rmdirSync(dbpath, {recursive:true, force:true})
+            })
+    }, 3000)
 
     afterEach(async ()=>{
         await db.removeEntity(Table,{})
@@ -84,17 +87,33 @@ describe("data service: MongoDB 3.4",()=>{
         it("findEntity", async()=>{
             expect(await db.findEntity(Table,{_id:test._id})).toMatchObject([test])
         })
+
+        it("buildIndexes",async ()=>{
+            const col=await db.collection(Table)
+            const indexes=await col.indexes()
+            
+            await db.buildIndexes({[Table]:[{name:1}, {age:1}]})
+            expect((await col.indexes()).length).toBe(indexes.length+2)
+
+            console.log(await db.buildIndexes({[Table]:[{name:1, age:-1}]}))
+            expect((await col.indexes()).length).toBe(indexes.length+3)
+
+            await db.buildIndexes({[Table]:[{__drop:true, name:1, age:-1}]})
+            expect((await col.indexes()).length).toBe(indexes.length+2)
+        })
     })
 
-    fdescribe("pagination", ()=>{
+    describe("pagination", ()=>{
         beforeAll(async()=>{
             const amount=100
-            await Promise.all(new Array(amount).fill(0).map(async()=>{
-                await db.createEntity(Table, {...TEST})
-            }))
-
-            const tests=await db.findEntity(Table,{},{_id:1})
-            expect(tests.length).toBe(amount)
+            return Promise.all(new Array(amount).fill(0).map(async()=>{
+                const test={...TEST}
+                delete test._id
+                await db.createEntity(Table, test)
+            })).then(async()=>{
+                const tests=await db.findEntity(Table,{},{_id:1})
+                expect(tests.length).toBe(amount)
+            })
         }, 5000)
 
         it("nextPage: first", async()=>{
@@ -108,9 +127,5 @@ describe("data service: MongoDB 3.4",()=>{
         it("prevPage", async()=>{
             
         })
-    })
-    
-    it("buildIndexes",async ()=>{
-        await db.buildIndexes({[Table]:[{name:1}, {age:1}]})
     })
 })

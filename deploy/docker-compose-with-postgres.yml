@@ -31,12 +31,12 @@ services:
       - "/etc/localtime:/etc/localtime:ro"
       - "${DATA_ROOT}/data:/data"
   qili.db:
-    image: "${HUB}mongo:3.4"
+    image: "${HUB}mongo:7.0.7"
     expose:
       - "27017"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
-      - "${DATA_ROOT}/data/db:/data/db"
+      - "${DATA_ROOT}/data/mongo/7:/data/db"
     command: --storageEngine=wiredTiger --directoryperdb
   qili.proxy:
     image: "${HUB}nginx:1.9.3"
