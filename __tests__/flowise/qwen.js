@@ -15,7 +15,6 @@ describe("qwen-turbo Model",()=>{
             const chat=new ChatAlibabaTongyi({modelName:"qwen-vl-plus"})
             debugger
             const res= await chat.call(input)
-            console.log(res)
             return res
         }
 
@@ -25,7 +24,7 @@ describe("qwen-turbo Model",()=>{
             
         })
 
-        fit("image problem",async ()=>{
+        it("image problem",async ()=>{
             const problem="https://img2020.cnblogs.com/i-beta/1388256/202003/1388256-20200303165510390-395584188.png"
             const res=await test([
                 new SystemMessage({content:[{text:"你是一个物理老师"},{text:"在回复中不要重复题目"}]}),
