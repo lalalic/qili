@@ -1,0 +1,19 @@
+diff --git a/node_modules/langchain/dist/callbacks/manager.cjs b/node_modules/langchain/dist/callbacks/manager.cjs
+index f23ef8e..5432943 100644
+--- a/node_modules/langchain/dist/callbacks/manager.cjs
++++ b/node_modules/langchain/dist/callbacks/manager.cjs
+@@ -540,6 +540,14 @@ class CallbackManager extends BaseCallbackManager {
+                 callbackManager.addMetadata(localMetadata ?? {}, false);
+             }
+         }
++        if(callbackManager && !callbackManager._parentRunId){
++            const Qili_Monitor_Name="qili_monitor"
++            callbackManager._parentRunId=callbackManager.metadata.parentRunId 
++            if(!callbackManager._parentRunId){
++                const monitor=[...callbackManager.handlers, ...callbackManager.inheritableHandlers].find(a=>a.name==Qili_Monitor_Name)
++                callbackManager._parentRunId=monitor.rootRunId
++            }
++        }
+         return callbackManager;
+     }
+ }
