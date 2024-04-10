@@ -1,7 +1,7 @@
 {
   "name": "qili",
   "description": "graphql BAAS",
-  "version": "2.3.15",
+  "version": "2.3.16",
   "author": {
     "name": "Raymond Li",
     "email": "lalalic@139.com"
@@ -43,7 +43,6 @@
     "openai-gpt-token-counter": "^1.1.1",
     "passport": "^0.7.0",
     "passwordless-nodecache": "^1.0.3",
-    "patch-package": "^8.0.0",
     "pngjs": "^7.0.0",
     "qiniu": "~6.1.x",
     "subscriptions-transport-ws": "^0.9.18",
