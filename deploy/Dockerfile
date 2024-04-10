@@ -3,7 +3,7 @@ FROM node:18-alpine
 WORKDIR /data/qili
 
 RUN yarn install --production
-RUN yarn global add patch-package
+RUN yarn global add npx
 
 EXPOSE 9080
 EXPOSE 9443

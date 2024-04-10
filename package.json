@@ -1,7 +1,7 @@
 {
   "name": "qili",
   "description": "graphql BAAS",
-  "version": "2.3.16",
+  "version": "2.3.17",
   "author": {
     "name": "Raymond Li",
     "email": "lalalic@139.com"
@@ -87,7 +87,7 @@
     "mongo": "mongod  --storageEngine=wiredTiger --directoryperdb --dbpath=test/mongo",
     "test": "node ./node_modules/.bin/jest",
     "python": "python lib/modules/python/run.py",
-    "postinstall": "patch-package"
+    "postinstall": "npx patch-package"
   },
   "readme": "README.md",
   "devDependencies": {
