@@ -1,7 +1,7 @@
 {
   "name": "qili",
   "description": "graphql BAAS",
-  "version": "2.3.12",
+  "version": "2.3.13",
   "author": {
     "name": "Raymond Li",
     "email": "lalalic@139.com"
@@ -47,7 +47,8 @@
     "qiniu": "~6.1.x",
     "subscriptions-transport-ws": "^0.9.18",
     "wechat": "^2.0.1",
-    "langchain":"^0.0.157"
+    "langchain":"^0.0.157",
+    "patch-package": "^8.0.0"
   },
   "resolutions": {
     "flowise/flowise-ui": "link:./.yarn/empty",
