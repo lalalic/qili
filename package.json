@@ -1,7 +1,7 @@
 {
   "name": "qili",
   "description": "graphql BAAS",
-  "version": "2.3.13",
+  "version": "2.3.14",
   "author": {
     "name": "Raymond Li",
     "email": "lalalic@139.com"
@@ -43,12 +43,12 @@
     "openai-gpt-token-counter": "^1.1.1",
     "passport": "^0.7.0",
     "passwordless-nodecache": "^1.0.3",
+    "patch-package": "^8.0.0",
     "pngjs": "^7.0.0",
     "qiniu": "~6.1.x",
     "subscriptions-transport-ws": "^0.9.18",
     "wechat": "^2.0.1",
-    "langchain":"^0.0.157",
-    "patch-package": "^8.0.0"
+    "langchain":"^0.0.157"
   },
   "resolutions": {
     "flowise/flowise-ui": "link:./.yarn/empty",
