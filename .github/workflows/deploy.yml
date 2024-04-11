@@ -49,19 +49,6 @@ jobs:
         node-version: 18.15
         cache: 'yarn'
     - run: yarn
-    - name: deploy to china ali cloud
-      run: |
-        export SSHPASS=${{ secrets.SERVER_PASS }}
-        sshpass -e scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -r deploy "$DEPLOY_USER@$DEPLOY_HOST:/data/qili"
-        sshpass -e scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -r lib "$DEPLOY_USER@$DEPLOY_HOST:/data/qili"
-        sshpass -e scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -r .yarn "$DEPLOY_USER@$DEPLOY_HOST:/data/qili"
-        sshpass -e scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -r patches "$DEPLOY_USER@$DEPLOY_HOST:/data/qili"
-        sshpass -e scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null conf.js "$DEPLOY_USER@$DEPLOY_HOST:/data/qili"
-        sshpass -e scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null package.json "$DEPLOY_USER@$DEPLOY_HOST:/data/qili"
-        sshpass -e scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null index.js "$DEPLOY_USER@$DEPLOY_HOST:/data/qili"
-        sshpass -e scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null yarn.lock "$DEPLOY_USER@$DEPLOY_HOST:/data/qili"
-        sshpass -e ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $DEPLOY_USER@$DEPLOY_HOST "./qili.travis.deploy.sh"
-
     - name: deploy to singapore ali cloud
       run: |
         rm -f deploy/docker-compose.yml
@@ -76,3 +63,16 @@ jobs:
         sshpass -e scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null index.js "$DEPLOY_USER@$DEPLOY_HOST_SINGAPORE:/data/qili"
         sshpass -e scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null yarn.lock "$DEPLOY_USER@$DEPLOY_HOST_SINGAPORE:/data/qili"
         sshpass -e ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $DEPLOY_USER@$DEPLOY_HOST_SINGAPORE "./qili.travis.deploy.sh"
+    - name: deploy to china ali cloud
+      run: |
+        export SSHPASS=${{ secrets.SERVER_PASS }}
+        sshpass -e scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -r deploy "$DEPLOY_USER@$DEPLOY_HOST:/data/qili"
+        sshpass -e scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -r lib "$DEPLOY_USER@$DEPLOY_HOST:/data/qili"
+        sshpass -e scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -r .yarn "$DEPLOY_USER@$DEPLOY_HOST:/data/qili"
+        sshpass -e scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -r patches "$DEPLOY_USER@$DEPLOY_HOST:/data/qili"
+        sshpass -e scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null conf.js "$DEPLOY_USER@$DEPLOY_HOST:/data/qili"
+        sshpass -e scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null package.json "$DEPLOY_USER@$DEPLOY_HOST:/data/qili"
+        sshpass -e scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null index.js "$DEPLOY_USER@$DEPLOY_HOST:/data/qili"
+        sshpass -e scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null yarn.lock "$DEPLOY_USER@$DEPLOY_HOST:/data/qili"
+        sshpass -e ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $DEPLOY_USER@$DEPLOY_HOST "./qili.travis.deploy.sh"
+
