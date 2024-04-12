@@ -99,7 +99,6 @@ console.log(process.env)
                         }
                     }
                     break
-                case `${apiKey}api`:
                 case "api":{
                     req.url=`/${qiliConfig.version}/graphql`
                     if(!req.headers['x-application-id']){
@@ -121,7 +120,7 @@ console.log(process.env)
         handle(apiKey)
     }))
 
-    const all=[`api`, `proxy`, alias, ...[apiKey,...Object.keys(services)].map(a=>[a, `${a}api`]).flat()].filter(a=>!!a)
+    const all=[`api`, `proxy`, alias, apiKey,...Object.keys(services)].filter(a=>!!a)
     const hosts=new (
         class{
             constructor(){
