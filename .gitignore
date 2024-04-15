@@ -35,3 +35,4 @@ log/
 apps/
 certs/
 __pycache__/
+deploy/local/
