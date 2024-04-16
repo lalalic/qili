@@ -129,17 +129,8 @@ console.log(process.env)
                 this.updated=""
             }
 
-            updateFinish(){
-                return new Promise((resolve,reject)=>{
-                    require("child_process").exec(`echo '${this.raw}${this.updated}' | sudo tee ${this.path}`,{name:"qili hosts"},(error,stdout, stderr)=>{
-                        if(error){
-                            console.error(error)
-                            reject(error)
-                            return 
-                        }
-                        resolve()
-                    })
-                })
+            async updateFinish(){
+                require('fs').writeFileSync(this.path, `${this.raw}${this.updated}`)
             }
             restore(){
                 this.updated=""
