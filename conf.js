@@ -9,7 +9,7 @@ process.on('unhandledRejection', (reason, promise) => {
 });
 
 const fs=require("fs")
-let env=process.env
+const env=process.env
 
 function autoCollectApps(appRoot){
 	if(!appRoot || !fs.existsSync(appRoot)){
