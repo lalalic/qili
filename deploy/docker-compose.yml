@@ -38,6 +38,7 @@ qili.server:
   - NODE_ENV=production
   - LOG_DIR
   - LOG_CATEGORY
+  - PATH=$PATH:/data/bin
 
  links:
   - qili.db
@@ -45,6 +46,7 @@ qili.server:
  volumes:
   - "/etc/localtime:/etc/localtime:ro"
   - "${DATA_ROOT}/data:/data"
+
 
 qili.proxy:
  image: "${HUB}nginx:1.9.3"

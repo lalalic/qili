@@ -22,6 +22,7 @@ qili.server:
     - NODE_ENV=production
     - LOG_DIR
     - LOG_CATEGORY
+    - PATH=$PATH:/data/bin
   links:
     - qili.postgres
     - qili.db

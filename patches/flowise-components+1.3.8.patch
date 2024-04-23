@@ -1,12 +1,12 @@
 diff --git a/node_modules/flowise-components/dist/nodes/tools/ChainTool/core.js b/node_modules/flowise-components/dist/nodes/tools/ChainTool/core.js
-index 37bf226..d2e1050 100644
+index 37bf226..2a0d2f7 100644
 --- a/node_modules/flowise-components/dist/nodes/tools/ChainTool/core.js
 +++ b/node_modules/flowise-components/dist/nodes/tools/ChainTool/core.js
 @@ -9,6 +9,7 @@ class ChainTool extends tools_1.DynamicTool {
              func: async (input, runManager) => {
                  // To enable LLM Chain which has promptValues
                  if (chain.prompt && chain.prompt.promptValues) {
-+                    chain.prompt.promptValues=JSON.parse(JSON.stringify(chain.prompt.promptValues).replaceAll('{{input}}',input))
++                    chain.prompt.promptValues={...chain.prompt.promptValues, input}
                      const values = await chain.call(chain.prompt.promptValues, runManager?.getChild());
                      return values?.text;
                  }
