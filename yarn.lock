@@ -7022,11 +7022,6 @@ open@^7.4.2:
     is-docker "^2.0.0"
     is-wsl "^2.1.1"
 
-openai-cost-calculator@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/openai-cost-calculator/-/openai-cost-calculator-1.0.1.tgz#4e88f6276cb9b064bc93b10f2399b0b9c2911c80"
-  integrity sha512-vAsvIpYOrJ9PZklfxGZ0z3JTu4v8ZXjUN2F8xdDpdWl+Li/A/hyp1gcq8LJtHz8+VLREoBavtzGI9FT3dyU6OQ==
-
 openai-gpt-token-counter@^1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/openai-gpt-token-counter/-/openai-gpt-token-counter-1.1.1.tgz#661749ade60ce421f3064096193bc875d15cc0e1"
