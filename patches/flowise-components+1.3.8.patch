@@ -10,3 +10,46 @@ index 37bf226..2a0d2f7 100644
                      const values = await chain.call(chain.prompt.promptValues, runManager?.getChild());
                      return values?.text;
                  }
+diff --git a/node_modules/flowise-components/dist/src/utils.js b/node_modules/flowise-components/dist/src/utils.js
+index ffba2a3..61e71aa 100644
+--- a/node_modules/flowise-components/dist/src/utils.js
++++ b/node_modules/flowise-components/dist/src/utils.js
+@@ -534,8 +534,8 @@ exports.getUserHome = getUserHome;
+  * @param {options} ICommonObject
+  * @returns {ChatMessageHistory}
+  */
+-const mapChatHistory = (options) => {
+-    const chatHistory = [];
++const mapChatHistory = (options) => {//"human" | "ai" | "generic" | "system" | "function"
++    const chatHistory = []; const MessageTypes={user:schema_1.HumanMessage,  human:schema_1.HumanMessage, ai: schema_1.AIMessage, assistant: schema_1.AIMessage, system:schema_1.SystemMessage, ["function"]: schema_1.FunctionMessage}
+     const histories = options.chatHistory ?? [];
+     for (const message of histories) {
+         if (message.type === 'apiMessage') {
+@@ -543,7 +543,7 @@ const mapChatHistory = (options) => {
+         }
+         else if (message.type === 'userMessage') {
+             chatHistory.push(new schema_1.HumanMessage(message.message));
+-        }
++        }else if(message.type in MessageTypes){chatHistory.push(new MessageTypes[message.type](message.message))}
+     }
+     return new memory_1.ChatMessageHistory(chatHistory);
+ };
+@@ -556,14 +556,15 @@ exports.mapChatHistory = mapChatHistory;
+ const convertChatHistoryToText = (chatHistory) => {
+     return chatHistory
+         .map((chatMessage) => {
++        const content=chatMessage.message.content || chatMessage.message
+         if (chatMessage.type === 'apiMessage') {
+-            return `Assistant: ${chatMessage.message}`;
++            return `Assistant: ${content}`;
+         }
+         else if (chatMessage.type === 'userMessage') {
+-            return `Human: ${chatMessage.message}`;
++            return `Human${chatMessage.message.name ? `[name:${chatMessage.message.name}]`:""}: ${content}`;
+         }
+         else {
+-            return `${chatMessage.message}`;
++            return `${content}`;
+         }
+     })
+         .join('\n');

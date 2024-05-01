@@ -5,9 +5,10 @@ process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
 require("dotenv").config()
 
-module.exports=function dev({clientPort,serverPort, conf, apiKey, logmongo=false, dbpath="testdata", vhost, alias, credentials, services={}}={}){
+module.exports=function dev({clientPort,serverPort, conf, apiKey, logmongo=false, dbpath="testdata", vhost, alias, credentials, services={}, qili={}}={}){
     console.assert(!!conf && !!apiKey)
     const qiliConfig=require("./conf")
+    Object.assign(qiliConfig,qili)
     qiliConfig.debug=true
     qiliConfig.server.timeout=100000000
     qiliConfig.applyConfFromEnv(apiKey,conf)
@@ -86,7 +87,7 @@ console.log(process.env)
                 case apiKey:
                     if(req.path!=="/graphql"){
                         req.url=`/${qiliConfig.version}/${apiKey}/static${req.url}`
-                    }else if(conf.graphiql){
+                    }else {
                         req.url=`/${qiliConfig.version}${req.url}`
                         if(!req.headers['x-application-id']){
                             req.headers['x-application-id']=apiKey
@@ -95,7 +96,7 @@ console.log(process.env)
                         if(token.length==0){
                             console.warn(`graphiql need, but can't find token from env.QILI_TOKEN`)
                         }else if(!(req.headers['x-session-token']||req.headers['x-access-token'])){
-                            req.headers[token.length>100 ? 'x-session-token' : "x-access-token"]=token
+                            req.headers["x-access-token"]=token
                         }
                     }
                     break
