@@ -48,6 +48,21 @@ index 60bff2c..f6e069d 100644
              }
          }
          return zodObj;
+diff --git a/node_modules/flowise-components/dist/nodes/tools/CustomTool/core.js b/node_modules/flowise-components/dist/nodes/tools/CustomTool/core.js
+index caf1426..cdf8c9f 100644
+--- a/node_modules/flowise-components/dist/nodes/tools/CustomTool/core.js
++++ b/node_modules/flowise-components/dist/nodes/tools/CustomTool/core.js
+@@ -43,8 +43,8 @@ class DynamicStructuredTool extends tools_1.StructuredTool {
+         this.returnDirect = fields.returnDirect ?? this.returnDirect;
+         this.schema = fields.schema;
+     }
+-    async _call(arg) {
+-        let sandbox = {};
++    async _call(arg, runManager) {
++        let sandbox = {$runManager:runManager};
+         if (typeof arg === 'object' && Object.keys(arg).length) {
+             for (const item in arg) {
+                 sandbox[`$${item}`] = arg[item];
 diff --git a/node_modules/flowise-components/dist/nodes/tools/OpenAPIToolkit/OpenAPIToolkit.js b/node_modules/flowise-components/dist/nodes/tools/OpenAPIToolkit/OpenAPIToolkit.js
 index 7fadbfb..d979e5b 100644
 --- a/node_modules/flowise-components/dist/nodes/tools/OpenAPIToolkit/OpenAPIToolkit.js
