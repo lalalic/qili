@@ -52,6 +52,12 @@ jobs:
     - name: deploy to china ali cloud
       run: |
         export SSHPASS=${{ secrets.SERVER_PASS }}
+        
+        sshpass -p "$SSHPASS" ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $DEPLOY_USER@$DEPLOY_HOST "rm -rf /data/qili/deploy 2>/dev/null"
+        sshpass -p "$SSHPASS" ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $DEPLOY_USER@$DEPLOY_HOST "rm -rf /data/qili/lib 2>/dev/null"
+        sshpass -p "$SSHPASS" ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $DEPLOY_USER@$DEPLOY_HOST "rm -rf /data/qili/.yarn 2>/dev/null"
+        sshpass -p "$SSHPASS" ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $DEPLOY_USER@$DEPLOY_HOST "rm -rf /data/qili/patches 2>/dev/null"
+        
         sshpass -e scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -r deploy "$DEPLOY_USER@$DEPLOY_HOST:/data/qili"
         sshpass -e scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -r lib "$DEPLOY_USER@$DEPLOY_HOST:/data/qili"
         sshpass -e scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -r .yarn "$DEPLOY_USER@$DEPLOY_HOST:/data/qili"
@@ -66,6 +72,11 @@ jobs:
         rm -f deploy/docker-compose.yml
         mv deploy/docker-compose-with-postgres.yml deploy/docker-compose.yml
         export SSHPASS=${{ secrets.SERVER_PASS }}
+        sshpass -p "$SSHPASS" ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $DEPLOY_USER@$DEPLOY_HOST_SINGAPORE "rm -rf /data/qili/deploy 2>/dev/null"
+        sshpass -p "$SSHPASS" ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $DEPLOY_USER@$DEPLOY_HOST_SINGAPORE "rm -rf /data/qili/lib 2>/dev/null"
+        sshpass -p "$SSHPASS" ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $DEPLOY_USER@$DEPLOY_HOST_SINGAPORE "rm -rf /data/qili/.yarn 2>/dev/null"
+        sshpass -p "$SSHPASS" ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $DEPLOY_USER@$DEPLOY_HOST_SINGAPORE "rm -rf /data/qili/patches 2>/dev/null"
+
         sshpass -e scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -r deploy "$DEPLOY_USER@$DEPLOY_HOST_SINGAPORE:/data/qili"
         sshpass -e scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -r lib "$DEPLOY_USER@$DEPLOY_HOST_SINGAPORE:/data/qili"
         sshpass -e scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -r .yarn "$DEPLOY_USER@$DEPLOY_HOST_SINGAPORE:/data/qili"
