@@ -1,0 +1,33 @@
+#each app should copy this file to /data/apps/[app key], and change $app_key
+server{
+    listen 443 ssl;
+    ssl_certificate /data/certbot/live/qili2.com/fullchain.pem;
+    ssl_certificate_key /data/certbot/live/qili2.com/privkey.pem;
+    root /data/apps;
+
+    # change $app_key to app key
+    set $app_key ai;
+    server_name	ai.qili2.com;
+    # -- end change
+
+    access_log /data/log/ai.log main;
+    
+    location @static {
+        proxy_pass http://qili.server:9080/1/$app_key/static/$request_uri;
+    }
+
+    location @graphql {
+        proxy_pass http://qili.server:9080/1/graphql$is_args$args;
+        proxy_set_header x-application-id $app_key;
+    }
+
+    location /graphql {
+        index @graphql;
+        try_files $uri @graphql;
+    }
+
+    location / {
+        try_files /$app_key/www/$uri @static;
+        sendfile on;
+    }
+}
