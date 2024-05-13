@@ -1,8 +1,10 @@
 import os
 import sys
-import subprocess
-from importlib import import_module
+import traceback
+from importlib import import_module, invalidate_caches
 from flask import Flask, Blueprint
+
+sys.path.append(os.getcwd())
 
 app = Flask(__name__)
 services=set()
@@ -10,20 +12,16 @@ def register_service(service, path=None):
     global services
     try:
         if path != None:
-            if not os.path.exists(f"{path}/{service}-main.py"):
-                return
-            if os.path.exists(f"{path}/requirements.txt"):
-                shells=["pip", "install", "-r", f"{path}/requirements.txt"]
-                if(os.environ.get('PYTHONPATH') != None):
-                    shells.extend(["--target", os.environ.get('PYTHONPATH')])
-                subprocess.run(
-                    shells, 
-                    capture_output=False, 
-                    text=True, 
-                    check=True
-                )
+            if not os.path.exists(f"{path}/{service}/main.py"):
+                print(f"[{service}]{path}/{service}/main.py does not exist")
+                return ""
+        if path not in sys.path:
+            sys.path.append(path)
 
-        module = import_module(f'{service}-main')
+        print(f'[{service}]loading {service} from {path} with {sys.path}')
+        module = import_module(f'{service}.main')
+        print(f"[{service}] main module loaded")
+
         blueprints = getattr(module, 'app')
         if not isinstance(blueprints, list):
             blueprints=[blueprints]
@@ -33,37 +31,34 @@ def register_service(service, path=None):
                 ctx=f'/{service}/{blueprint.name}'
                 app.register_blueprint(blueprint, url_prefix=ctx)
                 services.add(ctx)
-                print(f"flask blueprint[{blueprint.name}] loaded! ")
+                print(f"[{service}] flask blueprint[{blueprint.name}] loaded! ")
+        return service
     except Exception as e:
-        sys.stderr.write(f'Error: {str(e)}\n')
+        traceback.print_exc()
+        return f'Error: {str(e)}'
 
-
-def register_services(name):
-    root=os.path.join(os.path.dirname(__file__),name)
+def register_services(root):
+    if not os.path.exists(root):
+        print(f'[flask]tried load apps from {root}, failed!')
+        return
+    print(f'[flask]loading services from {root}')
     service_dirs = [d for d in os.listdir(root) if os.path.isdir(os.path.join(root, d))]    
     for service in service_dirs:
-        register_service(service)
+        register_service(service, root)
 
-#load from current folder
-register_services("apps")
+#load from environment
+if "APPS_ROOT" in os.environ:
+    register_services(os.environ.get("APPS_ROOT"))
 
 #load from arguments
-for service in sys.argv[1:]:
-    service_name, service_path=service.split(":")
-    sys.path.append(service_path)
-    register_service(service_name, service_path)
-    sys.path.remove(service_path)
+for root in sys.argv[1:]:
+    register_services(root)
 
 @app.route("/")
 def home():
-    return str(services)
-
-@app.route("/conf")
-def conf():
-    return import_module("qili-conf").conf
-
+    return f"apps:{str(services)}\npython: {sys.path}"
 
 if __name__ == '__main__':
-    print(f"python service is running on 5001")
-    app.run(host="0.0.0.0", port=5001, debug=False)
+    print(f"python service is running on 4001")
+    app.run(host="0.0.0.0", port=4001, debug=True)
     

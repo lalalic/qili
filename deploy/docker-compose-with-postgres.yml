@@ -64,12 +64,13 @@ qili.postgres:
 
 # qili.python:
 #   image: "${HUB}python:3.9"
-#   command: /bin/sh -c "cd /data && pip install -r requirements.txt --target ${PYTHONPATH} && python run.py"
+#   command: /bin/sh -c "cd /data && pip install -r requirements.txt --target ${PYTHONPATH} && gunicorn -b 0.0.0.0:4001 run:app"
 #   expose:
-#     - "5001"
+#     - "4001"
 #   environment:
 #     - XTTS_SAMPLE_DIR=/data/apps/ai/xtts/samples
 #     - PYTHONPATH=/data/packages
+#     - APPS_ROOT=/data/apps
 
 #   volumes:
 #     - "/etc/localtime:/etc/localtime:ro"

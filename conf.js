@@ -83,6 +83,8 @@ module.exports={
 	},
 	api: env.API, //qiniu need it, if you don't use file, ignore it
 
+	pythonApi: env.pythonApi,
+	
 	/**
 	 * qili use ali sms service to send verification code
 	 */

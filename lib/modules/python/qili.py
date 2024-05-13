@@ -6,25 +6,16 @@ import requests
 import traceback
 
 from importlib import import_module
-
-sys.path.append(os.getcwd())
-
-conf=None
-def makeConfReady():
-    global conf
-    if conf is None:
-        conf=import_module("qili-conf").conf
-
-def fetch(request, timeout=60000):
+    
+def fetch(request, timeout=60000, conf={}):
     try:
-        makeConfReady()
         with requests.Session() as session:
             response = session.post(
                 conf["api"],
                 headers={
                     'Content-Type': 'application/json',
                     'x-application-id': conf["apiKey"],
-                    "x-session-token":conf["token"]
+                    "x-access-token":conf["token"]
                 },
                 data=request if isinstance(request, str) else json.dumps(request),
                 timeout=timeout / 1000
@@ -46,8 +37,7 @@ def fetch(request, timeout=60000):
         raise TimeoutError('Timeout from qili service')
 
 
-def upload_bytes(bytes, key=None, ext=".wav"):
-    makeConfReady()
+def upload_bytes(bytes, key=None, ext=".wav", conf={}):
     try: 
         if key is None:
             key=f"_temp_/1/{str(uuid.uuid4())}{ext}"
@@ -63,28 +53,35 @@ def upload_bytes(bytes, key=None, ext=".wav"):
             "variables": {
                 "key": key
             }
-        })
+        }, conf=conf)
+
         data=data["file_upload_token"]
         files={"file":(os.path.basename(key), bytes)}
-        response = requests.post(conf["api"], files=files, data=data)
+        response = requests.post(
+            conf["storage"], 
+            files=files, 
+            data=data,
+            headers={
+                'x-application-id': conf["apiKey"],
+            }
+        )
         if response.ok:
             data = response.json()
             return data.get("data", {}).get("file_create", {}).get("url")
         else:
-            raise Exception(f"{response.status_code} - {response.reason}, {response.text}")
+            raise Exception(f"{conf['storage']}: {response.status_code} - {response.reason}, {response.text}")
     except Exception as e:
         traceback.print_exc()
         return str(e)
 
 
-def upload(files, root_key=None):
-    makeConfReady()
+def upload(files, root_key=None, conf={}):
     if not isinstance(files, list):
         shouldReturnString=True
         files = [files]
     
     if(root_key==None):
-        root_key="_temp_/1/" + str(uuid.uuid4())
+        root_key="_temp_/10/" + str(uuid.uuid4())
         
     try:
         keys, queries, variables = [], [], {}
@@ -105,14 +102,21 @@ def upload(files, root_key=None):
 
         query = f"""query({ keys }){{ { queries } }}"""
 
-        data = fetch({"query": query, "variables": variables})
+        data = fetch({"query": query, "variables": variables}, conf=conf)
         
         tokens = list(data.values())
         urls = []
         
         for i, file in enumerate(files):
             form = {"file": open(file, "rb")}
-            response = requests.post(conf["api"], files=form, data=tokens[i])
+            response = requests.post(
+                conf["storage"], 
+                files=form, 
+                data=tokens[i], 
+                headers={
+                    'x-application-id': conf["apiKey"],
+                },
+            )
             
             if response.ok:
                 data = response.json()

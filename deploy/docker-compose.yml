@@ -59,3 +59,18 @@ qili.proxy:
   - "/etc/localtime:/etc/localtime:ro"
   - "${DATA_ROOT}/data:/data"
   - "${DATA_ROOT}/data/qili/deploy/nginx.conf:/etc/nginx/nginx.conf"
+
+# qili.python:
+#   image: "${HUB}python:3.9"
+#   command: /bin/sh -c "cd /data && pip install -r requirements.txt --target ${PYTHONPATH} && gunicorn -b 0.0.0.0:4001 run:app"
+#   expose:
+#     - "4001"
+#   environment:
+#     - XTTS_SAMPLE_DIR=/data/apps/ai/xtts/samples
+#     - PYTHONPATH=/data/packages
+#     - APPS_ROOT=/data/apps
+
+#   volumes:
+#     - "/etc/localtime:/etc/localtime:ro"
+#     - "${DATA_ROOT}/data/qili/lib/modules/python:/data"
+#     - "${DATA_ROOT}/data/apps:/data/apps"

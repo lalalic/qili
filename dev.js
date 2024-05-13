@@ -5,7 +5,7 @@ process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
 require("dotenv").config()
 
-module.exports=function dev({clientPort,serverPort, conf, apiKey, logmongo=false, dbpath="testdata", vhost, alias, credentials, services={}, qili={}}={}){
+module.exports=function dev({clientPort,serverPort, conf, apiKey, logmongo=false, pythonRoot, dbpath="testdata", vhost, alias, credentials, services={}, qili={}}={}){
     console.assert(!!conf && !!apiKey)
     const qiliConfig=require("./conf")
     Object.assign(qiliConfig,qili)
@@ -44,6 +44,15 @@ console.log(process.env)
             ["--storageEngine=wiredTiger", "--directoryperdb", `--dbpath=${dbpath}`],
             {stdio:[stdio, stdio, stdio], killSignal:'SIGINT'}
         )
+
+    if(pythonRoot){
+        require('child_process')
+            .spawn(
+                `python`,
+                [`${__dirname}/lib/modules/python/run.py`, pythonRoot],
+                {stdio:["inherit", "inherit", "inherit"], killSignal:'SIGINT'}
+            )
+    }
 
     // require('child_process')
     //     .spawn(
