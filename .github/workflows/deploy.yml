@@ -63,7 +63,7 @@ jobs:
         sshpass -e scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -r .yarn "$DEPLOY_USER@$DEPLOY_HOST:/data/qili"
         sshpass -e scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -r patches "$DEPLOY_USER@$DEPLOY_HOST:/data/qili"
         sshpass -e scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null conf.js "$DEPLOY_USER@$DEPLOY_HOST:/data/qili"
-        sshpass -e scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null package.json "$DEPLOY_USER@$DEPLOY_HOST:/data/qili"
+        # sshpass -e scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null package.json "$DEPLOY_USER@$DEPLOY_HOST:/data/qili"
         sshpass -e scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null index.js "$DEPLOY_USER@$DEPLOY_HOST:/data/qili"
         sshpass -e scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null yarn.lock "$DEPLOY_USER@$DEPLOY_HOST:/data/qili"
         sshpass -e ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $DEPLOY_USER@$DEPLOY_HOST "./qili.travis.deploy.sh"

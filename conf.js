@@ -69,7 +69,7 @@ module.exports={
 	 */
 	server : {
 		port : env.PORT||9080,
-		timeout : 50000
+		timeout : env.TIMEOUT || 120*1000
 	},
 
 
