@@ -17,7 +17,7 @@ config
 	* cloud: support local app
 		* __installDir: folder to install application, qili will collect apps from this folder also if a subfolder has qili.conf.js, then subfolder will be cloud project root 
 		* __unsupportedModules: restricted built-in modules
-		* [apiKey]
+		* [apiKey], or self-apply from [app root]/qili.conf.js 
 			* root: optional static root
 			* code: cloud code project path, local folder, or a git project url
 			* [any app entity keys, such as isDev, canRunInCore, bucket: use qiliadmin as default]
@@ -30,6 +30,7 @@ config
 			* isDev: boolean
 			* reviewers: [phoneNumber, ...]
 			* testLoginCode: login request code for test only when isDev=true || contact in reviewers
+			* AnonymousQuery: allow anonymouse running graphql query id
 
 globalThis
 ----
@@ -62,6 +63,7 @@ Cloud
 	* typeDefs: string, app's schema
 	* resolver: graphql resolver object, app's resolver
 	* persistedQuery: {<id>: <graphql:string>, ...}
+		* [App Entity: conf.ai, or qili.conf.js].AnonymousQuery: {[id]: true, ...} can allow anonymouse execution
 	* static(service)
 		* serve request at <version=1>/:appKey/static/<path>
 		* service
