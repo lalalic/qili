@@ -69,7 +69,7 @@ module.exports={
 	 */
 	server : {
 		port : env.PORT||9080,
-		timeout : env.TIMEOUT || 120*1000
+		timeout : parseInt(env.TIMEOUT || 120*1000)
 	},
 
 
@@ -123,7 +123,6 @@ module.exports={
 		category:env.LOG_CATEGORY||"default",
 	},
 	cloud:{
-		timeout: env.CLOUD_TIMEOUT || 5000,
 		__installDir:require("path").resolve(env.APPS_ROOT||"./apps"),
 		__moduleBlacklist:["fs", "path", "process", "vm", "domain", "dns", "debugger"],
 		__moduleWhitelist:["graphql-redis-subscriptions"],
