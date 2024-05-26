@@ -8,8 +8,10 @@ process.on('unhandledRejection', (reason, promise) => {
     console.error('Unhandled Rejection at:', promise, 'reason:', reason);
 });
 
-const fs=require("fs")
+require("dotenv").config({override:true})
 const env=process.env
+
+const fs=require("fs")
 
 function autoCollectApps(appRoot){
 	if(!appRoot || !fs.existsSync(appRoot)){

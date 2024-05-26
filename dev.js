@@ -2,12 +2,9 @@
  * must run sudo: 80/443 need it
  */
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
-
-require("dotenv").config()
-
+const qiliConfig=require("./conf")
 module.exports=function dev({clientPort,serverPort, conf, apiKey, logmongo=false, pythonRoot, dbpath="testdata", vhost, alias, credentials, services={}, qili={}}={}){
     console.assert(!!conf && !!apiKey)
-    const qiliConfig=require("./conf")
     Object.assign(qiliConfig,qili)
     qiliConfig.debug=true
     qiliConfig.server.timeout=100000000
