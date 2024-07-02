@@ -21,6 +21,14 @@ server{
         proxy_set_header x-application-id $app_key;
     }
 
+    location /websocket/ {
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection $connection_upgrade;
+        proxy_set_header x-application-id $app_key;
+        proxy_read_timeout 7d;
+        proxy_pass http://qili.server:9080/1$request_uri;
+    }
+
     location /graphql {
         index @graphql;
         try_files $uri @graphql;
