@@ -3,7 +3,7 @@
  */
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 const qiliConfig=require("./conf")
-module.exports=function dev({clientPort,serverPort, conf, apiKey, logmongo=false, pythonRoot, dbpath="testdata", vhost, alias, credentials, services={}, qili={}}={}){
+module.exports=function dev({clientPort,serverPort, conf, apiKey, logmongo=false, pythonRoot, dbpath="testdata", vhost, alias, local=apiKey, credentials, services={}, qili={}}={}){
     console.assert(!!conf && !!apiKey)
     Object.assign(qiliConfig,qili)
     qiliConfig.debug=true
@@ -89,6 +89,8 @@ console.log(process.env)
         const ctx=req.vhost[0]
         function handle(apiKey){
             switch(ctx){
+                case "local":
+                    apiKey=local
                 case alias:
                 case apiKey:
                     if(req.path!=="/graphql"){
@@ -127,7 +129,7 @@ console.log(process.env)
         handle(apiKey)
     }))
 
-    const all=[`api`, `proxy`, alias, apiKey,...Object.keys(services)].filter(a=>!!a)
+    const all=[`api`, `proxy`, "local", alias, apiKey,...Object.keys(services)].filter(a=>!!a)
     const hosts=new (
         class{
             constructor(){
