@@ -414,4 +414,8 @@ cloud example
 		}
 	})
 ```
+
+dev
+===
+* reviewerLoginCode take effect when isDev || contact=reviewer
 	
