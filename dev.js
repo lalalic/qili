@@ -139,7 +139,11 @@ console.log(process.env)
             }
 
             async updateFinish(){
-                require('fs').writeFileSync(this.path, `${this.raw}${this.updated}`)
+                try{
+                    require('fs').writeFileSync(this.path, `${this.raw}${this.updated}`)
+                }catch(e){
+                    console.error("****Need allow current user writing /etc/hosts***")
+                }
             }
             restore(){
                 this.updated=""

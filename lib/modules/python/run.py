@@ -1,8 +1,13 @@
 import os
 import sys
 import traceback
+import shutil
+
 from importlib import import_module, invalidate_caches
 from flask import Flask, Blueprint
+
+print(f"--------python module isloading, python environment variables:-------")
+print("\n".join(os.environ))
 
 sys.path.append(os.getcwd())
 
@@ -18,6 +23,9 @@ def register_service(service, path=None):
         if path not in sys.path:
             sys.path.append(path)
 
+        if not os.path.exists(f"{path}/{service}/__init__.py"):
+            shutil.copy(f'{os.path.dirname(os.path.abspath(__file__))}/__init__.txt', f'{path}/{service}/__init__.py')
+            
         print(f'[{service}]loading {service} from {path} with {sys.path}')
         module = import_module(f'{service}.main')
         print(f"[{service}] main module loaded")
@@ -28,7 +36,7 @@ def register_service(service, path=None):
 
         for blueprint in blueprints:
             if isinstance(blueprint, Blueprint):
-                ctx=f'/{service}/{blueprint.name}'
+                ctx=f'/{blueprint.name}'
                 app.register_blueprint(blueprint, url_prefix=ctx)
                 services.add(ctx)
                 print(f"[{service}] flask blueprint[{blueprint.name}] loaded! ")

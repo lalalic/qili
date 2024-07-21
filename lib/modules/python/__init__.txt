@@ -1,0 +1,5 @@
+import os
+requirements=f"{os.path.dirname(os.path.abspath(__file__))}/requirements.txt"
+if os.path.exists(requirements):
+    os.system(f"pip install -r {requirements}")
+import conf

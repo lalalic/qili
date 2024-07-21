@@ -36,3 +36,4 @@ apps/
 certs/
 __pycache__/
 deploy/local/
+.DS_Store
