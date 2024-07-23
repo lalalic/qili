@@ -2,6 +2,7 @@
  * must run sudo: 80/443 need it
  */
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+process.env.reviewerLoginCode="1234"
 const qiliConfig=require("./conf")
 module.exports=function dev({clientPort,serverPort, conf, apiKey, logmongo=false, pythonRoot, dbpath="testdata", vhost, alias, local=apiKey, credentials, services={}, qili={}}={}){
     console.assert(!!conf && !!apiKey)

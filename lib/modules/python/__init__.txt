@@ -1,5 +1,5 @@
 import os
 requirements=f"{os.path.dirname(os.path.abspath(__file__))}/requirements.txt"
 if os.path.exists(requirements):
-    os.system(f"pip install -r {requirements}")
+    os.system(f"pip install -r {requirements} > /dev/null 2>&1 < /dev/null")
 import conf
