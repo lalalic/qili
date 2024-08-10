@@ -110,13 +110,13 @@ module.exports={
 	 * Not used
 	 */
 	email:{
-		host: "",
-		port: 587,
-		from: "",
-		secure: false,
+		host:"smtp.139.com", 
+		port:465, 
+		secure:true,
+		from: process.env.EMAIL,
 		auth:{
-			user: "",
-			pass: ""
+			user:process.env.EMAIL,
+            pass:process.env.EMAIL_PASS,
 		}
 	},
 	

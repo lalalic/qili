@@ -6,7 +6,7 @@ import shutil
 from importlib import import_module, invalidate_caches
 from flask import Flask, Blueprint
 
-logging.basicConfig(level=os.environ.get("LOG_CATEGORY", "INFO").upper(), format='%(asctime)s - %(levelname)s - %(message)s')
+logging.basicConfig(level=os.environ.get("LOG_CATEGORY", "DEBUG").upper(), format='%(asctime)s - %(levelname)s - %(message)s')
 
 
 logging.debug(f"--------python module isloading, python environment variables:-------")
@@ -42,7 +42,7 @@ def register_service(service, path=None):
                 ctx=f'/{blueprint.name}'
                 app.register_blueprint(blueprint, url_prefix=ctx)
                 services.add(ctx)
-                logging.info(f"[{service}] flask blueprint[{blueprint.name}] loaded! ")
+                logging.info(f"[python]service {ctx} loaded! ")
         return service
     except Exception as e:
         traceback.print_exc()
@@ -53,9 +53,10 @@ def register_services(root):
         logging.info(f'[flask]tried load apps from {root}, failed!')
         return
     logging.info(f'[flask]loading services from {root}')
-    service_dirs = [d for d in os.listdir(root) if os.path.isdir(os.path.join(root, d) and d!="__pycache__")]    
+    service_dirs = [d for d in os.listdir(root) if os.path.isdir(os.path.join(root, d))]    
     for service in service_dirs:
-        register_service(service, root)
+        if(service!="__pycache__"):
+            register_service(service, root)
 
 #load from environment
 if "APPS_ROOT" in os.environ:
