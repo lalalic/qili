@@ -33,24 +33,28 @@ console.log(process.env)
     qiliConfig.cloud[apiKey]={...conf}
     Object.assign(qiliConfig.cloud, services)
 
-    require('fs').mkdirSync(require('path').resolve(process.cwd(),dbpath),{recursive:true})
+    dbpath=require('path').resolve(process.cwd(),dbpath)
+
+    require('fs').mkdirSync(dbpath,{recursive:true})
     
     const stdio=logmongo ? "inherit" : "ignore"
     require('child_process')
         .spawn(
-            `${dbpath}/bin/mongod`,
-            ["--storageEngine=wiredTiger", "--directoryperdb", `--dbpath=${dbpath}`],
+            //`${dbpath}/bin/mongod`,[
+            "docker",["run", "-d", "--name", "mongodb", "-p", "27017:27017", "-v",`${dbpath}:${dbpath}`, "mongo:3.4","mongod",
+            "--storageEngine=wiredTiger", "--directoryperdb", //`--dbpath=${dbpath}`
+        ],
             {stdio:[stdio, stdio, stdio], killSignal:'SIGINT'}
         )
 
-    if(pythonRoot){
-        require('child_process')
-            .spawn(
-                `python`,
-                [`${__dirname}/lib/modules/python/run.py`, pythonRoot],
-                {stdio:["inherit", "inherit", "inherit"], killSignal:'SIGINT'}
-            )
-    }
+    // if(pythonRoot){
+    //     require('child_process')
+    //         .spawn(
+    //             `python`,
+    //             [`${__dirname}/lib/modules/python/run.py`, pythonRoot],
+    //             {stdio:["inherit", "inherit", "inherit"], killSignal:'SIGINT'}
+    //         )
+    // }
 
     // require('child_process')
     //     .spawn(
@@ -140,11 +144,7 @@ console.log(process.env)
             }
 
             async updateFinish(){
-                try{
-                    require('fs').writeFileSync(this.path, `${this.raw}${this.updated}`)
-                }catch(e){
-                    console.error("****Need allow current user writing /etc/hosts***")
-                }
+                require('fs').writeFileSync(this.path, `${this.raw}${this.updated}`)
             }
             restore(){
                 this.updated=""
@@ -156,20 +156,19 @@ console.log(process.env)
         }
     )();
 
-    const removeLocalhosts=async (servers)=>{
-        servers?.forEach(server=>server.close())
+    const removeLocalhosts=async ()=>{
         await hosts.restore()
         console.log('hosts is recovered')
     }
     hosts.add('127.0.0.1',[...all.map(a=>`${a}.${vhost}`), 'qili.pubsub'])
 
     hosts.updateFinish()
-        .finally((servers)=>{
-            console.log('vhost is ready in hosts. hosts will be clear once exit')
-            process.on('exit',()=>removeLocalhosts(servers))
-            process.on('SIGINT',()=>removeLocalhosts(servers))
-            process.on('SIGTERM',()=>removeLocalhosts(servers))
-            process.on('uncaughtException', ()=>removeLocalhosts(servers))
+        .then(()=>{
+            console.log(`vhost is ready in hosts. hosts will be clear once exit`)
+            process.on('exit',()=>removeLocalhosts())
+            process.on('SIGINT',()=>removeLocalhosts())
+            process.on('SIGTERM',()=>removeLocalhosts())
+            process.on('uncaughtException', ()=>removeLocalhosts())
         })
         .then(()=>{
             const servers=[]
@@ -182,6 +181,9 @@ console.log(process.env)
             servers.push(server.httpServer)
             console.debug(`Qili Dev Server is on localhost -> https://[${all.join("|")}].${vhost}`)
             return servers
+        })
+        .catch(e=>{
+            console.error("Qili Dev Server failed to start", e)
         })
         
 }

@@ -31,6 +31,7 @@ config
 			* reviewers: [phoneNumber, ...]
 			* testLoginCode: login request code for test only when isDev=true || contact in reviewers
 			* AnonymousQuery: allow anonymouse running graphql query id
+			* userApiKey: optional, share User data with other app, such as "ai"
 
 globalThis
 ----
