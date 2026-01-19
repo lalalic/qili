@@ -41,8 +41,8 @@ console.log(process.env)
     require('child_process')
         .spawn(
             //`${dbpath}/bin/mongod`,[
-            "docker",["run", "-d", "--name", "mongodb", "-p", "27017:27017", "-v",`${dbpath}:${dbpath}`, "mongo:3.4","mongod",
-            "--storageEngine=wiredTiger", "--directoryperdb", //`--dbpath=${dbpath}`
+            "podman",["run", "-d", "--name", "mongodb", "-p", "27017:27017", "-v",`${dbpath}:${dbpath}`, "mongo:3.4","mongod",
+            "--storageEngine=wiredTiger", "--directoryperdb", `--dbpath=${dbpath}`
         ],
             {stdio:[stdio, stdio, stdio], killSignal:'SIGINT'}
         )

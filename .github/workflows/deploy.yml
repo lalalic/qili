@@ -49,7 +49,7 @@ jobs:
         node-version: 18.15
         cache: 'yarn'
     - run: yarn
-    - name: deploy to ali cloud
+    - name: deploy to cloud (china + singapore)
       run: |
         export SSHPASS=${{ secrets.SERVER_PASS }}
 
@@ -60,5 +60,6 @@ jobs:
           sshpass -e ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $DEPLOY_USER@$DEPLOY_HOST "~/qili.travis.deploy.sh"
         }
 
-        deploy $DEPLOY_HOST_CHINA
         deploy $DEPLOY_HOST_SINGAPORE
+        deploy $DEPLOY_HOST_CHINA
+        
